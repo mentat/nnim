@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.1 2002/06/06 17:21:30 thementat Exp $
+    $Id: NContact.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
  
     GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    Copyright (C) 2001-2002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,19 +47,8 @@
 
 #include "bitmaps/wiz_obsd_fish2.xpm"
 
-#define ID_CONTACTS_BUTT 17000
-#define ID_CONTACTS_MENU_AWAY 10078
-#define ID_CONTACTS_MENU_SET_INFO 10079
-#define ID_CONTACTS_MENU_LOGOUT   10086
-#define ID_CONTACTS_LOGOUT 10080
-#define ID_CONTACTS_DIRECT 10081
-#define ID_CONTACTS_COMMIT 10082
-#define ID_CONTACTS_RESET_TREE 10083
-#define ID_CONTACTS_QUIT 10084
-#define ID_CONTACTS_ABOUT 10085
-
 wxMenuBar *myContactsMenuBar();
-wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , XMLNode& node);
+wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , weak_ptr<XMLNode> node);
 
 DECLARE_APP(wxNNIM)
 /*
@@ -111,14 +100,13 @@ BEGIN_EVENT_TABLE(guiContact, wxFrame)
 	EVT_CUSTOM(gmEVT_MESSAGE ,-1, guiContact::OnGetMessage)
 	EVT_CUSTOM(gmEVT_STATUS_CHANGE, -1, guiContact::OnChangeStatus)
 //	EVT_CUSTOM(gmEVT_LIST_ADD, -1, guiContact::OnListAdd)
-
-EVT_BUTTON(ID_CONTACTS_BUTT, guiContact::OnStart)
+    EVT_BUTTON(wxNNIM::ID_CONTACTS_BUTT, guiContact::OnStart)
 	// frame menu items
-	EVT_MENU(ID_CONTACTS_ABOUT, guiContact::OnAbout)
-	EVT_MENU(ID_CONTACTS_QUIT, guiContact::OnQuit)
-	EVT_MENU(ID_CONTACTS_MENU_AWAY, guiContact::OnSetAway)
-	EVT_MENU(ID_CONTACTS_MENU_SET_INFO, guiContact::OnSetInfo)
-	EVT_MENU(ID_CONTACTS_MENU_LOGOUT, guiContact::OnLogout)
+    EVT_MENU(wxNNIM::ID_CONTACTS_ABOUT, guiContact::OnAbout)
+	EVT_MENU(wxNNIM::ID_CONTACTS_QUIT, guiContact::OnQuit)
+	EVT_MENU(wxNNIM::ID_CONTACTS_MENU_AWAY, guiContact::OnSetAway)
+	EVT_MENU(wxNNIM::ID_CONTACTS_MENU_SET_INFO, guiContact::OnSetInfo)
+	EVT_MENU(wxNNIM::ID_CONTACTS_MENU_LOGOUT, guiContact::OnLogout)
 END_EVENT_TABLE()
 
 guiContact::guiContact(bool newUser, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, 
@@ -134,7 +122,7 @@ guiContact::guiContact(bool newUser, wxWindow* parent, wxWindowID id, const wxSt
  
   wxPanel * pTopPanel = new wxPanel(this);
 
-  Contacts(pTopPanel, true, true, wxGetApp().AccessLoader().C().GetConfig());
+  Contacts(pTopPanel, true, true, wxGetApp().AccessLoader().C().get()->GetConfig());
 
 }
 
@@ -214,9 +202,9 @@ void guiContact::OnChangeStatus(gmEvent& event)
 
 void guiContact::OnLogout(wxCommandEvent& event)
 {
-  wxLogDebug(wxT("OnLogout"));
+    wxLogDebug(wxT("OnLogout"));
 
-  wxGetApp().Logout();
+    wxGetApp().Logout();
 }
 
 void guiContact::OnCheckVersion(wxCommandEvent& event)
@@ -226,8 +214,8 @@ void guiContact::OnCheckVersion(wxCommandEvent& event)
 
 void guiContact::OnQuit(wxCommandEvent& event)
 {
-  wxLogDebug(wxT("OnQuit"));
-  Close(TRUE);
+    wxLogDebug(wxT("OnQuit"));
+    Close(TRUE);
 }
 
 void guiContact::OnCloseWindow(wxCloseEvent& event)
@@ -239,29 +227,29 @@ void guiContact::OnCloseWindow(wxCloseEvent& event)
 
 void guiContact::OnAbout(wxCommandEvent& event)
 {
-  new guiAbout(wxT("About GM: NNIM"), wxPoint(20,20), wxDefaultSize, this);
+    new guiAbout(wxT("About GM: NNIM"), wxPoint(20,20), wxDefaultSize, this);
 }
 
 void guiContact::OnStart(wxCommandEvent& event)
 {
-  wxLogDebug(wxT("OnStart"));
-  wxMenu popUp;
-  
-  popUp.Append(ID_CONTACTS_MENU_POPUP_CONNECT, wxT("Connect"), wxT("Go online!"));
-  popUp.Append(ID_CONTACTS_MENU_POPUP_UPDATE_DEBUG, wxT("Update"));
-  popUp.Append(ID_CONTACTS_MENU_POPUP_DISCONNECT, wxT("Disconnect"), wxT("Go offline."));
-  popUp.AppendSeparator();
-  popUp.Append(ID_CONTACTS_MENU_POPUP_ADD_CONTACT, wxT("Add Contact"));
-  popUp.Append(ID_CONTACTS_MENU_POPUP_ADD_FOLDER, wxT("Add Folder"));
-  popUp.Append(ID_CONTACTS_MENU_POPUP_PREFS, wxT("Preferences"));
-  popUp.Append(ID_CONTACTS_MENU_POPUP_TESTCRASH, wxT("Test Crash"));
-  popUp.AppendSeparator();
-  popUp.Append(ID_CONTACTS_MENU_POPUP_QUIT, wxT("Quit"));
+    wxLogDebug(wxT("OnStart"));
+    wxMenu popUp;
 
-  wxSize size = GetClientSize();
-  wxSize l_size = wxButton::GetDefaultSize();
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_CONNECT, wxT("Connect"), wxT("Go online!"));
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_UPDATE_DEBUG, wxT("Update"));
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_DISCONNECT, wxT("Disconnect"), wxT("Go offline."));
+    popUp.AppendSeparator();
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_ADD_CONTACT, wxT("Add Contact"));
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_ADD_FOLDER, wxT("Add Folder"));
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_PREFS, wxT("Preferences"));
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_TESTCRASH, wxT("Test Crash"));
+    popUp.AppendSeparator();
+    popUp.Append(wxNNIM::ID_CONTACTS_MENU_POPUP_QUIT, wxT("Quit"));
 
-  PopupMenu(&popUp, wxPoint(l_size.GetWidth()/2,(size.y - (l_size.GetHeight()))));
+    wxSize size = GetClientSize();
+    wxSize l_size = wxButton::GetDefaultSize();
+
+    PopupMenu(&popUp, wxPoint(l_size.GetWidth()/2,(size.y - (l_size.GetHeight()))));
 
 }
 
@@ -487,18 +475,18 @@ return NULL;
 }*/
 
 
-wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer, XMLNode& node )
+wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer, weak_ptr<XMLNode> node )
 {
     wxFlexGridSizer *item0 = new wxFlexGridSizer( 1, 0, 0 );
     item0->AddGrowableCol( 0 );
     item0->AddGrowableRow( 0 );
 
-    NContactTreeXML *item1 = new NContactTreeXML( parent, ID_TREE_CONTROL, wxDefaultPosition, wxSize(120,160), wxTR_HAS_BUTTONS|wxSUNKEN_BORDER, node );
+    NContactTreeXML *item1 = new NContactTreeXML( parent, wxNNIM::ID_TREE_CONTROL, wxDefaultPosition, wxSize(120,160), wxTR_HAS_BUTTONS|wxSUNKEN_BORDER, node );
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 0 );
 
     wxBoxSizer *item2 = new wxBoxSizer( wxHORIZONTAL );
 
-    wxButton *item3 = new wxButton( parent, ID_CONTACTS_BUTT, wxT("NNIM"), wxDefaultPosition);
+    wxButton *item3 = new wxButton( parent, wxNNIM::ID_CONTACTS_BUTT, wxT("NNIM"), wxDefaultPosition);
     wxASSERT( item3 );
     item2->Add( item3, 0, wxALIGN_CENTRE, 5 );
 
@@ -522,20 +510,20 @@ wxMenuBar *myContactsMenuBar()
     wxMenuBar *item0 = new wxMenuBar;
     
     wxMenu* item1 = new wxMenu;
-    item1->Append( ID_CONTACTS_MENU_AWAY, wxT("Away Message"), wxT("Sets an away message for all networks.") );
-    item1->Append( ID_CONTACTS_MENU_SET_INFO, wxT("Set Info"), wxT("Sets permanent info such as AOL directory information.") );
+    item1->Append( wxNNIM::ID_CONTACTS_MENU_AWAY, wxT("Away Message"), wxT("Sets an away message for all networks.") );
+    item1->Append( wxNNIM::ID_CONTACTS_MENU_SET_INFO, wxT("Set Info"), wxT("Sets permanent info such as AOL directory information.") );
     item1->AppendSeparator();
-    item1->Append( ID_CONTACTS_LOGOUT, wxT("Logout"), wxT("Logs you off of all of your networks.") );
-    item1->Append( ID_CONTACTS_DIRECT, wxT("Direct connect"), "" );
+    item1->Append( wxNNIM::ID_CONTACTS_LOGOUT, wxT("Logout"), wxT("Logs you off of all of your networks.") );
+    item1->Append( wxNNIM::ID_CONTACTS_DIRECT, wxT("Direct connect"), "" );
     item1->AppendSeparator();
-    item1->Append( ID_CONTACTS_COMMIT, wxT("Commit"), wxT("(For debug use) Commits configuration file to disk.") );
-    item1->Append( ID_CONTACTS_RESET_TREE, wxT("Reset Tree"), wxT("(For debug use) Resets contact tree.") );
+    item1->Append( wxNNIM::ID_CONTACTS_COMMIT, wxT("Commit"), wxT("(For debug use) Commits configuration file to disk.") );
+    item1->Append( wxNNIM::ID_CONTACTS_RESET_TREE, wxT("Reset Tree"), wxT("(For debug use) Resets contact tree.") );
     item1->AppendSeparator();
-    item1->Append( ID_CONTACTS_QUIT, wxT("Quit"), wxT("Exits NNIM") );
+    item1->Append( wxNNIM::ID_CONTACTS_QUIT, wxT("Quit"), wxT("Exits NNIM") );
     item0->Append( item1, wxT("NNIM") );
     
     wxMenu* item2 = new wxMenu;
-    item2->Append( ID_CONTACTS_ABOUT, wxT("About NNIM"), "" );
+    item2->Append( wxNNIM::ID_CONTACTS_ABOUT, wxT("About NNIM"), "" );
     item0->Append( item2, wxT("Help") );
     
     return item0;
@@ -543,8 +531,11 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
-    Revision 1.1  2002/06/06 17:21:30  thementat
-    Initial revision
+    Revision 1.2  2002/06/14 22:02:24  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
+    Revision 1.1.1.1  2002/06/06 17:21:30  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.11  2002/01/17 20:00:50  mentat
     Moved dirs back to normal.

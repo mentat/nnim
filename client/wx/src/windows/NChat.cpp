@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.cpp,v 1.1 2002/06/06 17:21:29 thementat Exp $
+    $Id: NChat.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -64,13 +64,13 @@ private:
 };
 
 BEGIN_EVENT_TABLE(guiChat, wxFrame)
-  EVT_MENU(CHAT_QUIT, guiChat::OnQuit)
-  EVT_MENU(CHAT_ABOUT, guiChat::OnAbout)
-  EVT_CLOSE(guiChat::OnCloseWindow)
-  EVT_BUTTON(SEND_BUTT, guiChat::OnSend)
-  EVT_BUTTON(P2_FILESEND_BUTT, guiChat::OnFileSend)
-  EVT_BUTTON(P2_BROWSE_BUTT, guiChat::OnP2Browse)
-  EVT_IDLE(guiChat::OnIdle)
+    EVT_MENU(wxNNIM::ID_CHAT_QUIT, guiChat::OnQuit)
+    EVT_MENU(wxNNIM::ID_CHAT_ABOUT, guiChat::OnAbout)
+    EVT_CLOSE(guiChat::OnCloseWindow)
+    EVT_BUTTON(wxNNIM::ID_CHAT_SEND_BUTT, guiChat::OnSend)
+    EVT_BUTTON(wxNNIM::ID_CHAT_P2_FILESEND_BUTT, guiChat::OnFileSend)
+    EVT_BUTTON(wxNNIM::ID_CHAT_P2_BROWSE_BUTT, guiChat::OnP2Browse)
+    EVT_IDLE(guiChat::OnIdle)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(myTextCtrl, wxTextCtrl)
@@ -124,7 +124,7 @@ guiChat::guiChat(const wxString& title, int x, int y, int w, int h, wxWindow * p
 	c->bottom.SameAs(this, wxBottom);
 	m_panel->SetConstraints(c);
 
-	m_notebook = new wxNotebook(m_panel, ID_NOTEBOOK);
+    m_notebook = new wxNotebook(m_panel, wxNNIM::ID_CHAT_NOTEBOOK);
 
 	c = new wxLayoutConstraints;
 	c->left.SameAs(m_panel, wxLeft, 1);
@@ -258,7 +258,7 @@ void guiChat::InitTabView(wxNotebook* notebook, wxPanel* window)
   m_outText->SetConstraints(c);
 
 
-  wxBitmapButton * l_butt = new wxBitmapButton(panel1, SEND_BUTT, 
+  wxBitmapButton * l_butt = new wxBitmapButton(panel1, wxNNIM::ID_CHAT_SEND_BUTT, 
     wxBitmap(nnim_button_trans2_xpm),wxDefaultPosition,wxDefaultSize,wxNO_BORDER);
   l_butt->SetBitmapSelected(wxBitmap(nnim_button_trans_bw2_xpm));
 
@@ -305,7 +305,7 @@ void guiChat::InitTabView(wxNotebook* notebook, wxPanel* window)
   c->height.AsIs();
   m_file_p2->SetConstraints(c);
 
-  wxButton *l_browse_p2 = new wxButton(panel2, P2_BROWSE_BUTT, wxT("Browse"));
+  wxButton *l_browse_p2 = new wxButton(panel2, wxNNIM::ID_CHAT_P2_BROWSE_BUTT, wxT("Browse"));
 
   c = new wxLayoutConstraints;
   c->right.SameAs(panel2, wxRight, 4);
@@ -315,7 +315,7 @@ void guiChat::InitTabView(wxNotebook* notebook, wxPanel* window)
   l_browse_p2->SetConstraints(c);
 
 
-  wxButton *l_sendfile_p2 = new wxButton(panel2, P2_FILESEND_BUTT, wxT("Send File"));
+  wxButton *l_sendfile_p2 = new wxButton(panel2, wxNNIM::ID_CHAT_P2_FILESEND_BUTT, wxT("Send File"));
 
   c = new wxLayoutConstraints;
   c->left.SameAs(panel2, wxLeft, 4);
@@ -540,7 +540,7 @@ void myTextCtrl::OnChar(wxKeyEvent& event)
   // Catching the <RETURN> to send the text, <SHIFT><RETURN> inserts new line
     if ( (event.ShiftDown() == false) && (event.GetKeyCode() == WXK_RETURN) )
     {  
-      wxCommandEvent myEvent(wxEVT_COMMAND_BUTTON_CLICKED,SEND_BUTT);
+        wxCommandEvent myEvent(wxEVT_COMMAND_BUTTON_CLICKED,wxNNIM::ID_CHAT_SEND_BUTT);
       GetParent()->ProcessEvent(myEvent);
     }
     else
@@ -568,8 +568,11 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
 /*
     -----
     $Log: NChat.cpp,v $
-    Revision 1.1  2002/06/06 17:21:29  thementat
-    Initial revision
+    Revision 1.2  2002/06/14 22:02:24  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
+    Revision 1.1.1.1  2002/06/06 17:21:29  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.11  2002/01/17 20:00:50  mentat
     Moved dirs back to normal.

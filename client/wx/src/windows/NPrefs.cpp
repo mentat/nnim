@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: NPrefs.cpp,v 1.1 2002/06/06 17:21:30 thementat Exp $
+    $Id: NPrefs.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
  
     GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    Copyright (C) 2001-2002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -69,10 +69,10 @@ public:
 };
 
 BEGIN_EVENT_TABLE(guiPrefs, wxFrame)
-  EVT_TREE_SEL_CHANGED(ID_PREF_TREE_CTRL, guiPrefs::OnTreeChange)
-  EVT_BUTTON(ID_PREF_BUTT_CANCEL, guiPrefs::OnCancel)
-  EVT_BUTTON(ID_PREF_BUTT_APPLY, guiPrefs::OnApply)
-  EVT_BUTTON(ID_PREF_BUTT_OK, guiPrefs::OnOK) 
+  EVT_TREE_SEL_CHANGED(wxNNIM::ID_PREF_TREE_CTRL, guiPrefs::OnTreeChange)
+  EVT_BUTTON(wxNNIM::ID_PREF_BUTT_CANCEL, guiPrefs::OnCancel)
+  EVT_BUTTON(wxNNIM::ID_PREF_BUTT_APPLY, guiPrefs::OnApply)
+  EVT_BUTTON(wxNNIM::ID_PREF_BUTT_OK, guiPrefs::OnOK) 
   EVT_CLOSE(guiPrefs::OnCloseWindow)
 END_EVENT_TABLE()
 
@@ -100,7 +100,7 @@ guiPrefs::guiPrefs(const wxString& title, int x, int y, int w, int h, wxWindow* 
   wxSizer * sizer = Preferences(panel, true, true);
 
   // Find splitter window by id
-  m_splitterWindow = (MySplitterWindow *)FindWindow( ID_PREF_SPLIT );
+  m_splitterWindow = (MySplitterWindow *)FindWindow( wxNNIM::ID_PREF_SPLIT );
 
   // create new panels for splitter window
   wxPanel * myLeft = new wxPanel(m_splitterWindow);
@@ -115,9 +115,9 @@ guiPrefs::guiPrefs(const wxString& title, int x, int y, int w, int h, wxWindow* 
   PrefTree(myLeft, true, true);
 
   // find controls
-  m_apply = (wxButton *)FindWindow( ID_PREF_BUTT_APPLY );
+  m_apply = (wxButton *)FindWindow( wxNNIM::ID_PREF_BUTT_APPLY );
   
-  m_treeCtrl = (wxGenericTreeCtrl *)FindWindow( ID_PREF_TREE_CTRL );
+  m_treeCtrl = (wxGenericTreeCtrl *)FindWindow( wxNNIM::ID_PREF_TREE_CTRL );
   m_treeRoot = m_treeCtrl->AddRoot("root");
   m_treeCtrl->SetWindowStyle(wxTR_FULL_ROW_HIGHLIGHT | wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_HIDE_ROOT);
 
@@ -150,12 +150,12 @@ wxGenericTreeCtrl& guiPrefs::GetTree()
 void guiPrefs::LoadSettings()
 {
 
-  wxTreeItemId genId = m_treeCtrl->AppendItem(m_treeRoot, "General", -1, -1, new TreeData(PREF_TREEITEM_GENERAL));
+  wxTreeItemId genId = m_treeCtrl->AppendItem(m_treeRoot, "General", -1, -1, new TreeData(wxNNIM::PREF_TREEITEM_GENERAL));
 
-  m_treeCtrl->AppendItem(m_treeRoot, "Security", -1, -1, new TreeData(PREF_TREEITEM_SECURITY));
-  m_treeCtrl->AppendItem(m_treeRoot, "Networks", -1, -1, new TreeData(PREF_TREEITEM_NETWORKROOT));
+  m_treeCtrl->AppendItem(m_treeRoot, "Security", -1, -1, new TreeData(wxNNIM::PREF_TREEITEM_SECURITY));
+  m_treeCtrl->AppendItem(m_treeRoot, "Networks", -1, -1, new TreeData(wxNNIM::PREF_TREEITEM_NETWORKROOT));
   
-  m_treeCtrl->AppendItem(m_treeRoot, "Plug-ins", -1, -1, new TreeData(PREF_TREEITEM_PLUGINS));
+  m_treeCtrl->AppendItem(m_treeRoot, "Plug-ins", -1, -1, new TreeData(wxNNIM::PREF_TREEITEM_PLUGINS));
 
   m_treeCtrl->SelectItem(genId);
 }
@@ -188,13 +188,13 @@ void guiPrefs::OnTreeChange(wxTreeEvent& event)
 
   switch ( TYPE )
   {
-  case PREF_TREEITEM_NETWORKROOT:
+  case wxNNIM::PREF_TREEITEM_NETWORKROOT:
     m_splitterWindow->ReplaceWindow(CURRENT, m_prefNet); m_prefNet->Show(TRUE);
     break;
-  case PREF_TREEITEM_SECURITY:
+  case wxNNIM::PREF_TREEITEM_SECURITY:
     m_splitterWindow->ReplaceWindow(CURRENT, m_prefSec); m_prefSec->Show(TRUE);
     break;
-  case PREF_TREEITEM_PLUGINS:
+  case wxNNIM::PREF_TREEITEM_PLUGINS:
     m_splitterWindow->ReplaceWindow(CURRENT, m_prefGen); m_prefGen->Show(TRUE);
     break;
   default: 
@@ -306,21 +306,21 @@ wxSizer *Preferences( wxWindow *parent, bool call_fit, bool set_sizer )
     item0->AddGrowableCol( 0 );
     item0->AddGrowableRow( 0 );
 
-    wxSplitterWindow *item1 = new MySplitterWindow( parent, ID_PREF_SPLIT, wxDefaultPosition, wxSize(260,160), wxSP_3D|wxCLIP_CHILDREN );
+    wxSplitterWindow *item1 = new MySplitterWindow( parent, wxNNIM::ID_PREF_SPLIT, wxDefaultPosition, wxSize(260,160), wxSP_3D|wxCLIP_CHILDREN );
     item1->SetMinimumPaneSize( 20 );
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     wxBoxSizer *item2 = new wxBoxSizer( wxHORIZONTAL );
 
-    wxButton *item3 = new wxButton( parent, ID_PREF_BUTT_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton *item3 = new wxButton( parent, wxNNIM::ID_PREF_BUTT_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
     item3->SetDefault();
     item3->Enable( FALSE );
     item2->Add( item3, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxButton *item4 = new wxButton( parent, ID_PREF_BUTT_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton *item4 = new wxButton( parent, wxNNIM::ID_PREF_BUTT_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     item2->Add( item4, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxButton *item5 = new wxButton( parent, ID_PREF_BUTT_APPLY, wxT("Apply"), wxDefaultPosition, wxDefaultSize, 0);
+    wxButton *item5 = new wxButton( parent, wxNNIM::ID_PREF_BUTT_APPLY, wxT("Apply"), wxDefaultPosition, wxDefaultSize, 0);
     item2->Add( item5, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     item0->Add( item2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
@@ -345,7 +345,7 @@ wxSizer *PrefTree( wxWindow *parent, bool call_fit, bool set_sizer )
     item0->AddGrowableCol( 0 );
     item0->AddGrowableRow( 0 );
 
-    wxGenericTreeCtrl *item1 = new wxGenericTreeCtrl( parent, ID_PREF_TREE_CTRL, wxDefaultPosition, wxSize(120,160), wxSUNKEN_BORDER );
+    wxGenericTreeCtrl *item1 = new wxGenericTreeCtrl( parent, wxNNIM::ID_PREF_TREE_CTRL, wxDefaultPosition, wxSize(120,160), wxSUNKEN_BORDER );
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 0 );
 
     if (set_sizer)
@@ -364,8 +364,11 @@ wxSizer *PrefTree( wxWindow *parent, bool call_fit, bool set_sizer )
 /*
     -----
     $Log: NPrefs.cpp,v $
-    Revision 1.1  2002/06/06 17:21:30  thementat
-    Initial revision
+    Revision 1.2  2002/06/14 22:02:24  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
+    Revision 1.1.1.1  2002/06/06 17:21:30  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.10  2002/01/17 20:00:51  mentat
     Moved dirs back to normal.

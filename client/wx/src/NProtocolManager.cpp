@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.1 2002/06/06 17:21:29 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -43,29 +43,29 @@ InitProtoManager(AuthLoad & myLoader, ProtocolManager& myMan)
 {
 	XMLNode config;
 	
-	myLoader.U().GetNet("toc", config);
+	myLoader.U().get()->GetNet("toc", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new TocProtocol(config, &myMan));
 	}
-	myLoader.U().GetNet("icq", config);
+	myLoader.U().get()->GetNet("icq", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new IcqProtocol(config, &myMan));
 	}
-	myLoader.U().GetNet("msn", config);
+	myLoader.U().get()->GetNet("msn", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new MsnProtocol(config, &myMan));
 	}
 
-	myLoader.U().GetNet("yahoo", config);
+	myLoader.U().get()->GetNet("yahoo", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new YahooProtocol(config, &myMan));
 	}
 
-	myLoader.U().GetNet("kit", config);
+	myLoader.U().get()->GetNet("kit", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new KitProtocol(config, &myMan));
@@ -89,7 +89,7 @@ wxProtocolManager::~wxProtocolManager()
 Network * wxProtocolManager::createNet(Protocol *proto)
 {
   wxNetwork * pMyNet = new wxNetwork(proto);
-  pMyNet->SetEventHandler(wxGetApp(), SOCKET_ID);
+  pMyNet->SetEventHandler(wxGetApp(), wxNNIM::SOCKET_ID);
   pMyNet->SetNotify(wxSOCKET_CONNECTION_FLAG |
                     wxSOCKET_INPUT_FLAG |
                     wxSOCKET_LOST_FLAG);
@@ -117,7 +117,7 @@ void wxProtocolManager::c_statusChange(const string &proto,const Contact &c)
   wxLogMessage(wxString("Status change event for ") + wxString(proto.c_str(), wxConvUTF8) +
     wxString(" ") + wxString(c.nick().c_str(), wxConvUTF8) );
 
-  gmEvent myEvent(gmEVT_STATUS_CHANGE, ID_CONTACTS_STATUS_CHANGE);
+  gmEvent myEvent(gmEVT_STATUS_CHANGE, wxNNIM::ID_CONTACTS_STATUS_CHANGE);
   myEvent.contact = c;
 
   wxGetApp().SendEvent(myEvent);
@@ -128,7 +128,7 @@ void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, con
 	wxString wProto(proto.c_str(), wxConvUTF8);
 	wxString wMessage(message.c_str(), wxConvUTF8);
 	
-	gmEvent myEvent(gmEVT_MESSAGE,ID_CONTACTS_INCOMMING_MESSAGE);
+	gmEvent myEvent(gmEVT_MESSAGE,wxNNIM::ID_CONTACTS_INCOMMING_MESSAGE);
 	myEvent.setProtocol(wProto);
 	myEvent.setServerId(wxString(c.nick().c_str(), wxConvUTF8));
 	myEvent.setMessage(wMessage);
@@ -156,8 +156,11 @@ void wxProtocolManager::c_stateChange(const string &proto,int state)
 /*
     -----
     $Log: NProtocolManager.cpp,v $
-    Revision 1.1  2002/06/06 17:21:29  thementat
-    Initial revision
+    Revision 1.2  2002/06/14 22:02:24  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
+    Revision 1.1.1.1  2002/06/06 17:21:29  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2002/01/17 20:00:51  mentat
     Moved dirs back to normal.

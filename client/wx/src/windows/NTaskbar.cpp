@@ -1,3 +1,26 @@
+// --*-c++-*--
+/*
+    $Id: NTaskbar.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+ 
+    GNU Messenger - The secure instant messenger
+    Copyright (C) 2001-2002  Jesse Lovelace
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+
 #include "NInclude.h"
 #include "NMain.h"
 
@@ -14,10 +37,10 @@ void NNIMTaskBarIcon::OnRButtonUp(wxEvent& event)
 {
   wxMenu menu("NNIM Menu");
 
-  menu.Append(ID_CONTACTS_TASKBAR_RESTORE, "&Restore GM: NNIM");
-  menu.Append(ID_CONTACTS_TASKBAR_HIDE, "&Hide");
+  menu.Append(wxNNIM::ID_CONTACTS_TASKBAR_RESTORE, "&Restore GM: NNIM");
+  menu.Append(wxNNIM::ID_CONTACTS_TASKBAR_HIDE, "&Hide");
   menu.AppendSeparator();
-  menu.Append(ID_CONTACTS_TASKBAR_EXIT, "E&xit");
+  menu.Append(wxNNIM::ID_CONTACTS_TASKBAR_EXIT, "E&xit");
 
   PopupMenu(&menu);
 }
@@ -65,13 +88,13 @@ void NNIMTaskBarIcon::OnMenuCommand(int id)
 
   switch(id)
   {
-  case(ID_CONTACTS_TASKBAR_RESTORE):
+  case(wxNNIM::ID_CONTACTS_TASKBAR_RESTORE):
     pMyWindow->Show(TRUE);
     break;
-  case(ID_CONTACTS_TASKBAR_HIDE):
+  case(wxNNIM::ID_CONTACTS_TASKBAR_HIDE):
     pMyWindow->Show(FALSE);
     break;
-  case(ID_CONTACTS_TASKBAR_EXIT):
+  case(wxNNIM::ID_CONTACTS_TASKBAR_EXIT):
     pMyWindow->Close(TRUE);
     wxGetApp().ProcessIdle(); 
     break;

@@ -1,3 +1,28 @@
+// --*-c++-*--
+/*
+    $Id: NContactTreeXML.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+ 
+    GNU Messenger - The secure instant messenger
+    Copyright (C) 2001-2002  Jesse Lovelace
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+
+#include "boost/smart_ptr.hpp"
+
 #include "NInclude.h"
 #include "NEvent.h"
 #include "NMain.h"
@@ -52,25 +77,25 @@ private:
 
 BEGIN_EVENT_TABLE(NContactTreeXML, wxGenericTreeCtrl)
 
-EVT_TREE_BEGIN_DRAG(ID_TREE_CONTROL, NContactTreeXML::OnBeginDrag)
-EVT_TREE_END_DRAG(ID_TREE_CONTROL, NContactTreeXML::OnEndDrag)
+EVT_TREE_BEGIN_DRAG(wxNNIM::ID_TREE_CONTROL, NContactTreeXML::OnBeginDrag)
+EVT_TREE_END_DRAG(wxNNIM::ID_TREE_CONTROL, NContactTreeXML::OnEndDrag)
 //EVT_TREE_DELETE_ITEM(ID_TREE_CONTROL, NContactTreeXML::OnDeleteItem)
 EVT_RIGHT_UP(NContactTreeXML::OnRMouseUp)
-EVT_TREE_ITEM_ACTIVATED(ID_TREE_CONTROL, NContactTreeXML::OnItemActivated)  
-EVT_TREE_ITEM_EXPANDING(ID_TREE_CONTROL, NContactTreeXML::OnItemExpanding)	
-EVT_TREE_ITEM_EXPANDED(ID_TREE_CONTROL, NContactTreeXML::OnItemExpanded)
-EVT_TREE_END_LABEL_EDIT(ID_TREE_CONTROL, NContactTreeXML::OnEndLabelEdit)
-EVT_MENU(ID_TREE_DELETE, NContactTreeXML::OnDeleteItem)
-EVT_MENU(ID_TREE_ADD_CONTACT, NContactTreeXML::OnAddContact)
-EVT_MENU(ID_TREE_ADD_FOLDER, NContactTreeXML::OnAddFolder)
-EVT_MENU(ID_TREE_DELETE, NContactTreeXML::OnTreeDelete)
-EVT_MENU(ID_TREE_RENAME, NContactTreeXML::OnTreeRename)
+EVT_TREE_ITEM_ACTIVATED(wxNNIM::ID_TREE_CONTROL, NContactTreeXML::OnItemActivated)  
+EVT_TREE_ITEM_EXPANDING(wxNNIM::ID_TREE_CONTROL, NContactTreeXML::OnItemExpanding)	
+EVT_TREE_ITEM_EXPANDED(wxNNIM::ID_TREE_CONTROL, NContactTreeXML::OnItemExpanded)
+EVT_TREE_END_LABEL_EDIT(wxNNIM::ID_TREE_CONTROL, NContactTreeXML::OnEndLabelEdit)
+EVT_MENU(wxNNIM::ID_TREE_DELETE, NContactTreeXML::OnDeleteItem)
+EVT_MENU(wxNNIM::ID_TREE_ADD_CONTACT, NContactTreeXML::OnAddContact)
+EVT_MENU(wxNNIM::ID_TREE_ADD_FOLDER, NContactTreeXML::OnAddFolder)
+EVT_MENU(wxNNIM::ID_TREE_DELETE, NContactTreeXML::OnTreeDelete)
+EVT_MENU(wxNNIM::ID_TREE_RENAME, NContactTreeXML::OnTreeRename)
 
 END_EVENT_TABLE()
 
 NContactTreeXML::NContactTreeXML(wxWindow *parent, const wxWindowID id,
                        const wxPoint& pos, const wxSize& size,
-                       long style, XMLNode& xml, int type)
+                       long style, weak_ptr<XMLNode> xml, int type)
                        : wxGenericTreeCtrl(parent, id, pos, size, style)
 {
 
@@ -103,13 +128,13 @@ NContactTreeXML::~NContactTreeXML()
 
 void NContactTreeXML::LoadFromXML()
 {
-
+/*
 	wxLogDebug(wxT("In LoadFromXML"));
     if (m_type == ContactTree)
         PlaceContactsInTree(GetRootItem(), m_xml);
     else
         PlaceItemsInTree(GetRootItem(), m_xml);
-    
+   */ 
 }
 
 /*void NContactTreeXML::OnMenuDeleted(wxCommandEvent& event)
@@ -177,9 +202,10 @@ void NContactTreeXML::PlaceContactsInTree(wxTreeItemId &base, XMLNode& xml)
 }
 
 
-void NContactTreeXML::SetXML(XMLNode &xml)
+void NContactTreeXML::SetXML(weak_ptr<XMLNode> xml)
 {
    m_xml = xml;
+   LoadFromXML();
 }
 
 void NContactTreeXML::RefreshTree()
@@ -230,13 +256,13 @@ void NContactTreeXML::OnDeleteItem(wxCommandEvent& event)
 	if (m_type == ContactTree)
 	{
 		if (((MyTreeItemData *)GetItemData(id))->GetStatus() == STATUS_FOLDER)
-			wxGetApp().AccessLoader().C().DeleteFolder(GetItemText(id).mb_str(wxConvUTF8).data());
+			wxGetApp().AccessLoader().C().get()->DeleteFolder(GetItemText(id).mb_str(wxConvUTF8).data());
 		else
-			wxGetApp().AccessLoader().C().Delete(GetItemText(id).mb_str(wxConvUTF8).data());
+			wxGetApp().AccessLoader().C().get()->Delete(GetItemText(id).mb_str(wxConvUTF8).data());
 	}
 	else
 	{
-		wxGetApp().AccessLoader().C().DeleteInfo(m_user.mb_str(wxConvUTF8).data(), GetItemText(id).mb_str(wxConvUTF8).data());
+		wxGetApp().AccessLoader().C().get()->DeleteInfo(m_user.mb_str(wxConvUTF8).data(), GetItemText(id).mb_str(wxConvUTF8).data());
 	}
 
 	RefreshTree();
@@ -355,14 +381,14 @@ void NContactTreeXML::ShowMenu(wxTreeItemId id, const wxPoint& pt)
   }
 
   wxMenu menu(title);
-  menu.Append(ID_TREE_ABOUT, wxT("&About..."));
+  menu.Append(wxNNIM::ID_TREE_ABOUT, wxT("&About..."));
   menu.AppendSeparator();
-  menu.Append(ID_TREE_DELETE, wxT("&Delete"));
-  menu.Append(ID_TREE_EDIT, wxT("&Edit"));
-  menu.Append(ID_TREE_RENAME, wxT("&Rename"));
+  menu.Append(wxNNIM::ID_TREE_DELETE, wxT("&Delete"));
+  menu.Append(wxNNIM::ID_TREE_EDIT, wxT("&Edit"));
+  menu.Append(wxNNIM::ID_TREE_RENAME, wxT("&Rename"));
   menu.AppendSeparator();
-  menu.Append(ID_TREE_ADD_CONTACT, wxT("Add Contact"));
-  menu.Append(ID_TREE_ADD_FOLDER, wxT("Add Folder"));
+  menu.Append(wxNNIM::ID_TREE_ADD_CONTACT, wxT("Add Contact"));
+  menu.Append(wxNNIM::ID_TREE_ADD_FOLDER, wxT("Add Folder"));
   //menu.Append(ID_TREE_EXPAND, wxT("Expand"));
 
   PopupMenu(&menu, pt);
@@ -494,7 +520,7 @@ void NContactTreeXML::SetStatus(wxTreeItemId &id, int status)
 }
 wxString NContactTreeXML::NewFolder(const wxString& base)
 {
-	wxString name = wxGetTextFromUser(wxT("New Folder Name"), wxT("New Folder"), "", this);	if (name == wxT(""))		return wxT("");	AuthLoad &myLoader = wxGetApp().AccessLoader();	if (myLoader.C().FolderExists(name.mb_str(wxConvUTF8).data()))	{		wxMessageBox(wxT("Sorry, this folder already exists."), wxT("Folder Exists"));		return wxT("");	}	if (base == wxT(""))	{		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data()))		{			wxLogError(wxT("Folder not added with no base."));			return "";		}		else			return name;	}		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data(), base.mb_str(wxConvUTF8).data()))	{		wxLogError(wxT("This folder wasn't added."));		return wxT("");	}
+	wxString name = wxGetTextFromUser(wxT("New Folder Name"), wxT("New Folder"), "", this);	if (name == wxT(""))		return wxT("");	AuthLoad &myLoader = wxGetApp().AccessLoader();	if (myLoader.C().get()->FolderExists(name.mb_str(wxConvUTF8).data()))	{		wxMessageBox(wxT("Sorry, this folder already exists."), wxT("Folder Exists"));		return wxT("");	}	if (base == wxT(""))	{		if (!myLoader.C().get()->AddFolder(name.mb_str(wxConvUTF8).data()))		{			wxLogError(wxT("Folder not added with no base."));			return "";		}		else			return name;	}		if (!myLoader.C().get()->AddFolder(name.mb_str(wxConvUTF8).data(), base.mb_str(wxConvUTF8).data()))	{		wxLogError(wxT("This folder wasn't added."));		return wxT("");	}
 
 	return name;
 }

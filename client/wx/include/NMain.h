@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.h,v 1.2 2002/06/09 19:45:00 thementat Exp $
+    $Id: NMain.h,v 1.3 2002/06/14 22:02:23 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -85,12 +85,132 @@ private:
 	friend class guiLogin;
 	friend class guiLog;
 
+public:
+
+    enum {
+        ID_CONTACTS_BUTT = 18000, 
+        ID_CONTACTS_MENU_AWAY,
+        ID_CONTACTS_MENU_SET_INFO,
+        ID_CONTACTS_MENU_LOGOUT,
+        ID_CONTACTS_LOGOUT,
+        ID_CONTACTS_DIRECT,
+        ID_CONTACTS_COMMIT,
+        ID_CONTACTS_RESET_TREE,
+        ID_CONTACTS_QUIT,
+        ID_CONTACTS_ABOUT,
+        ID_CONTACTS_MENU_POPUP_CONNECT,
+        ID_CONTACTS_MENU_POPUP_DISCONNECT,
+        ID_CONTACTS_MENU_POPUP_SERVICES,
+        ID_CONTACTS_MENU_POPUP_PREFS,
+        ID_CONTACTS_MENU_POPUP_WIZARD,
+        ID_CONTACTS_MENU_POPUP_ADD_CONTACT,
+        ID_CONTACTS_MENU_POPUP_QUIT,
+        ID_CONTACTS_MENU_POPUP_TESTCRASH,
+        ID_CONTACTS_MENU_POPUP_ADD_FOLDER,
+        ID_CONTACTS_MENU_POPUP_UPDATE_DEBUG,
+        ID_CONTACTS_TASKBAR_RESTORE,
+        ID_CONTACTS_TASKBAR_EXIT,
+        ID_CONTACTS_TASKBAR_HIDE,
+        ID_CONTACTS_INCOMMING_MESSAGE,
+        ID_CONTACTS_STATUS_CHANGE,
+
+        ID_LOGIN_LOGO,
+        ID_LOGIN_USERNAME,
+        ID_LOGIN_PASSWORD,
+        ID_LOGIN_LOGIN,
+        ID_LOGIN_MENU_NEWUSER,
+        ID_LOGIN_MENU_QUIT,
+        ID_LOGIN_MENU_ABOUT,
+
+        ID_PREF_GENERAL,
+        ID_PREF_SECURITY,
+        ID_PREF_AIM,
+        ID_PREF_YAHOO,
+        ID_PREF_MSN,
+        ID_PREF_ICQ,
+        ID_PREF_KIT,
+        ID_PREF_PEER,
+        ID_PREF_NETWORKS,
+        ID_PREF_CANCEL,
+        ID_PREF_SAVE,
+        ID_PREF_CONTACTS,
+        ID_PREF_UPDATED,
+        ID_PREF_CONTACT_LIST,
+        ID_PREF_CONTACT_COMBO,
+        ID_PREF_ADDUSER,
+        ID_TREE_CONTROL,
+        ID_TREE_ABOUT,
+        ID_TREE_CHANGE_STATUS,
+        ID_TREE_DELETE,
+        ID_TREE_EDIT,
+        ID_TREE_ADD_CONTACT,
+        ID_TREE_ADD_FOLDER,
+        ID_TREE_RENAME,
+        ID_MENU_QUIT,
+        ID_MENU_ABOUT,
+        ID_MENU_CHECKVERSION,
+        ID_MENU_OPTIONS,
+        ID_MENU_CHATWINDOW,
+        ID_MENU_COMMIT,
+        ID_MENU_LOAD,
+        ID_MENU_CLEAR_CONTACTS,
+        ID_MENU_LOGOUT,
+        ID_MENU_CONTACT_EDIT,
+        ID_MENU_START,
+        ID_MENU_POPUP_KIT,
+        ID_MENU_POPUP_AIM,
+        ID_MENU_POPUP_ICQ,
+        ID_MENU_POPUP_PEER,
+        ID_MENU_POPUP_CONNECT,
+        ID_MENU_POPUP_DISCONNECT,
+        ID_MENU_POPUP_SERVICES,
+        ID_MENU_POPUP_PREFS,
+        ID_MENU_POPUP_WIZARD,
+        ID_MENU_POPUP_ADD_CONTACT,
+        ID_MENU_POPUP_QUIT,
+        ID_PREF_TREE_CTRL,
+        ID_PREF_SPLIT,
+        ID_PREF_BUTT_OK,
+        ID_PREF_BUTT_CANCEL,
+        ID_PREF_BUTT_APPLY,
+        ID_AWAY_WINDOW,
+        ID_NEW_USER_WIZARD,
+
+        PREF_TREEITEM_CONTACT,
+        PREF_TREEITEM_FOLDER,
+        PREF_TREEITEM_CONTACTROOT,
+        PREF_TREEITEM_SECURITY,
+        PREF_TREEITEM_NETWORKROOT,
+        PREF_TREEITEM_PLUGINS,
+        PREF_TREEITEM_GENERAL,
+
+        ID_LOG_QUIT,
+        ID_LOG_ENTER,
+
+        SOCKET_ID,
+        SERVER_ID,
+
+        ID_NETWORK_REFRESH_CONTACTS,
+        ID_NETWORK_REFRESH_NETWORK,
+
+        ID_CHAT_QUIT,
+        ID_CHAT_ABOUT,
+        ID_CHAT_SEND,
+        ID_CHAT_SEND_BUTT,
+        ID_CHAT_NOTEBOOK,
+        ID_CHAT_P2_BROWSE_BUTT,
+        ID_CHAT_P2_FILESEND_BUTT
+    };
+
 };
 
 #endif
 /*
     -----
     $Log: NMain.h,v $
+    Revision 1.3  2002/06/14 22:02:23  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
     Revision 1.2  2002/06/09 19:45:00  thementat
     Liberal use of auto_ptr.
 

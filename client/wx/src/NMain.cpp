@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.3 2002/06/10 12:43:25 thementat Exp $
+    $Id: NMain.cpp,v 1.4 2002/06/14 22:02:24 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -44,15 +44,16 @@ public:
 
 protected:
 
-  virtual void LogText(const string& text) { wxLogDebug(wxString(text.c_str(), wxConvUTF8)); }
+  virtual void LogText(const string& text) 
+  { wxLogDebug(wxString(text.c_str(), wxConvUTF8)); }
 
 };
 
 BEGIN_EVENT_TABLE(wxNNIM, wxApp)
-  EVT_SOCKET(SOCKET_ID, wxNNIM::OnSocketEvent)
-  EVT_SOCKET(SERVER_ID,  wxNNIM::OnServerEvent)
-  EVT_CUSTOM(gmEVT_REFRESH_CONTACTS, ID_NETWORK_REFRESH_CONTACTS, wxNNIM::OnRefreshContacts)
-  EVT_CUSTOM(gmEVT_REFRESH_NETWORK, ID_NETWORK_REFRESH_NETWORK, wxNNIM::OnRefreshNetwork)
+    EVT_SOCKET(wxNNIM::SOCKET_ID, wxNNIM::OnSocketEvent)
+    EVT_SOCKET(wxNNIM::SERVER_ID,  wxNNIM::OnServerEvent)
+    EVT_CUSTOM(gmEVT_REFRESH_CONTACTS, ID_NETWORK_REFRESH_CONTACTS, wxNNIM::OnRefreshContacts)
+    EVT_CUSTOM(gmEVT_REFRESH_NETWORK, ID_NETWORK_REFRESH_NETWORK, wxNNIM::OnRefreshNetwork)
 END_EVENT_TABLE()
 
 void wxNNIM::OnServerEvent(wxSocketEvent &event)
@@ -116,14 +117,6 @@ void wxNNIM::OnRefreshContacts(gmEvent& event)
 
 bool wxNNIM::OnInit()
 { 
-/*	m_pAuthLoader = NULL;
-	m_pProtoManager = NULL;
-	m_pContactView = NULL;
-	m_pLoginView = NULL;
-	m_pLogView = NULL;*/
-
-	//m_pLogView = InitLogView(NULL);
-
     m_LogView.reset( InitLogView(NULL) );
 
 	m_LoginView.reset( InitLoginView(NULL) );
@@ -230,41 +223,15 @@ bool wxNNIM::Shutdown() // a callable shutdown command
     m_ProtoManager.reset( NULL );
     m_ContactView.reset( NULL );
     m_LoginView.reset( NULL );
-/*	if (m_pLogView)
-	{
-		m_pLogView->Destroy();
-		m_pLogView = NULL;
-	}*/
-/*
-	if (m_pAuthLoader)
-	{
-		delete m_pAuthLoader;
-		m_pAuthLoader = NULL;
-	}
 
-	if (m_pProtoManager)
-	{
-		delete m_pProtoManager;
-		m_pProtoManager = NULL;
-	}
-
-	if (m_pContactView)
-	{
-		m_pContactView->Destroy();
-		m_pContactView = NULL;
-	}
-
-	if (m_pLoginView)
-	{
-		m_pLoginView->Destroy();
-		m_pLoginView = NULL;
-	}
-*/
 	return true;
 }
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.4  2002/06/14 22:02:24  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
     Revision 1.3  2002/06/10 12:43:25  thementat
     Fixed bug that prevented shutdown (related to auto pointers)
 

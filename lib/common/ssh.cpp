@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: ssh.cpp,v 1.2 2002/06/13 16:38:50 thementat Exp $
+    $Id: ssh.cpp,v 1.3 2002/06/14 22:02:24 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -38,6 +38,7 @@
 #include "crypto/arc4.h"
 #include "crypto/cast.h"
 #include "crypto/idea.h"
+#include "crypto/osrng.h"
 
 using namespace std;
 using namespace CryptoPP;
@@ -59,7 +60,11 @@ SecByteBlock GetMAC( const SecByteBlock& key, int keyLength, const SecByteBlock&
 
     HMAC<T> themac(key, keyLength);
     themac.Update(packet, packet.Size());
-    themac.TruncatedFinal(ret, trun);
+
+    if (trun < themac.DIGESTSIZE)
+        themac.TruncatedFinal(ret, trun);
+    else 
+        themac.Final(ret);
  
     return ret;
 }
@@ -104,13 +109,6 @@ SecByteBlock DoDecrypt( const SecByteBlock& key, int keyLength, const SecByteBlo
                        SecByteBlock& IV, unsigned int blockLength)
 {
   
-    // update remote IV, opposite of encrypt
-
-    if (IV.Size() < blockLength)
-        IV.CleanNew(blockLength);
-
-    for (unsigned int i = 0; i < blockLength; i++)
-        IV[i] = packet[packet.Size() - blockLength + i]; // gets the last block
 
     // create templated cipher
     T cipher(key, keyLength);
@@ -125,9 +123,19 @@ SecByteBlock DoDecrypt( const SecByteBlock& key, int keyLength, const SecByteBlo
     
     dec.Get(ret, ret.Size());
 
+    // update remote IV, opposite of encrypt
+
+    if (IV.Size() < blockLength)
+        IV.CleanNew(blockLength);
+
+    for (unsigned int i = 0; i < blockLength; i++)
+        IV[i] = packet[packet.Size() - blockLength + i]; // gets the last block
+
+
     return ret;
 
 }
+
 
 // transform a real string to a ssh2 (ietf draft pg 6/7) string
 SecByteBlock sshString(const string& str)
@@ -147,9 +155,19 @@ SecByteBlock sshString(const string& str)
     return out;
 }
 
-SSH2::SSH2()
+// returns an mpint as per IETF draft
+//SecByteBlock mpint(
+
+SSH2::SSH2(Protocol * proto, Contact contact)
 {
+    m_proto = proto;
+    m_contact = contact;
     m_sequenceNumber = 0;
+    m_remoteSequenceNumber = 0;
+    m_status = NO_CONNECTION;
+    m_name = NONE;
+    m_macType = NO_HMAC;
+    m_cipherType = NO_CIPHER;
 }
 
 SecByteBlock SSH2::MakeBinaryPacket(const SecByteBlock& payload,
@@ -252,7 +270,7 @@ SecByteBlock SSH2::DecryptPacket(const SecByteBlock& cipher_text)
 
 }
 
-SecByteBlock SSH2::MakeNegotiationPacket()
+SecByteBlock SSH2::MakeNegotiationPacket(bool nextIsGuess)
 {
     /*
       byte      SSH_MSG_KEXINIT
@@ -270,10 +288,91 @@ SecByteBlock SSH2::MakeNegotiationPacket()
   boolean   first_kex_packet_follows
   uint32    0 (reserved for future extension)*/
 
-   //string largeString(
+   
+    // converting all strings to ssh strings
 
+    SecByteBlock kex_algorithms(sshString(KEYX_METHODS));
+    SecByteBlock encryption_algorithms(sshString(CIPHERS));
+    SecByteBlock mac_algorithms(sshString(MAC_ALGORITHMS));
+    SecByteBlock compression_algorithms(sshString(COMPRESSION));
+    SecByteBlock languages(sshString(LANGUAGE));
 
-    return SecByteBlock();
+    // creating large outbound block
+    SecByteBlock kex_packet((kex_algorithms.Size() + encryption_algorithms.Size() + 
+        mac_algorithms.Size() + compression_algorithms.Size() + languages.Size()) * 2 + 22);
+
+    kex_packet[0] = (byte)SSH_MSG_KEXINIT;
+
+    // creating cookie
+    byte cookie[16];
+    AutoSeededRandomPool rng;
+    rng.GenerateBlock(cookie, 16);
+
+    // add cookie
+    uint32 place(1);
+    uint32 tempsize(16);
+
+    memcpy(kex_packet + place, cookie, tempsize);
+    place += tempsize;
+
+    // add kex algorithms twice
+    tempsize = kex_algorithms.Size();
+
+    memcpy(kex_packet + place, kex_algorithms, tempsize);
+    place += tempsize;
+
+    memcpy(kex_packet + place, kex_algorithms, tempsize);
+    place += tempsize;
+
+    // add ciphers twice
+    tempsize = encryption_algorithms.Size();
+    memcpy(kex_packet + place, encryption_algorithms, tempsize);
+    place += tempsize;
+
+    memcpy(kex_packet + place, encryption_algorithms, tempsize);
+    place += tempsize;
+
+    // add macs twice
+    tempsize = mac_algorithms.Size();
+
+    memcpy(kex_packet + place, mac_algorithms, tempsize);
+    place += tempsize;
+
+    memcpy(kex_packet + place, mac_algorithms, tempsize);
+    place += tempsize;
+
+    // add compression algos twice
+    tempsize = compression_algorithms.Size();
+
+    memcpy(kex_packet + place, compression_algorithms, tempsize);
+    place += tempsize;
+
+    place += tempsize;
+    memcpy(kex_packet + place, compression_algorithms, tempsize);
+
+    // add languages twice
+    tempsize = languages.Size();
+
+    memcpy(kex_packet + place, languages, tempsize);
+    place += tempsize;
+
+    memcpy(kex_packet + place, languages, tempsize);
+    place += tempsize;
+
+    if (nextIsGuess)
+        kex_packet[place] = 1; // true, guessed packet to follow
+    else
+        kex_packet[place] = 0;
+
+    kex_packet[place + 1] = (byte)(0 && 0xff);
+    kex_packet[place + 2] = (byte)(0 && 0xff);
+    kex_packet[place + 3] = (byte)(0 && 0xff);
+    kex_packet[place + 4] = (byte)(0 && 0xff);
+
+    if ((place + 5) != kex_packet.Size())
+        throw("kex packet error");
+    
+    return kex_packet;
 
 }
 
@@ -295,6 +394,8 @@ SecByteBlock SSH2::MakeMAC(const SecByteBlock& packet)
     SecByteBlock ToMac(packet.Size() + 4);
 
     uint32 seq(NBO(m_sequenceNumber));
+
+    // adding the sequence number to the packet to do a hmac on
 
     ToMac[0] = (byte)(seq && 0xff);
     ToMac[1] = (byte)((seq >> 8) && 0xff);
@@ -325,33 +426,45 @@ SecByteBlock SSH2::MakeMAC(const SecByteBlock& packet)
 
 bool SSH2::VerifyMAC(const SecByteBlock& packet, const SecByteBlock& hmac)
 {
+
+    SecByteBlock ToMac(packet.Size() + 4);
+
+    uint32 seq(NBO(m_remoteSequenceNumber));
+
+    // adding the sequence number to the packet to do a hmac on
+
+    ToMac[0] = (byte)(seq && 0xff);
+    ToMac[1] = (byte)((seq >> 8) && 0xff);
+    ToMac[2] = (byte)((seq >> 16) && 0xff);
+    ToMac[3] = (byte)((seq >> 24) && 0xff);
+
+    for (uint32 i = 0; i < packet.Size(); i++)
+        ToMac[i+4] = packet[i];
+
     switch (m_remoteMacType)
     {
     case(NO_HMAC): 
         return true; 
         break;
     case (HMAC_SHA1_96): 
-        return CheckMAC<SHA>(m_sessionKey, 20, packet, hmac); break;
+        return CheckMAC<SHA>(m_sessionKey, 20, ToMac, hmac); break;
     case (HMAC_SHA1): 
-        return CheckMAC<SHA>(m_sessionKey, 20, packet, hmac); break;
+        return CheckMAC<SHA>(m_sessionKey, 20, ToMac, hmac); break;
     case (HMAC_MD5):
-        return CheckMAC<MD5>(m_sessionKey, 16, packet, hmac); break;
+        return CheckMAC<MD5>(m_sessionKey, 16, ToMac, hmac); break;
     case (HMAC_MD5_96):
-        return CheckMAC<MD5>(m_sessionKey, 16, packet, hmac); break;
+        return CheckMAC<MD5>(m_sessionKey, 16, ToMac, hmac); break;
     default: throw ("No such MAC available");
     }
-
-
 }
 
 
 SecByteBlock SSH2::CompressPayload(const SecByteBlock& packet)
 {
-    static ZlibCompressor comp; // ietf talks of "partial flush" to the
-                                // compressor so is static (check with crypto++)
+    static ZlibCompressor comp; 
 
     comp.Put(packet, packet.Size());
-    comp.MessageEnd();
+    comp.Flush(true);
 
     SecByteBlock compressed(comp.MaxRetrievable());
     comp.Get(compressed, compressed.Size());
@@ -364,7 +477,7 @@ SecByteBlock SSH2::DecompressPayload(const SecByteBlock& packet)
     static ZlibDecompressor decomp;
 
     decomp.Put(packet, packet.Size());
-    decomp.MessageEnd();
+    decomp.Flush(true);
 
     SecByteBlock decompressed(decomp.MaxRetrievable());
     decomp.Get(decompressed, decompressed.Size());
@@ -372,3 +485,28 @@ SecByteBlock SSH2::DecompressPayload(const SecByteBlock& packet)
     return decompressed;
 }
 
+void SSH2::Receive(const SecByteBlock& inbound)
+{
+    // if no connection yet, only packet can be KEX
+    if (m_status == NO_CONNECTION)
+    {
+        if (inbound.Size() < 4)
+            return;
+
+        uint32 ssh_msg;
+        ssh_msg = (uint32)inbound[0];
+        ssh_msg |= (uint32)(inbound[1] << 8);
+        ssh_msg |= (uint32)(inbound[2] << 16);
+        ssh_msg |= (uint32)(inbound[3] << 24);
+
+        switch (ssh_msg)
+        {
+        case(SSH_MSG_KEXINIT): 
+            m_name = SERVER;
+            m_status = KEX;
+            ProcessKexPacket(inbound);
+            break;
+        default: return;
+        }
+    }
+}

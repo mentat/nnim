@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.cpp,v 1.1 2002/06/06 17:21:30 thementat Exp $
+    $Id: NLogin.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -54,11 +54,11 @@ InitLoginView(wxWindow * parent)
 }
 
 BEGIN_EVENT_TABLE(guiLogin, wxFrame)
-  EVT_MENU(ID_LOGIN_MENU_QUIT, guiLogin::OnQuit)
-  EVT_MENU(ID_LOGIN_MENU_ABOUT, guiLogin::OnAbout)
-  EVT_MENU(ID_LOGIN_MENU_NEWUSER, guiLogin::OnNewUser)
-  EVT_CLOSE(guiLogin::OnCloseWindow)
-  EVT_BUTTON(ID_LOGIN_LOGIN, guiLogin::OnLogin)
+    EVT_MENU(wxNNIM::ID_LOGIN_MENU_QUIT, guiLogin::OnQuit)
+    EVT_MENU(wxNNIM::ID_LOGIN_MENU_ABOUT, guiLogin::OnAbout)
+    EVT_MENU(wxNNIM::ID_LOGIN_MENU_NEWUSER, guiLogin::OnNewUser)
+    EVT_CLOSE(guiLogin::OnCloseWindow)
+    EVT_BUTTON(wxNNIM::ID_LOGIN_LOGIN, guiLogin::OnLogin)
 END_EVENT_TABLE()
 
 guiLogin::guiLogin(const wxString& title, int x, int y, wxWindow * parent)
@@ -75,7 +75,7 @@ guiLogin::guiLogin(const wxString& title, int x, int y, wxWindow * parent)
   wxPanel * panel = new wxPanel(this);
 
   // for some reason this won't show in win98 if not using a wxBitmapButton
-  wxStaticBitmap * bit_butt = new wxStaticBitmap(panel, ID_LOGIN_LOGO, 
+  wxStaticBitmap * bit_butt = new wxStaticBitmap(panel, wxNNIM::ID_LOGIN_LOGO, 
     wxBitmap(nnim_logo_xpm), wxDefaultPosition,wxDefaultSize,wxNO_BORDER);
   
   wxSizer * sizer = NNIMLogin(panel, true,  true);
@@ -84,9 +84,9 @@ guiLogin::guiLogin(const wxString& title, int x, int y, wxWindow * parent)
  
   SetSize(sizer->GetMinSize());
   
-  m_username = static_cast<wxTextCtrl *> (FindWindow(ID_LOGIN_USERNAME));
+  m_username = static_cast<wxTextCtrl *> (FindWindow(wxNNIM::ID_LOGIN_USERNAME));
 	
-  m_password = static_cast<wxTextCtrl *> (FindWindow(ID_LOGIN_PASSWORD));
+  m_password = static_cast<wxTextCtrl *> (FindWindow(wxNNIM::ID_LOGIN_PASSWORD));
 
 /* Generic settings saving via wxWindows config */
 #if 0
@@ -174,7 +174,7 @@ void guiLogin::OnLogin(wxCommandEvent&)
 void guiLogin::NewUser()
 {
   
-  wxWizard * wizard = new wxWizard(this, ID_NEW_USER_WIZARD, wxT("New User Wizard"), wxBitmap(wiz_obsd_fish2_xpm));
+  wxWizard * wizard = new wxWizard(this, wxNNIM::ID_NEW_USER_WIZARD, wxT("New User Wizard"), wxBitmap(wiz_obsd_fish2_xpm));
   wizard->SetBackgroundColour(*wxWHITE);
   UserWizardP1 * page1= new UserWizardP1(wizard);
   UserWizardP2 * page2 = new UserWizardP2(wizard);
@@ -208,7 +208,7 @@ wxSizer *NNIMLogin( wxWindow *parent, bool call_fit, bool set_sizer )
 {
     wxBoxSizer *item0 = new wxBoxSizer( wxVERTICAL );
 
-    wxWindow *item1 = parent->FindWindow( ID_LOGIN_LOGO );
+    wxWindow *item1 = parent->FindWindow( wxNNIM::ID_LOGIN_LOGO );
     wxASSERT( item1 );
     item0->Add( item1, 0, wxALIGN_CENTRE, 5 );
 
@@ -218,18 +218,18 @@ wxSizer *NNIMLogin( wxWindow *parent, bool call_fit, bool set_sizer )
     wxStaticText *item3 = new wxStaticText( parent, -1, wxT("Username:"), wxDefaultPosition, wxDefaultSize, 0 );
     item2->Add( item3, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxTextCtrl *item4 = new wxTextCtrl( parent, ID_LOGIN_USERNAME, "", wxDefaultPosition, wxSize(100,-1), 0 );
+    wxTextCtrl *item4 = new wxTextCtrl( parent, wxNNIM::ID_LOGIN_USERNAME, "", wxDefaultPosition, wxSize(100,-1), 0 );
     item2->Add( item4, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     wxStaticText *item5 = new wxStaticText( parent, -1, wxT("Password:"), wxDefaultPosition, wxDefaultSize, 0 );
     item2->Add( item5, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxTextCtrl *item6 = new wxTextCtrl( parent, ID_LOGIN_PASSWORD, "", wxDefaultPosition, wxSize(100,-1), wxTE_PASSWORD );
+    wxTextCtrl *item6 = new wxTextCtrl( parent, wxNNIM::ID_LOGIN_PASSWORD, "", wxDefaultPosition, wxSize(100,-1), wxTE_PASSWORD );
     item2->Add( item6, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     item0->Add( item2, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
-    wxButton *item7 = new wxButton( parent, ID_LOGIN_LOGIN, wxT("Login"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton *item7 = new wxButton( parent, wxNNIM::ID_LOGIN_LOGIN, wxT("Login"), wxDefaultPosition, wxDefaultSize, 0 );
     item7->SetDefault();
     item0->Add( item7, 0, wxALIGN_CENTRE|wxALL, 5 );
 
@@ -252,13 +252,13 @@ wxMenuBar *myLoginMenuBar()
     wxMenuBar *item0 = new wxMenuBar;
     
     wxMenu* item1 = new wxMenu;
-    item1->Append( ID_LOGIN_MENU_NEWUSER, wxT("New User Wizard\tCtrl-n"), wxT("Run New User Wizard" ));
+    item1->Append( wxNNIM::ID_LOGIN_MENU_NEWUSER, wxT("New User Wizard\tCtrl-n"), wxT("Run New User Wizard" ));
     item1->AppendSeparator();
-    item1->Append( ID_LOGIN_MENU_QUIT, wxT("Quit\tCtrl-x"), "" );
+    item1->Append( wxNNIM::ID_LOGIN_MENU_QUIT, wxT("Quit\tCtrl-x"), "" );
     item0->Append( item1, wxT("File"));
     
     wxMenu* item2 = new wxMenu;
-    item2->Append( ID_LOGIN_MENU_ABOUT, wxT("About NNIM\tCtrl-a"), wxT("About NNIM/KiT") );
+    item2->Append( wxNNIM::ID_LOGIN_MENU_ABOUT, wxT("About NNIM\tCtrl-a"), wxT("About NNIM/KiT") );
     item0->Append( item2, wxT("Help") );
     
     return item0;
@@ -266,8 +266,11 @@ wxMenuBar *myLoginMenuBar()
 /*
     -----
     $Log: NLogin.cpp,v $
-    Revision 1.1  2002/06/06 17:21:30  thementat
-    Initial revision
+    Revision 1.2  2002/06/14 22:02:24  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
+    Revision 1.1.1.1  2002/06/06 17:21:30  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.10  2002/01/17 20:00:51  mentat
     Moved dirs back to normal.

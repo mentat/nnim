@@ -68,18 +68,28 @@
 #define SSH_MSG_USERAUTH_SUCCESS            52
 #define SSH_MSG_USERAUTH_BANNER             53
 
+// DH codes
+#define SSH_MSG_KEX_DH_GEX_REQUEST_OLD  30
+#define SSH_MSG_KEX_DH_GEX_REQUEST      34
+#define SSH_MSG_KEX_DH_GEX_GROUP        31
+#define SSH_MSG_KEX_DH_GEX_INIT         32
+#define SSH_MSG_KEX_DH_GEX_REPLY        33
+
 /// KIM Supported SSH2 methods
 
 #define MAC_ALGORITHMS "hmac-sha1, hmac-sha1-96, hmac-md5, hmac-md5-96, none"
 #define KEYX_METHODS "diffie-hellman-group1-sha1"
-#define PK_CERT_FORMATS "ssh-dss, ssh-rsa, x509v3-sign-rsa, x509v3-sign-dss, spki-sign-rsa, spki-sign-dss, pgp-sign-rsa, pgp-sign-dss"
-#define CIPHERS "3des-cbc, blowfish-cbc, twofish256-cbc, twofish-cbc, twofish192-cbc, twofish128-cbc, aes256-cbc, aes192-cbc, aes128-cbc, serpent256-cbc, serpent192-cbc, serpent128-cbc, arcfour, idea-cbc, cast128-cbc"
-#define COMPRESSION "none, zlib"
+#define PK_CERT_FORMATS "ssh-rsa, ssh-dss, x509v3-sign-rsa, x509v3-sign-dss, spki-sign-rsa, spki-sign-dss, pgp-sign-rsa, pgp-sign-dss"
+#define CIPHERS "twofish256-cbc, 3des-cbc, blowfish-cbc, twofish-cbc, twofish192-cbc, twofish128-cbc, aes256-cbc, aes192-cbc, aes128-cbc, serpent256-cbc, serpent192-cbc, serpent128-cbc, arcfour, idea-cbc, cast128-cbc"
+#define COMPRESSION "zlib, none"
+#define LANGUAGE ""
 
 #define MAX_PACKET_LENGTH 35000
 #define MAX_PAYLOAD_LENGTH 32768
 
 #include "crypto/misc.h"
+#include "protocol.h"
+#include "contact.h"
 #include <string>
 
 using namespace std;
@@ -94,15 +104,14 @@ SecByteBlock sshString(const string& str);
 class SSH2
 {
 public:
-    SSH2();
+    SSH2(Protocol * proto, Contact contact);
     ~SSH2();
     
     SecByteBlock MakeConnection();
 
     /* Decrypts inbound traffic */
-    SecByteBlock Receive(const char * inbound);
-    SecByteBlock Receive(const string& inbound);
-    SecByteBlock Receive(const SecByteBlock& inbound);
+
+    void Receive(const SecByteBlock& inbound);
 
     /* Encrypts outbound traffic */
     SecByteBlock Send(const char * outbound);
@@ -124,7 +133,7 @@ protected:
     SecByteBlock EncryptPacket(const SecByteBlock& packet_minus_mac);
     SecByteBlock DecryptPacket(const SecByteBlock& cipher_text);
 
-    SecByteBlock MakeNegotiationPacket();
+    SecByteBlock MakeNegotiationPacket(bool nextIsGuess = true);
 
     SecByteBlock MakeDisconnectPacket(unsigned long reason_code, const char * description, 
                                               const char * lang_code);
@@ -136,8 +145,10 @@ protected:
     SecByteBlock CompressPayload(const SecByteBlock& packet);
     SecByteBlock DecompressPayload(const SecByteBlock& packet);
 
+    void ProcessKexPacket(const SecByteBlock& packet);
+
     unsigned long IncrementSequence() { 
-        if (m_sequenceNumber == 4294967296) // check with ietf
+        if (m_sequenceNumber == 4294967296) // check with ietf, should be 2^32
             m_sequenceNumber = 0;
         return m_sequenceNumber++;
     }
@@ -150,6 +161,15 @@ protected:
     }
 
 private:
+
+    enum name{ CLIENT, SERVER, NONE };
+    enum status{ NO_CONNECTION, KEX, 
+        DH_GEX_REQUEST, DH_GEX_GROUP, DH_GEX_INIT, DH_GEX_REPLY,
+        READY };
+
+
+    name m_name;
+    status m_status;
 
     uint32 m_remoteSequenceNumber;
     uint32 m_sequenceNumber;
@@ -164,6 +184,9 @@ private:
 
     SecByteBlock m_remoteIV;
     SecByteBlock m_IV;
+
+    Protocol * m_proto;
+    Contact m_contact;
 
 protected:
 

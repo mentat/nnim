@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NInclude.h,v 1.2 2002/06/08 18:34:21 thementat Exp $
+    $Id: NInclude.h,v 1.3 2002/06/14 22:02:23 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -85,103 +85,6 @@ Datatype prefixes are as follows:
 
 #define NNIM_GUI_VER                         wxT("Beta 1.3")
 
-#define SOCKET_ID 6767
-#define SERVER_ID	8888
-
-#define ID_LOG_QUIT                           250
-#define ID_LOG_ENTER                          251
-
-//#define ID_PREF_TREE_CTRL                     301
-#define ID_PREF_GENERAL                       401
-#define ID_PREF_SECURITY                      402
-#define ID_PREF_AIM                           403
-#define ID_PREF_YAHOO                         404
-#define ID_PREF_MSN                           405
-#define ID_PREF_ICQ                           406
-#define ID_PREF_KIT                           407
-#define ID_PREF_PEER                          408
-#define ID_PREF_NETWORKS                      409
-#define ID_PREF_CANCEL                        600
-#define ID_PREF_SAVE                          601
-#define ID_PREF_CONTACTS                      602
-#define ID_PREF_UPDATED                       603
-#define ID_PREF_CONTACT_LIST                  604
-#define ID_PREF_CONTACT_COMBO                 605
-#define ID_PREF_ADDUSER                       606
-          
-//--------------- event IDs -------------------------------
-#define ID_TREE_CONTROL                       1000
-#define ID_TREE_ABOUT                         1001
-#define ID_TREE_CHANGE_STATUS                 1002
-#define ID_TREE_DELETE                        1003
-#define ID_TREE_EDIT                          1004
-#define ID_TREE_ADD_CONTACT                   1005
-#define ID_TREE_ADD_FOLDER                    1006
-#define ID_TREE_RENAME                        1007
-
-#define ID_MENU_QUIT                          100
-#define ID_MENU_ABOUT                         101
-#define ID_MENU_CHECKVERSION                  102
-#define ID_MENU_OPTIONS                       103
-#define ID_MENU_CHATWINDOW                    104
-#define ID_MENU_COMMIT                        105
-#define ID_MENU_LOAD                          106
-#define ID_MENU_CLEAR_CONTACTS                107
-#define ID_MENU_LOGOUT                        108
-#define ID_MENU_CONTACT_EDIT                  109
-#define ID_MENU_START                         110
-
-/* Note to self: these must be dynamic one day... */
-#define ID_MENU_POPUP_KIT                     150
-#define ID_MENU_POPUP_AIM                     151
-#define ID_MENU_POPUP_ICQ                     152
-#define ID_MENU_POPUP_PEER                    153
-
-#define ID_MENU_POPUP_CONNECT                 180
-#define ID_MENU_POPUP_DISCONNECT              181
-#define ID_MENU_POPUP_SERVICES                182
-#define ID_MENU_POPUP_PREFS                   183
-#define ID_MENU_POPUP_WIZARD                  184
-#define ID_MENU_POPUP_ADD_CONTACT             185
-#define ID_MENU_POPUP_QUIT                    186
-
-#define ID_PREF_TREE_CTRL                   10014
-#define ID_PREF_SPLIT                       10015
-#define ID_PREF_BUTT_OK                     10016
-#define ID_PREF_BUTT_CANCEL                 10017
-#define ID_PREF_BUTT_APPLY                  10100
-
-#define ID_CONTACTS_MENU_POPUP_CONNECT      14000
-#define ID_CONTACTS_MENU_POPUP_DISCONNECT   14001
-#define ID_CONTACTS_MENU_POPUP_SERVICES     14002
-#define ID_CONTACTS_MENU_POPUP_PREFS        14003
-#define ID_CONTACTS_MENU_POPUP_WIZARD       14004
-#define ID_CONTACTS_MENU_POPUP_ADD_CONTACT  14005
-#define ID_CONTACTS_MENU_POPUP_QUIT         14006
-#define ID_CONTACTS_MENU_POPUP_TESTCRASH    14007
-#define ID_CONTACTS_MENU_POPUP_ADD_FOLDER   14008
-#define ID_CONTACTS_TASKBAR_RESTORE         13000
-#define ID_CONTACTS_TASKBAR_EXIT            13001
-#define ID_CONTACTS_TASKBAR_HIDE            13002
-#define ID_CONTACTS_MENU_POPUP_UPDATE_DEBUG 13003
-#define ID_CONTACTS_INCOMMING_MESSAGE       13004
-#define ID_CONTACTS_STATUS_CHANGE           13005
-
-#define ID_LOGIN_LOGO                       10000
-#define ID_LOGIN_USERNAME                   10002
-#define ID_LOGIN_PASSWORD                   10004
-#define ID_LOGIN_LOGIN                      10005
-#define ID_LOGIN_MENU_NEWUSER               10075
-#define ID_LOGIN_MENU_QUIT                  10076
-#define ID_LOGIN_MENU_ABOUT                 10077
-
-#define ID_NETWORK_REFRESH_CONTACTS         14000
-#define ID_NETWORK_REFRESH_NETWORK          14001
-
-#define ID_AWAY_WINDOW                      15000
-
-#define ID_NEW_USER_WIZARD                  16000
-
 #define STATUS_OFFLINE                        100
 #define STATUS_ONLINE                         101
 #define STATUS_AWAY                           102
@@ -190,14 +93,6 @@ Datatype prefixes are as follows:
 #define STATUS_FFC                            105
 #define STATUS_FOLDER                         199
 #define STATUS_CUSTOM                         200
-
-#define PREF_TREEITEM_CONTACT               12000
-#define PREF_TREEITEM_FOLDER                12001
-#define PREF_TREEITEM_CONTACTROOT           12002
-#define PREF_TREEITEM_SECURITY              12003
-#define PREF_TREEITEM_NETWORKROOT           12004
-#define PREF_TREEITEM_PLUGINS               12005
-#define PREF_TREEITEM_GENERAL               12006
 
 /* wx Colour Database:
 
@@ -225,23 +120,6 @@ Datatype prefixes are as follows:
 #define COLOUR_FOLDER                         wxT("SKY BLUE")
 
 #define HASH_TABLE_SIZE                       2000
-
-#define CHAT_QUIT                             700
-#define CHAT_ABOUT                            701
-#define CHAT_SEND                             702
-#define SEND_BUTT                             703
-#define ID_NOTEBOOK                           704
-#define TEXT_ENTRY                            705
-#define P2_BROWSE_BUTT                        706
-#define P2_FILESEND_BUTT                      707
-
-
-#define Login_Quit                            800
-#define Login_About                           801
-#define Login_Login                           802
-#define Login_NewUser                         802
-
-
 
 #define TOC_SERVER        "toc.oscar.aol.com"
 #define TOC_SERVER_PORT   "9898"
@@ -287,6 +165,9 @@ template<class T> inline void destroy(T*& p) { delete p; p = 0; }
 /*
     -----
     $Log: NInclude.h,v $
+    Revision 1.3  2002/06/14 22:02:23  thementat
+    Large work on revamping IDs in gui, more SSH2 additions.
+
     Revision 1.2  2002/06/08 18:34:21  thementat
     Added comments and fixed VC7 project dirs
 
