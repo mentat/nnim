@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: buffer.hpp,v 1.3 2002/06/24 12:07:40 thementat Exp $
+    $Id: buffer.hpp,v 1.4 2002/06/25 01:36:03 thementat Exp $
 
     vbuf Class - Extention of STL vector
     Copyright (C) 1999-2002  Jesse Lovelace <jllovela@eos.ncsu.edu>
@@ -112,12 +112,14 @@ public:
             for (i = 0; i < start; i++)
                 itStart++;
 
-        vector<byte>::const_iterator itEnd = begin();
-        if (length != 0)
-            for (i = start; i < (start + length) ; i++)
+        vector<byte>::const_iterator itEnd = itStart;
+        if (length == 0)
+			itEnd = end();
+		else
+            for (i = 0; i < length; i++)
                 itEnd++;
 
-        temp.insert(temp.end(), itStart, itEnd);
+        temp.insert(temp.begin(), itStart, itEnd);
 
         return temp;
     }
