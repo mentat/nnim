@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.8 2002/06/26 04:27:08 thementat Exp $
+    $Id: NMain.cpp,v 1.9 2002/06/27 02:54:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -124,7 +124,7 @@ bool wxNNIM::OnInit()
     m_LogView.reset( InitLogView(NULL) );
 
 	m_LoginView.reset( InitLoginView(NULL) );
-	
+
 	SetTopWindow(m_LoginView.get());
 
 	// Special directory access needs to be gathered from registry/home dir here and passed
@@ -148,10 +148,10 @@ bool wxNNIM::Logout()
 	m_AuthLoader->CommitToFile();
 
     // destroy configuration manager
-	m_AuthLoader.reset( NULL );
+	m_AuthLoader.reset();
 
     // if the contact view exits, destroy it
-	m_ContactView.reset( NULL );
+	m_ContactView.reset();
 
     // recreate the login winodw
 	m_LoginView.reset( InitLoginView(NULL) );
@@ -177,6 +177,8 @@ void wxNNIM::SendNEvent(gmEvent& event)
 {
     wxLogDebug(wxT("wxNNIM::SendEvent"));
     // if Contact view is ok send event
+
+    #if 0
     if (m_ContactView.get() != NULL)
     {
         wxLogDebug(wxT("Sending event..."));
@@ -184,6 +186,7 @@ void wxNNIM::SendNEvent(gmEvent& event)
         return;
     }
     wxLogDebug(wxT("Event not sent..."));
+    #endif
 
 }
 
@@ -191,10 +194,13 @@ bool wxNNIM::Login(bool newUser)
 {
     // create contact window
     m_ContactView.reset(InitContactView(NULL, false) );
+
     SetTopWindow(m_ContactView.get());
 
     // create protocol manager
-    m_ProtoManager.reset ( new wxProtocolManager(this) );
+    m_ProtoManager.reset ( new wxProtocolManager() );
+   // m_ProtoManager->SetEventHandler(*this);
+
 
     // Load all protocol network information into the protocol manager 
     // from the authload class
@@ -229,17 +235,20 @@ wxNNIM::AccessManager()
 bool wxNNIM::Shutdown() // a callable shutdown command
 {
 
-    m_LogView.reset( NULL );
-    m_AuthLoader.reset ( NULL );
-    m_ProtoManager.reset( NULL );
-    m_ContactView.reset( NULL );
-    m_LoginView.reset( NULL );
+    m_LogView.reset();
+    m_AuthLoader.reset ();
+    m_ProtoManager.reset();
+    m_ContactView.reset();
+    m_LoginView.reset();
 
 	return true;
 }
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.9  2002/06/27 02:54:08  thementat
+    Changes to the Event handling.
+
     Revision 1.8  2002/06/26 04:27:08  thementat
     Event fixes.
 

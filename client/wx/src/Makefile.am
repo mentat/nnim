@@ -1,4 +1,4 @@
-CXXFLAGS = `wx-config --cflags` `gtk-config --cflags`
+CXXFLAGS = `wx-config --cflags` `gtk-config --cflags` -D__WXDEBUG__
 LDFLAGS = `wx-config --libs` `gtk-config --libs`
 INCLUDES =  \
     -I../../../crypto -I../../../lib/include \

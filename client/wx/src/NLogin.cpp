@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.cpp,v 1.5 2002/06/26 04:27:08 thementat Exp $
+    $Id: NLogin.cpp,v 1.6 2002/06/27 02:54:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -267,6 +267,9 @@ wxMenuBar *myLoginMenuBar()
 /*
     -----
     $Log: NLogin.cpp,v $
+    Revision 1.6  2002/06/27 02:54:08  thementat
+    Changes to the Event handling.
+
     Revision 1.5  2002/06/26 04:27:08  thementat
     Event fixes.
 

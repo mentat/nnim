@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.5 2002/06/26 04:27:08 thementat Exp $
+    $Id: NContact.cpp,v 1.6 2002/06/27 02:54:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -26,7 +26,6 @@
 
 #include "wx/notebook.h"
 #include "wx/treebase.h"
-
 #include "wx/generic/treectlg.h"
 #include "wx/wizard.h"
 
@@ -45,8 +44,6 @@
 #include "contact.h"
 #include "authload.h"
 #include "protocol.h"
-
-#include "bitmaps/wiz_obsd_fish2.xpm"
 
 wxMenuBar *myContactsMenuBar();
 wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , XMLNode node);
@@ -73,6 +70,7 @@ void ResetContactTree()
 }
 
 BEGIN_EVENT_TABLE(guiContact, wxFrame)
+
 	EVT_IDLE(guiContact::OnIdle)
 	EVT_CLOSE(guiContact::OnCloseWindow)
 
@@ -116,6 +114,7 @@ bool guiContact::RemoveChat(const string& name)
     m_chatWindows.erase(name);
 
     return false;
+
 }
 
 bool guiContact::AddChat(const string& name, guiChat * window)
@@ -182,6 +181,7 @@ void guiContact::OnGetMessage(gmEvent& event)
 }
 
 void guiContact::OnChangeStatus(gmEvent& event)
+
 {
     wxLogDebug(wxT("OnChangeStatus"));
   int treeStatus;
@@ -557,6 +557,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.6  2002/06/27 02:54:08  thementat
+    Changes to the Event handling.
+
     Revision 1.5  2002/06/26 04:27:08  thementat
     Event fixes.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.7 2002/06/26 04:27:08 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.8 2002/06/27 02:54:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -122,7 +122,7 @@ void wxProtocolManager::c_statusChange(const string &proto,const Contact &c)
   gmEvent myEvent(gmEVT_STATUS_CHANGE, wxNNIM::ID_CONTACTS_STATUS_CHANGE);
   myEvent.contact = c;
 
-  SendGMEvent(myEvent);
+  SendEvent(myEvent);
 }
 
 void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, const string &message)
@@ -135,10 +135,11 @@ void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, con
 	myEvent.setServerId(wxString(c.nick().c_str(), wxConvUTF8));
 	myEvent.setMessage(wMessage);
 
-	SendGMEvent(myEvent);
+    //wxLogDebug("Hello");
+	SendEvent(myEvent);
 
-	wxLogMessage(wxString(wxT("Message from ")) + wxString(c.nick().c_str(), wxConvUTF8) + 
-		wxString(wxT(":")) + wMessage );
+	//wxLogDebug(wxString(wxT("Message from ")) + wxString(c.nick().c_str(), wxConvUTF8) +
+		//wxString(wxT(":")) + wMessage );
 }
 
 void wxProtocolManager::c_recvdMessageAnony(const string& proto, const Contact &c, const string& message)
@@ -151,11 +152,12 @@ void wxProtocolManager::c_recvdMessageAnony(const string& proto, const Contact &
 	myEvent.setServerId(c.nick().c_str());
 	myEvent.setMessage(message.c_str());
 
-	SendGMEvent(myEvent);
+    //wxLogDebug("here123");
+	SendEvent(myEvent);
 
-	wxLogMessage(wxString(wxT("Anonymous Message from ")) +
-        wxString(c.nick().c_str()) + wxString(wxT(":")) +
-        wxString(message.c_str())  );
+	//wxLogDebug(wxString(wxT("Anonymous Message from ")) +
+       // wxString(c.nick().c_str()) + wxString(wxT(":")) +
+       // wxString(message.c_str())  );
 }
 
 void wxProtocolManager::c_error(const string &proto,int err_no,const string &error)
@@ -166,27 +168,35 @@ void wxProtocolManager::c_error(const string &proto,int err_no,const string &err
 void wxProtocolManager::c_stateChange(const string &proto,int state)
 {
   if (state==Protocol::S_online)
-    wxLogMessage(wxT("Current state is online"));
+    wxLogDebug(wxT("Current state is online"));
   if (state==Protocol::S_connecting)
-    wxLogMessage(wxT("Current state is connecting"));
+    wxLogDebug(wxT("Current state is connecting"));
   if (state==Protocol::S_offline)
-   wxLogMessage(wxT("Current state is offline"));
+   wxLogDebug(wxT("Current state is offline"));
 }
 
-void wxProtocolManager::SendGMEvent(gmEvent & event)
+void wxProtocolManager::SendEvent(gmEvent & event)
 {
     wxLogDebug(wxT("SendGMEvent"));
 
-    if (m_owner != NULL) {
-        wxLogDebug(wxT("event send ok."));
-        m_owner->SendNEvent(event);
+    if (m_handler) {
+        m_handler->AddPendingEvent(event);
     }
 
-
 }
+
+void wxProtocolManager::SetEventHandler(wxEvtHandler& handler, int id)
+{
+    m_handler = &handler;
+    m_id = id;
+}
+
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.8  2002/06/27 02:54:08  thementat
+    Changes to the Event handling.
+
     Revision 1.7  2002/06/26 04:27:08  thementat
     Event fixes.
 
@@ -201,6 +211,7 @@ void wxProtocolManager::SendGMEvent(gmEvent & event)
 
     Revision 1.3  2002/06/16 04:08:28  thementat
     Hopefully fixed Authload and related classes.
+
 
     Revision 1.2  2002/06/14 22:02:24  thementat
     Large work on revamping IDs in gui, more SSH2 additions.

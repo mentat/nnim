@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.h,v 1.6 2002/06/26 04:27:07 thementat Exp $
+    $Id: NMain.h,v 1.7 2002/06/27 02:54:07 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -57,6 +57,8 @@ public:
 	bool Shutdown();
 
 	AuthLoad& AccessLoader();
+
+
 	ProtocolManager& AccessManager();
 	
 	bool Login(bool newUser = false);
@@ -75,7 +77,6 @@ protected:
 #endif
 
 private:
-
     scoped_ptr<wxFrame> m_LogView;
     scoped_ptr<wxFrame> m_LoginView;
     scoped_ptr<wxFrame> m_ContactView;
@@ -216,6 +217,9 @@ public:
 /*
     -----
     $Log: NMain.h,v $
+    Revision 1.7  2002/06/27 02:54:07  thementat
+    Changes to the Event handling.
+
     Revision 1.6  2002/06/26 04:27:07  thementat
     Event fixes.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.h,v 1.3 2002/06/26 04:27:07 thementat Exp $
+    $Id: NProtocolManager.h,v 1.4 2002/06/27 02:54:07 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -21,6 +21,9 @@
 
     -----
     $Log: NProtocolManager.h,v $
+    Revision 1.4  2002/06/27 02:54:07  thementat
+    Changes to the Event handling.
+
     Revision 1.3  2002/06/26 04:27:07  thementat
     Event fixes.
 
@@ -50,6 +53,10 @@
 #include "protocol.h"
 #include "NEvent.h"
 
+using namespace std;
+
+DECLARE_APP(wxNNIM)
+
 class AuthLoad;
 
 void
@@ -61,11 +68,11 @@ InitProtoManager(AuthLoad & myLoader, ProtocolManager& myMan);
 void 
 AddNet(const wxString& network, AuthLoad * pMyLoader, ProtocolManager *pManager);
 
-class wxProtocolManager: public ProtocolManager
+class wxProtocolManager: public ProtocolManager, public wxObject
 {
 public:
   virtual ~wxProtocolManager();
-  wxProtocolManager(wxNNIM * app = NULL): ProtocolManager(), m_owner(app) {}
+  wxProtocolManager(): ProtocolManager(), m_handler(NULL) { SetEventHandler(wxGetApp()); }
 
   // override the c_* functions you are interested in. hopefully the names should be
   // descriptive enough.
@@ -79,19 +86,22 @@ public:
 
   void c_statusChange(const string &proto,const Contact &c);
 
-  void c_recvdMessage(const string &proto,const Contact &c, const string &message);
-  void c_recvdMessageAnony(const string& proto, const Contact &c, const string& message);
+  virtual void c_recvdMessage(const string &proto,const Contact &c, const string &message);
+  virtual void c_recvdMessageAnony(const string& proto, const Contact &c, const string& message);
 
   void c_error(const string &proto,int err_no,const string &error);
   
   void c_stateChange(const string &proto,int state);
 
-  void SendGMEvent(gmEvent & event);
+  void SendEvent(gmEvent & event);
+
+  void SetEventHandler(wxEvtHandler& handler, int id = -1);
 
   private:
-  wxNNIM * m_owner;
+
+  wxEvtHandler *m_handler;
+  int m_id;
 
 };
-
 
 #endif
