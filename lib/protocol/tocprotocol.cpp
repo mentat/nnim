@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.1 2002/06/06 17:21:50 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.2 2002/06/23 14:50:01 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -31,56 +31,43 @@
 #include <string>
 #include <sstream>
 
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-*/
-// Note: windows has no sleep() because has no unistd, does have a Sleep()
-// declared in windows.h -jll
-
-#ifndef _WIN32
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#else
-#include <winsock.h>
-#endif
-
 #include <basenetwork.h>
 
 #include "log.h"
+#include "dstring.h"
 #include "protocol.h"
 #include "tocprotocol.h"
+#include "crypto/misc.h"
 
 using namespace std;
+using namespace CryptoPP;
 
 class flapHdr {
 public:
   
 	flapHdr() 
 	{ 
-		ast='*';
-		type=2;
-		seq=htons(real_seq++);
-		len=0;
+		m_ast='*';
+		m_type=2;
+		m_seq = byteReverse(real_seq++);
+		m_len=0;
 	}
 
-	unsigned char ast;
-	unsigned char type;
-	unsigned short seq;
-	unsigned short len;
+	unsigned char m_ast;
+	unsigned char m_type;
+	unsigned short m_seq;
+	unsigned short m_len;
 
-	string getHdr()
+	dstring getHdr()
 	{
-		string header;
+		dstring header;
 
-		header[0] = ast;
-		header[1] = type;
-		header[2] = (char)seq;
-		header[3] = (char)((seq >> 8)& 0xff);
-		header[4] = (char)len;
-		header[5] = (char)((len >> 8)& 0xff);
+		header += m_ast;
+		header += m_type;
+		header += (byte) m_seq;
+		header += (byte)((m_seq >> 8)& 0xff);
+		header += (byte) m_len;
+		header += (byte) ((m_len >> 8)& 0xff);
 
 		return header;
 	}
@@ -119,9 +106,9 @@ TocProtocol::aim_encode(const string& s)
   return buf;
 }
 
-string TocProtocol::aim_normalize(const string& s)
+dstring TocProtocol::aim_normalize(const string& s)
 {
-	string buf;
+	dstring buf;
 
 	for (unsigned int i=0; i<s.length(); i++)
 	{
@@ -131,7 +118,7 @@ string TocProtocol::aim_normalize(const string& s)
 	}
 	return buf;
 }
-
+#if 0
 string TocProtocol::roast_password(const string& pass)
 {
 	/* Trivial "encryption" */
@@ -147,17 +134,32 @@ string TocProtocol::roast_password(const string& pass)
 
 	return roastedPassword.str();
 }
+#endif
 
+unsigned char *TocProtocol::roast_password(const char *pass)
+{
+  /* Trivial "encryption" */
+  static char rp[256];
+  static char *roast =  "Tic/Toc";
+  int pos = 2;
+  int x;
 
-void TocProtocol::send_flap(int type, const string& data)
+  strcpy(rp, "0x");
+  for (x = 0; (x < 150) && pass[x]; x++)
+    pos += sprintf(&rp[pos], "%02x", pass[x] ^ roast[x % strlen(roast)]);
+  rp[pos] = '\0';
+  return (unsigned char *) rp;
+}
+
+void TocProtocol::send_flap(int type, const dstring& data)
 {
 	m_net->sendData(return_flap(type, data));
 }
 
-string TocProtocol::return_flap(int type, const string& data)
+dstring TocProtocol::return_flap(int type, const dstring& data)
 {
-// output buffer object
-	stringstream buffer;
+	// output buffer object
+	dstring buffer;
 
 	/*
 	* FLAP Header (6 bytes)
@@ -176,17 +178,17 @@ string TocProtocol::return_flap(int type, const string& data)
 	int len = data.length();
 
 	// set flap type
-	fh.type = type;
+	fh.m_type = type;
 	// put length in network byte order
-	fh.len = htons((short)len);
+	fh.m_len = byteReverse((unsigned short)len);
 
 	// get the header and return it to the output buffer
-	buffer << fh.getHdr().c_str();
+	buffer = fh.getHdr();
 
-	if (len>0)
-		buffer << data;
+	if (len > 0)
+		buffer += data;
 
-	return buffer.str().c_str();
+	return buffer;
 }
 
 void TocProtocol::toc_send_keep_alive()
@@ -287,7 +289,7 @@ void TocProtocol::connectionError(Network *net,int e)
   debug() << "Connection closed!";
   m_net->disconnect();
 
-  for(buddy_t::iterator i=m_buddies.begin();i!=m_buddies.end();i++)
+  for(buddy_t::iterator i=m_buddies.begin(); i!=m_buddies.end(); i++)
   {
     i->second.setStatus(Contact::Offline);
     eventStatusChange(i->second);
@@ -311,10 +313,8 @@ void TocProtocol::signup()
 {
 	debug() << "doing FLAP SIGNON" ;
 
-	send_flap(TYPE_SIGNON, "FLAP SIGNON");
-
 	string normalizedUsername(aim_normalize(m_conf.child("user").property("username")));
-	unsigned short usernameLength = htons(normalizedUsername.length());
+	unsigned short usernameLength = byteReverse((unsigned short)normalizedUsername.length());
 
 	unsigned char postHeader[8];
 	postHeader[0] = 0;
@@ -326,10 +326,10 @@ void TocProtocol::signup()
 	postHeader[6] = (unsigned char) (usernameLength & 0xff);
 	postHeader[7] = (unsigned char) ((usernameLength >> 8) & 0xff);
 	  
-	string msg((char *)postHeader);
+	string msg((char *)postHeader, 8);
 	msg += normalizedUsername;
 
-	string tempFullSignup(return_flap(TYPE_SIGNON, msg));
+	m_net->sendData(msg.c_str(), 8 + normalizedUsername.length());
 
   /*
    * toc_signon <authorizer host> <authorizer port> <User Name> <Password>
@@ -340,11 +340,9 @@ void TocProtocol::signup()
 	buffer << "toc_signon " << m_conf.child("loginserver").property("host") 
 		<< " " << m_conf.child("loginserver").intProperty("port") << " "
 		<< normalizedUsername << " " << roast_password(m_conf.child("user").property("password").c_str())
-		<< " " << "english" << " " << "\"NNIM\"";
+		<< " " << "english" << " " << "\"NNIM\"" << "\0";
 
-	tempFullSignup += return_flap(TYPE_DATA, buffer.str());
-
-	m_net->sendData(tempFullSignup);
+	send_flap(TYPE_SIGNON, buffer.str());
 
 	m_state=S_online;
 }
@@ -420,6 +418,9 @@ void TocProtocol::handleData(Network *net, const string &data)
 	payLoadLength = (unsigned int)data[4];
 	payLoadLength |= (unsigned int)(data[5] << 8);
 
+	// convert to network byte order
+	payLoadLength = byteReverse((unsigned short)payLoadLength);
+
 	// see if payload length is greater then actual payload, 
 	// if so, more on the way
 
@@ -438,8 +439,18 @@ void TocProtocol::handleData(Network *net, const string &data)
 }
 
 void TocProtocol::handleRealData(Network *net, const string& data)
-{	
+{
+
 	string command;
+
+	// if we are connecting, we should just go to signup
+	// but the actual data should be "FLAPON"
+	if (m_state == S_connecting)
+	{
+		signup();
+		return;
+	}
+
 	unsigned int position(data.find(":", 0));
 
 	command = data.substr(0, position-1);
@@ -704,8 +715,11 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
-    Revision 1.1  2002/06/06 17:21:50  thementat
-    Initial revision
+    Revision 1.2  2002/06/23 14:50:01  thementat
+    Work on TOC protocol and new buffer class.
+
+    Revision 1.1.1.1  2002/06/06 17:21:50  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.13  2001/12/17 18:33:42  mentat
     Importing changes for NNIM Beta 1 client.

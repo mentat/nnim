@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.3 2002/06/21 19:38:22 thementat Exp $
+    $Id: NContact.cpp,v 1.4 2002/06/23 14:50:01 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -60,7 +60,7 @@ InitContactView(wxWindow * pParent, bool newUser)
 {
   /* Get window placement/size prefs here */
   
-  guiContact * pMyContact = new guiContact(newUser, pParent, -1, wxT("GM: NNIM"), wxPoint(100, 100), wxSize(200, 400));
+  guiContact * pMyContact = new guiContact(newUser, pParent, -1, wxT("GM: NNIM"), wxPoint(100, 100), wxSize(180, 300));
   pMyContact->Show(TRUE);
   return pMyContact;
 }
@@ -105,6 +105,7 @@ guiContact::guiContact(bool newUser, wxWindow* parent, wxWindowID id, const wxSt
   wxPanel * pTopPanel = new wxPanel(this);
 
   Contacts(pTopPanel, true, true, wxGetApp().AccessLoader().C().GetConfig());
+
 
 }
 
@@ -547,6 +548,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.4  2002/06/23 14:50:01  thementat
+    Work on TOC protocol and new buffer class.
+
     Revision 1.3  2002/06/21 19:38:22  thementat
     Trying to get online...
 

@@ -6,19 +6,21 @@
 #pragma warning(disable:4786)
 #endif
 
-#include "platform.h"
+#include "crypto/misc.h"
 
 #include <vector>
 #include <string>
 #include <iostream>
 
 using namespace std;
+using namespace CryptoPP;
 /// Defines a vector for storing data
 template<class T>
 class myvector: public vector<T>
 {
 public:
   myvector(): vector<T>() ,_data(0) {};
+
   myvector(const string &e): vector<T>() ,_data(0)
   {
     for (unsigned int i=0;i<e.length();i++)
@@ -42,26 +44,27 @@ public:
 
     return _data;
   }
+
   myvector operator+ (const myvector &m)
   {
     myvector tmp(*this);
     tmp.insert(tmp.end(), m.begin(), m.end());
     return tmp;
-  };
+  }
 
   myvector &operator+= (const myvector &m)
   {
     insert(end(), m.begin(), m.end());
     return *this;
-  };
+  }
 
   myvector &append(T _t)
   {
     insert(end(), _t);
     return *this;
-  };
+  }
 
-  int length() const { return size();};
+  int length() const { return size();}
 
   myvector substr(int pos,int n=-1) const
   {
@@ -83,11 +86,13 @@ public:
     tmp.insert(tmp.begin(), b, e);
     return tmp;
   };
+
   friend ostream &operator<< (ostream &o, const myvector &m)
   {
     o << string(m);
     return o;
   };
+
   operator string() const
   {
     return string((char*)data(),sizeof(T)*size());
@@ -97,6 +102,6 @@ private:
 };
 
 /// defines an 8-bit clean string for use in data storage
-typedef myvector<uint8> dstring;
+typedef myvector<byte> dstring;
 
 #endif

@@ -395,6 +395,9 @@
 				RelativePath="include\basenetwork.h">
 			</File>
 			<File
+				RelativePath="include\buffer.hpp">
+			</File>
+			<File
 				RelativePath="include\contact.h">
 			</File>
 			<File

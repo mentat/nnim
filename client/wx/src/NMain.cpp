@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.6 2002/06/20 16:21:56 thementat Exp $
+    $Id: NMain.cpp,v 1.7 2002/06/23 14:50:01 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -71,7 +71,10 @@ void wxNNIM::OnSocketEvent(wxSocketEvent &event)
 {
 
     if (!m_ContactView.get() || !m_ProtoManager.get())
+	{
+		wxLogError(wxT("Error in OnSocketEvent"));
         return;
+	}
 
     wxNetwork * inboundSocket(NULL);
 
@@ -230,6 +233,9 @@ bool wxNNIM::Shutdown() // a callable shutdown command
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.7  2002/06/23 14:50:01  thementat
+    Work on TOC protocol and new buffer class.
+
     Revision 1.6  2002/06/20 16:21:56  thementat
     Many GCC fixes and updates to configure engine.
 

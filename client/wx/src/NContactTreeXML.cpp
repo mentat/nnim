@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTreeXML.cpp,v 1.4 2002/06/20 16:21:56 thementat Exp $
+    $Id: NContactTreeXML.cpp,v 1.5 2002/06/23 14:50:01 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -285,16 +285,24 @@ void NContactTreeXML::OnItemActivated(wxTreeEvent& event)
 		return;
 	}
 
+	if (item == GetRootItem())
+		event.Veto();
+
 	if (((MyTreeItemData *)GetItemData(item))->GetStatus() == STATUS_FOLDER)
 	{
 		wxLogDebug(wxT("item is folder"));
 
 		if (HasChildren(item))
+		{
 			wxLogDebug(wxT("item has child"));
-		if (IsExpanded(item))
-			Collapse(item);
-		else
-			Expand(item);
+		
+			if (IsExpanded(item))
+				Collapse(item);
+			else
+				Expand(item);
+		}
+		else 
+			event.Veto();
 	}
 }
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NSocket.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NSocket.cpp,v 1.3 2002/06/23 14:50:01 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -20,7 +20,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-
+#include <string>
 #include "NInclude.h"
 
 #include <wx/string.h>
@@ -32,6 +32,8 @@
 #include "NSocket.h"
 
 #include "protocol.h"
+
+using namespace std;
 
 wxString ConvertString(const char * data, int len)
 {
@@ -119,8 +121,8 @@ void wxNetwork::socketData(string &data)
   SetTimeout(1);
   SetFlags(wxSOCKET_NONE);
 
-  vector<char> dataBuffer;
-  int lCount = 0, it = 0;
+  string dataBuffer;
+  unsigned int lCount = 0, it = 0;
 
   char charBuffer[READ_CHUNK_SIZE];
 
@@ -128,10 +130,7 @@ void wxNetwork::socketData(string &data)
 
   lCount = LastCount();
 
-  for (it = 0; it < lCount; it++)
-  {
-    dataBuffer.push_back(charBuffer[it]);
-  }
+  dataBuffer += string(charBuffer, lCount);
   wxLogMessage(wxString(wxT("Receive LCount is: ")) + WXITOA(lCount));
   
   while (READ_CHUNK_SIZE == lCount)
@@ -140,19 +139,14 @@ void wxNetwork::socketData(string &data)
     Read(charBuffer, READ_CHUNK_SIZE);
     lCount = LastCount();
 
-    for (it = 0; it < lCount; it++)
-    {
-      dataBuffer.push_back(charBuffer[it]);
-    }
+    dataBuffer += string(charBuffer, lCount);
+    
     wxLogMessage(wxString(wxT("Receive LCount is: ")) + WXITOA(lCount));
   }
 
   unsigned long int len = dataBuffer.size();
 
-  for(it = 0; it < len; it++)
-  {
-    data[it] = dataBuffer[it];
-  }
+  data = dataBuffer;
 
 #undef READ_CHUNK_SIZE
 }
@@ -224,7 +218,7 @@ void wxNetwork::checkForData()
     return;
   }
 
-  wxLogMessage(wxString(wxT("Receiving: ")) + wxString(buf.c_str(), wxConvUTF8));
+  wxLogMessage(wxString(wxT("Receiving: ")) + ConvertString(buf.c_str(), buf.length()));
 
 
   if (owner)

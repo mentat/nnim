@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NUserWiz.cpp,v 1.3 2002/06/21 19:03:15 thementat Exp $
+    $Id: NUserWiz.cpp,v 1.4 2002/06/23 14:50:01 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -134,9 +134,9 @@ void UserWizardP2::OnAddNet(wxCommandEvent &event)
   else
     prompt.Printf(wxT("What is your screen-name\non %s Network"), listbox->GetStringSelection());
   
-  wxString screenname = wxGetTextFromUser(prompt, wxT("Contact Information"),"", this);
+  wxString screenname = wxGetTextFromUser(prompt, wxT("Contact Information"),wxT(""), this);
 
-  if (screenname == "")
+  if (screenname.IsEmpty())
     return;
 
   long fingstr = listctrl->FindItem(-1, screenname);
@@ -200,9 +200,7 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 	wxString uname = ((UserWizardP1 *)GetPrev())->name->GetValue();
 	wxString pword = ((UserWizardP1 *)GetPrev())->p1->GetValue();
 
-	SecByteBlock pass((const unsigned char *)pword.c_str(), 
-
-		pword.length());
+	SecByteBlock pass((const unsigned char *)pword.c_str(), pword.length());
     
 	AuthLoad &myLoader = wxGetApp().AccessLoader();
 
@@ -212,11 +210,6 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 	}
 
 	wxMessageBox(uname + pword);
-
-	//try to get password value out of memory, dont know of the actual value of this
-	pword = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-	((UserWizardP1 *)GetPrev())->p1->SetValue("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-  
 
   // load defaults
 	XMLNode toc, msn, yahoo, kit, icq;
@@ -266,8 +259,10 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 		default: wxASSERT(false); break;
 		}
 
+		wxLogDebug(listctrl->GetItemText(it).c_str());
+
 		tmp.child("user").setProperty("username", listctrl->GetItemText(it).c_str());
-		tmp.child("user").setProperty("password", (const char *)(void *)m_pwords[it]);
+		tmp.child("user").setProperty("password", string((const char *)(const unsigned char *)m_pwords[it], m_pwords[it].Size()));
       
 	}
 
@@ -290,6 +285,9 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 /*
     -----
     $Log: NUserWiz.cpp,v $
+    Revision 1.4  2002/06/23 14:50:01  thementat
+    Work on TOC protocol and new buffer class.
+
     Revision 1.3  2002/06/21 19:03:15  thementat
     NNIM compiles and links in gcc 2.96 20000731
 

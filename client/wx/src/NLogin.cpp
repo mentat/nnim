@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
+    $Id: NLogin.cpp,v 1.3 2002/06/23 14:50:01 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -30,7 +30,7 @@
 #include "NAbout.h"
 #include "NUserWiz.h"
 
-#include "bitmaps/nnim_logo.xpm"
+#include "bitmaps/nnim_logo_botch.xpm"
 #include "bitmaps/wiz_obsd_fish2.xpm"
 
 #include "authload.h"
@@ -76,7 +76,7 @@ guiLogin::guiLogin(const wxString& title, int x, int y, wxWindow * parent)
 
   // for some reason this won't show in win98 if not using a wxBitmapButton
   wxStaticBitmap * bit_butt = new wxStaticBitmap(panel, wxNNIM::ID_LOGIN_LOGO, 
-    wxBitmap(nnim_logo_xpm), wxDefaultPosition,wxDefaultSize,wxNO_BORDER);
+    wxBitmap(nnim_logo_botch_xpm), wxDefaultPosition,wxDefaultSize,wxNO_BORDER);
   
   wxSizer * sizer = NNIMLogin(panel, true,  true);
   
@@ -266,6 +266,9 @@ wxMenuBar *myLoginMenuBar()
 /*
     -----
     $Log: NLogin.cpp,v $
+    Revision 1.3  2002/06/23 14:50:01  thementat
+    Work on TOC protocol and new buffer class.
+
     Revision 1.2  2002/06/20 01:25:00  thementat
     Removed unicode for the time being to fix linux build.
 

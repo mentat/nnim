@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.4 2002/06/20 01:25:00 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.5 2002/06/23 14:50:01 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -19,14 +19,13 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
+#include <string>
 #include "NInclude.h"
 
 #include "NProtocolManager.h"
 #include "NSocket.h"
 #include "NMain.h"
 #include "NEvent.h"
-
 
 #include "basenetwork.h"
 #include "manager.h"
@@ -35,6 +34,8 @@
 #include "tocprotocol.h"
 #include "msnprotocol.h"
 #include "yahooprotocol.h"
+
+using namespace std;
 
 DECLARE_APP(wxNNIM)
 
@@ -156,6 +157,9 @@ void wxProtocolManager::c_stateChange(const string &proto,int state)
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.5  2002/06/23 14:50:01  thementat
+    Work on TOC protocol and new buffer class.
+
     Revision 1.4  2002/06/20 01:25:00  thementat
     Removed unicode for the time being to fix linux build.
 

@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="e:\cvs\wxWindows\include;include\;..\..\lib\include;..\..\lib\common;..\..\lib\protocol;..\..\lib\protocol\msn;..\..\lib\protocol\icq;..\.."
+				AdditionalIncludeDirectories="e:\wxWindows\include;include\;..\..\lib\include;..\..\lib\common;..\..\lib\protocol;..\..\lib\protocol\msn;..\..\lib\protocol\icq;..\.."
 				PreprocessorDefinitions="_DEBUG,WIN32,_WINDOWS,WINVER=0x400,_MT,wxUSE_GUI=1,__WXDEBUG__,__WXMSW__,__WIN32__"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -32,10 +32,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cryptlib.lib libGM.lib wxmswd.lib zlibd.lib jpegd.lib pngd.lib regexd.lib tiffd.lib"
+				AdditionalDependencies="comctl32.lib rpcrt4.lib wsock32.lib cryptlib.lib libGM.lib wxmswd.lib zlibd.lib jpegd.lib pngd.lib regexd.lib tiffd.lib"
 				OutputFile="$(OutDir)/nnim.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="e:/cvs/wxWindows/lib,../../lib/debug/, ../../crypto/debug"
+				AdditionalLibraryDirectories="e:/wxWindows/lib,../../lib/debug/, ../../crypto/debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/nnim.pdb"
 				SubSystem="2"
@@ -49,7 +49,8 @@
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="e:/wxWindows/include"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -143,12 +144,6 @@
 			</File>
 			<File
 				RelativePath="src\NContactTreeXML.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="src\NContactWiz.cpp">
@@ -341,6 +336,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="src\vc\resource.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
