@@ -80,8 +80,8 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 INCLUDES = -I. -I../../include -I../../../ -I../
-noinst_LIBRARIES = libicq.a
-libicq_a_SOURCES = fnacbospackets.cpp \
+noinst_LTLIBRARIES = libicq.la
+libicq_la_SOURCES = fnacbospackets.cpp \
 	fnacbudpackets.cpp \
 	fnacbudpackets.h \
 	fnacgenpackets.cpp \
@@ -116,19 +116,17 @@ libicq_a_SOURCES = fnacbospackets.cpp \
 subdir = lib/protocol/icq
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
 
-libicq_a_AR = $(AR) cru
-libicq_a_LIBADD =
-am_libicq_a_OBJECTS = fnacbospackets.$(OBJEXT) fnacbudpackets.$(OBJEXT) \
-	fnacgenpackets.$(OBJEXT) fnacicqpackets.$(OBJEXT) \
-	fnaclocpackets.$(OBJEXT) fnacmsgpackets.$(OBJEXT) \
-	fnacpacket.$(OBJEXT) icqprotocol.$(OBJEXT) packet.$(OBJEXT) \
-	packets.$(OBJEXT) parsefnacbos.$(OBJEXT) parsefnacbud.$(OBJEXT) \
-	parsefnac.$(OBJEXT) parsefnacgen.$(OBJEXT) \
-	parsefnacicq.$(OBJEXT) parsefnacmsg.$(OBJEXT) \
-	parsepacket.$(OBJEXT) stdpackets.$(OBJEXT) util.$(OBJEXT)
-libicq_a_OBJECTS = $(am_libicq_a_OBJECTS)
+libicq_la_LDFLAGS =
+libicq_la_LIBADD =
+am_libicq_la_OBJECTS = fnacbospackets.lo fnacbudpackets.lo \
+	fnacgenpackets.lo fnacicqpackets.lo fnaclocpackets.lo \
+	fnacmsgpackets.lo fnacpacket.lo icqprotocol.lo packet.lo \
+	packets.lo parsefnacbos.lo parsefnacbud.lo parsefnac.lo \
+	parsefnacgen.lo parsefnacicq.lo parsefnacmsg.lo parsepacket.lo \
+	stdpackets.lo util.lo
+libicq_la_OBJECTS = $(am_libicq_la_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir)
@@ -136,18 +134,21 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/fnacbospackets.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fnacbudpackets.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fnacgenpackets.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fnacicqpackets.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fnaclocpackets.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fnacmsgpackets.Po $(DEPDIR)/fnacpacket.Po \
-@AMDEP_TRUE@	$(DEPDIR)/icqprotocol.Po $(DEPDIR)/packet.Po \
-@AMDEP_TRUE@	$(DEPDIR)/packets.Po $(DEPDIR)/parsefnac.Po \
-@AMDEP_TRUE@	$(DEPDIR)/parsefnacbos.Po $(DEPDIR)/parsefnacbud.Po \
-@AMDEP_TRUE@	$(DEPDIR)/parsefnacgen.Po $(DEPDIR)/parsefnacicq.Po \
-@AMDEP_TRUE@	$(DEPDIR)/parsefnacmsg.Po $(DEPDIR)/parsepacket.Po \
-@AMDEP_TRUE@	$(DEPDIR)/stdpackets.Po $(DEPDIR)/util.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/fnacbospackets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/fnacbudpackets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/fnacgenpackets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/fnacicqpackets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/fnaclocpackets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/fnacmsgpackets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/fnacpacket.Plo $(DEPDIR)/icqprotocol.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/packet.Plo $(DEPDIR)/packets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/parsefnac.Plo $(DEPDIR)/parsefnacbos.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/parsefnacbud.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/parsefnacgen.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/parsefnacicq.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/parsefnacmsg.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/parsepacket.Plo $(DEPDIR)/stdpackets.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/util.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -165,9 +166,9 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(libicq_a_SOURCES)
+DIST_SOURCES = $(libicq_la_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(libicq_a_SOURCES)
+SOURCES = $(libicq_la_SOURCES)
 
 all: all-am
 
@@ -190,14 +191,10 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 
-AR = ar
-
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libicq.a: $(libicq_a_OBJECTS) $(libicq_a_DEPENDENCIES) 
-	-rm -f libicq.a
-	$(libicq_a_AR) libicq.a $(libicq_a_OBJECTS) $(libicq_a_LIBADD)
-	$(RANLIB) libicq.a
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+libicq.la: $(libicq_la_OBJECTS) $(libicq_la_DEPENDENCIES) 
+	$(CXXLINK)  $(libicq_la_LDFLAGS) $(libicq_la_OBJECTS) $(libicq_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -205,25 +202,25 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacbospackets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacbudpackets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacgenpackets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacicqpackets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnaclocpackets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacmsgpackets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacpacket.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/icqprotocol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/packet.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/packets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnac.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacbos.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacbud.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacgen.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacicq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacmsg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsepacket.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stdpackets.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/util.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacbospackets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacbudpackets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacgenpackets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacicqpackets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnaclocpackets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacmsgpackets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnacpacket.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/icqprotocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/packet.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/packets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnac.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacbos.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacbud.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacgen.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacicq.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsefnacmsg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parsepacket.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stdpackets.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/util.Plo@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
@@ -303,7 +300,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LTLIBRARIES)
 
 installdirs:
 
@@ -332,7 +329,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
+clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -370,15 +367,16 @@ mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 uninstall-am: uninstall-info-am
 
 .PHONY: GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstLIBRARIES distclean distclean-compile \
-	distclean-depend distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am info info-am install \
-	install-am install-data install-data-am install-exec \
-	install-exec-am install-info install-info-am install-man \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	tags uninstall uninstall-am uninstall-info-am
+	clean-libtool clean-noinstLTLIBRARIES distclean \
+	distclean-compile distclean-depend distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am info \
+	info-am install install-am install-data install-data-am \
+	install-exec install-exec-am install-info install-info-am \
+	install-man install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool tags uninstall uninstall-am \
+	uninstall-info-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

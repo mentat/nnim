@@ -36,7 +36,7 @@ oldincludedir = /usr/include
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-top_builddir = ../../..
+top_builddir = ../..
 
 ACLOCAL = @ACLOCAL@
 AUTOCONF = @AUTOCONF@
@@ -79,34 +79,21 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
-INCLUDES = -Iinclude
+INCLUDES = -I. -I../include -I../../
 
-noinst_LTLIBRARIES = libexpat.la
+noinst_LTLIBRARIES = libcert.la
+libcert_la_SOURCES = gmstorage.cpp platform.h securecomm.cpp sign.cpp
 
-libexpat_la_SOURCES = gennmtab.c \
-	hashtable.c \
-	xmlparse.c \
-	xmlrole.c \
-	xmltok.c 
-
-
-CFLAGS = -g -Wall
-
-EXTRA_DIST = xmltok_impl.c xmltok_ns.c \
-include/asciitab.h   include/iasciitab.h  include/nametab.h  include/xmldef.h \
-include/xmlrole.h    include/xmltok_impl.h include/hashtable.h  include/latin1tab.h \
-include/utf8tab.h  include/xmlparse.h  include/xmltok.h
-
-subdir = lib/common/expat
+EXTRA_DIST = test.cpp
+subdir = lib/certificates
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 
-libexpat_la_LDFLAGS =
-libexpat_la_LIBADD =
-am_libexpat_la_OBJECTS = gennmtab.lo hashtable.lo xmlparse.lo xmlrole.lo \
-	xmltok.lo
-libexpat_la_OBJECTS = $(am_libexpat_la_OBJECTS)
+libcert_la_LDFLAGS =
+libcert_la_LIBADD =
+am_libcert_la_OBJECTS = gmstorage.lo securecomm.lo sign.lo
+libcert_la_OBJECTS = $(am_libcert_la_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir)
@@ -114,9 +101,18 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/gennmtab.Plo $(DEPDIR)/hashtable.Plo \
-@AMDEP_TRUE@	$(DEPDIR)/xmlparse.Plo $(DEPDIR)/xmlrole.Plo \
-@AMDEP_TRUE@	$(DEPDIR)/xmltok.Plo
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/gmstorage.Plo $(DEPDIR)/securecomm.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/sign.Plo
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+CXXFLAGS = @CXXFLAGS@
+CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -124,14 +120,14 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(libexpat_la_SOURCES)
+DIST_SOURCES = $(libcert_la_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(libexpat_la_SOURCES)
+SOURCES = $(libcert_la_SOURCES)
 
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .cpp .lo .o .obj
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -143,7 +139,7 @@ distclean-libtool:
 	-rm -f libtool
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  lib/common/expat/Makefile
+	  $(AUTOMAKE) --gnu  lib/certificates/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
@@ -151,8 +147,8 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 
 clean-noinstLTLIBRARIES:
 	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
-libexpat.la: $(libexpat_la_OBJECTS) $(libexpat_la_DEPENDENCIES) 
-	$(LINK)  $(libexpat_la_LDFLAGS) $(libexpat_la_OBJECTS) $(libexpat_la_LIBADD) $(LIBS)
+libcert.la: $(libcert_la_OBJECTS) $(libcert_la_DEPENDENCIES) 
+	$(CXXLINK)  $(libcert_la_LDFLAGS) $(libcert_la_OBJECTS) $(libcert_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -160,33 +156,31 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gennmtab.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hashtable.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmlparse.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmlrole.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmltok.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gmstorage.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/securecomm.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sign.Plo@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
 
-.c.o:
+.cpp.o:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c `test -f $< || echo '$(srcdir)/'`$<
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
-.c.obj:
+.cpp.obj:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c `cygpath -w $<`
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
 
-.c.lo:
+.cpp.lo:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(LTCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
-CCDEPMODE = @CCDEPMODE@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
 
 tags: TAGS
@@ -223,11 +217,10 @@ distclean-tags:
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-top_distdir = ../../..
+top_distdir = ../..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
-	$(mkinstalldirs) $(distdir)/include
 	@for file in $(DISTFILES); do \
 	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \

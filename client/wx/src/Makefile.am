@@ -1,4 +1,6 @@
-INCLUDES = `wx-config --cflags` \
+CXXFLAGS = `wx-config --cflags` `gtk-config --cflags`
+LDFLAGS = `wx-config --libs` `gtk-config --libs`
+INCLUDES =  \
     -I../../../crypto -I../../../lib/include \
     -I../include -I../../../lib/protocol/msn \
 	-I../../../lib/protocol/icq \
@@ -30,9 +32,5 @@ NTreeCtrlXML.cpp  \
 NUserWiz.cpp      \
 NWizards_wdr.cpp
 
-nnim_LDADD = ../../../lib/libGM.a ../../../crypto/libcryptopp.a
+nnim_LDADD = ../../../lib/libGM.la ../../../crpyto/libcryptopp.a
 
-
-
-LDFLAGS = `wx-config --libs` \
-	-L../../../crypto -L$(GMDIR)

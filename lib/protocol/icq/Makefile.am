@@ -1,6 +1,6 @@
 INCLUDES = -I. -I../../include -I../../../ -I../
-noinst_LIBRARIES = libicq.a
-libicq_a_SOURCES = fnacbospackets.cpp \
+noinst_LTLIBRARIES = libicq.la
+libicq_la_SOURCES = fnacbospackets.cpp \
 	fnacbudpackets.cpp \
 	fnacbudpackets.h \
 	fnacgenpackets.cpp \

@@ -79,27 +79,27 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
-MAINTAINERCLEANFILES = Makefile.in
 SUBDIRS = expat
+
 CXXFLAGS = -g
 INCLUDES = -I../../ -I../include
-noinst_LIBRARIES = libcommon.a
-libcommon_a_SOURCES = auth_contact.cpp auth_global.cpp auth_user.cpp \
+
+noinst_LTLIBRARIES = libcommon.la
+libcommon_la_SOURCES = auth_contact.cpp auth_global.cpp auth_user.cpp \
 	authload.cpp contact.cpp cryptography.cpp expat.cpp log.cpp \
 	xml.cpp xmlnode.cpp
 
 subdir = lib/common
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
 
-libcommon_a_AR = $(AR) cru
-libcommon_a_LIBADD =
-am_libcommon_a_OBJECTS = auth_contact.$(OBJEXT) auth_global.$(OBJEXT) \
-	auth_user.$(OBJEXT) authload.$(OBJEXT) contact.$(OBJEXT) \
-	cryptography.$(OBJEXT) expat.$(OBJEXT) log.$(OBJEXT) \
-	xml.$(OBJEXT) xmlnode.$(OBJEXT)
-libcommon_a_OBJECTS = $(am_libcommon_a_OBJECTS)
+libcommon_la_LDFLAGS =
+libcommon_la_LIBADD =
+am_libcommon_la_OBJECTS = auth_contact.lo auth_global.lo auth_user.lo \
+	authload.lo contact.lo cryptography.lo expat.lo log.lo xml.lo \
+	xmlnode.lo
+libcommon_la_OBJECTS = $(am_libcommon_la_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir)
@@ -107,12 +107,12 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/auth_contact.Po \
-@AMDEP_TRUE@	$(DEPDIR)/auth_global.Po $(DEPDIR)/auth_user.Po \
-@AMDEP_TRUE@	$(DEPDIR)/authload.Po $(DEPDIR)/contact.Po \
-@AMDEP_TRUE@	$(DEPDIR)/cryptography.Po $(DEPDIR)/expat.Po \
-@AMDEP_TRUE@	$(DEPDIR)/log.Po $(DEPDIR)/xml.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xmlnode.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/auth_contact.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/auth_global.Plo $(DEPDIR)/auth_user.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/authload.Plo $(DEPDIR)/contact.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/cryptography.Plo $(DEPDIR)/expat.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/log.Plo $(DEPDIR)/xml.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/xmlnode.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -121,7 +121,7 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(libcommon_a_SOURCES)
+DIST_SOURCES = $(libcommon_la_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-info-recursive all-recursive install-data-recursive \
@@ -129,7 +129,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = Makefile.am Makefile.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(libcommon_a_SOURCES)
+SOURCES = $(libcommon_la_SOURCES)
 
 all: all-recursive
 
@@ -152,14 +152,10 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 
-AR = ar
-
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libcommon.a: $(libcommon_a_OBJECTS) $(libcommon_a_DEPENDENCIES) 
-	-rm -f libcommon.a
-	$(libcommon_a_AR) libcommon.a $(libcommon_a_OBJECTS) $(libcommon_a_LIBADD)
-	$(RANLIB) libcommon.a
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+libcommon.la: $(libcommon_la_OBJECTS) $(libcommon_la_DEPENDENCIES) 
+	$(CXXLINK)  $(libcommon_la_LDFLAGS) $(libcommon_la_OBJECTS) $(libcommon_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -167,16 +163,16 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/auth_contact.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/auth_global.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/auth_user.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/authload.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/contact.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cryptography.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/expat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/log.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xml.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmlnode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/auth_contact.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/auth_global.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/auth_user.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/authload.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/contact.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cryptography.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/expat.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/log.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xml.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmlnode.Plo@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
@@ -329,7 +325,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LTLIBRARIES)
 installdirs: installdirs-recursive
 installdirs-am:
 
@@ -356,10 +352,9 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-recursive
 
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
+clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-recursive
@@ -399,7 +394,7 @@ uninstall-am: uninstall-info-am
 uninstall-info: uninstall-info-recursive
 
 .PHONY: $(RECURSIVE_TARGETS) GTAGS all all-am check check-am clean \
-	clean-generic clean-libtool clean-noinstLIBRARIES \
+	clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	clean-recursive distclean distclean-compile distclean-depend \
 	distclean-generic distclean-libtool distclean-recursive \
 	distclean-tags distdir dvi dvi-am dvi-recursive info info-am \

@@ -79,7 +79,9 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
-INCLUDES = `wx-config --cflags` \
+CXXFLAGS = `wx-config --cflags` `gtk-config --cflags`
+LDFLAGS = `wx-config --libs` `gtk-config --libs`
+INCLUDES = \
     -I../../../crypto -I../../../lib/include \
     -I../include -I../../../lib/protocol/msn \
 	-I../../../lib/protocol/icq \
@@ -113,11 +115,7 @@ NUserWiz.cpp      \
 NWizards_wdr.cpp
 
 
-nnim_LDADD = ../../../lib/libGM.a ../../../crypto/libcryptopp.a
-
-LDFLAGS = `wx-config --libs` \
-	-L../../../crypto -L$(GMDIR)
-
+nnim_LDADD = ../../../lib/libGM.la ../../../crpyto/libcryptopp.a
 subdir = client/wx/src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
@@ -134,7 +132,7 @@ am_nnim_OBJECTS = NAbout.$(OBJEXT) NAutoTxt.$(OBJEXT) NChat.$(OBJEXT) \
 	NTreeCtrlXML.$(OBJEXT) NUserWiz.$(OBJEXT) \
 	NWizards_wdr.$(OBJEXT)
 nnim_OBJECTS = $(am_nnim_OBJECTS)
-nnim_DEPENDENCIES = ../../../lib/libGM.a ../../../crypto/libcryptopp.a
+nnim_DEPENDENCIES = ../../../lib/libGM.la ../../../crpyto/libcryptopp.a
 nnim_LDFLAGS =
 
 DEFS = @DEFS@
@@ -162,7 +160,6 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-CXXFLAGS = @CXXFLAGS@
 DIST_SOURCES = $(nnim_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
 SOURCES = $(nnim_SOURCES)

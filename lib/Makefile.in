@@ -80,27 +80,37 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 EXTRA_DIST = XMLSpec.xml libGM.sln libGM.vcproj
-SUBDIRS = common protocol
+SUBDIRS = certificates common protocol
 
-lib_LIBRARIES = libGM.a
-libGM_a_SOURCES = null.c
-libGM_a_LIBADD = common/libcommon.a \
-		common/expat/libexpat.a \
-		protocol/libprotocol.a \
-		protocol/icq/libicq.a \
-		protocol/msn/libmsn.a
+include_HEADERS = include/authload.h include/basenetwork.h include/contact.h \
+ include/cryptography.h include/dstring.h include/expat.h include/globals.h \
+ include/gmException.h include/gmstorage.h include/icqprotocol.h \
+ include/kitprotocol.h include/log.h include/manager.h include/msnprotocol.h \
+ include/nnimprotocol.h include/peerprotocol.h include/platform.h \
+ include/protocol.h include/securecomm.h include/sign.h include/ssh.h \
+ include/tocprotocol.h include/WString.h include/xml.h include/xmlnode.h \
+ include/yahooprotocol.h	
+
+
+lib_LTLIBRARIES = libGM.la
+libGM_la_SOURCES = null.c
+libGM_la_LIBADD = common/libcommon.la \
+		common/expat/libexpat.la \
+		protocol/libprotocol.la \
+		protocol/icq/libicq.la \
+		protocol/msn/libmsn.la
 
 subdir = lib
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
-LIBRARIES = $(lib_LIBRARIES)
+LTLIBRARIES = $(lib_LTLIBRARIES)
 
-libGM_a_AR = $(AR) cru
-libGM_a_DEPENDENCIES = common/libcommon.a common/expat/libexpat.a \
-	protocol/libprotocol.a protocol/icq/libicq.a \
-	protocol/msn/libmsn.a
-am_libGM_a_OBJECTS = null.$(OBJEXT)
-libGM_a_OBJECTS = $(am_libGM_a_OBJECTS)
+libGM_la_LDFLAGS =
+libGM_la_DEPENDENCIES = common/libcommon.la common/expat/libexpat.la \
+	protocol/libprotocol.la protocol/icq/libicq.la \
+	protocol/msn/libmsn.la
+am_libGM_la_OBJECTS = null.lo
+libGM_la_OBJECTS = $(am_libGM_la_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir)
@@ -108,7 +118,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/null.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/null.Plo
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -117,15 +127,17 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 CFLAGS = @CFLAGS@
-DIST_SOURCES = $(libGM_a_SOURCES)
+DIST_SOURCES = $(libGM_la_SOURCES)
+HEADERS = $(include_HEADERS)
+
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-info-recursive all-recursive install-data-recursive \
 	install-exec-recursive installdirs-recursive install-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = $(include_HEADERS) Makefile.am Makefile.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(libGM_a_SOURCES)
+SOURCES = $(libGM_la_SOURCES)
 
 all: all-recursive
 
@@ -147,38 +159,27 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
-
-AR = ar
-install-libLIBRARIES: $(lib_LIBRARIES)
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	@list='$(lib_LIBRARIES)'; for p in $$list; do \
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(libdir)/$$p"; \
-	    $(INSTALL_DATA) $$p $(DESTDIR)$(libdir)/$$p; \
-	  else :; fi; \
-	done
-	@$(POST_INSTALL)
-	@list='$(lib_LIBRARIES)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo " $(RANLIB) $(DESTDIR)$(libdir)/$$p"; \
-	    $(RANLIB) $(DESTDIR)$(libdir)/$$p; \
+	    echo " $(LIBTOOL) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p; \
 	  else :; fi; \
 	done
 
-uninstall-libLIBRARIES:
+uninstall-libLTLIBRARIES:
 	@$(NORMAL_UNINSTALL)
-	@list='$(lib_LIBRARIES)'; for p in $$list; do \
-	  echo " rm -f $(DESTDIR)$(libdir)/$$p"; \
-	  rm -f $(DESTDIR)$(libdir)/$$p; \
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  echo " $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p"; \
+	  $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
 	done
 
-clean-libLIBRARIES:
-	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-libGM.a: $(libGM_a_OBJECTS) $(libGM_a_DEPENDENCIES) 
-	-rm -f libGM.a
-	$(libGM_a_AR) libGM.a $(libGM_a_OBJECTS) $(libGM_a_LIBADD)
-	$(RANLIB) libGM.a
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+libGM.la: $(libGM_la_OBJECTS) $(libGM_la_DEPENDENCIES) 
+	$(LINK) -rpath $(libdir) $(libGM_la_LDFLAGS) $(libGM_la_OBJECTS) $(libGM_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -186,7 +187,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/null.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/null.Plo@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
@@ -210,6 +211,23 @@ distclean-depend:
 	$(LTCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 CCDEPMODE = @CCDEPMODE@
 uninstall-info-am:
+install-includeHEADERS: $(include_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(includedir)
+	@list='$(include_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " $(INSTALL_HEADER) $$d$$p $(DESTDIR)$(includedir)/$$f"; \
+	  $(INSTALL_HEADER) $$d$$p $(DESTDIR)$(includedir)/$$f; \
+	done
+
+uninstall-includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(include_HEADERS)'; for p in $$list; do \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " rm -f $(DESTDIR)$(includedir)/$$f"; \
+	  rm -f $(DESTDIR)$(includedir)/$$f; \
+	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -309,6 +327,7 @@ top_distdir = ..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
+	$(mkinstalldirs) $(distdir)/include
 	@for file in $(DISTFILES); do \
 	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
@@ -339,10 +358,10 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(includedir)
 
 install: install-recursive
 install-exec: install-exec-recursive
@@ -369,7 +388,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic clean-libLIBRARIES clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
+	mostlyclean-am
 
 distclean: distclean-recursive
 
@@ -384,9 +404,9 @@ info: info-recursive
 
 info-am:
 
-install-data-am:
+install-data-am: install-includeHEADERS
 
-install-exec-am: install-libLIBRARIES
+install-exec-am: install-libLTLIBRARIES
 
 install-info: install-info-recursive
 
@@ -403,26 +423,29 @@ mostlyclean: mostlyclean-recursive
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-uninstall-am: uninstall-info-am uninstall-libLIBRARIES
+uninstall-am: uninstall-includeHEADERS uninstall-info-am \
+	uninstall-libLTLIBRARIES
 
 uninstall-info: uninstall-info-recursive
 
 .PHONY: $(RECURSIVE_TARGETS) GTAGS all all-am check check-am clean \
-	clean-generic clean-libLIBRARIES clean-libtool clean-recursive \
-	distclean distclean-compile distclean-depend distclean-generic \
-	distclean-libtool distclean-recursive distclean-tags distdir \
-	dvi dvi-am dvi-recursive info info-am info-recursive install \
-	install-am install-data install-data-am install-data-recursive \
-	install-exec install-exec-am install-exec-recursive \
-	install-info install-info-am install-info-recursive \
-	install-libLIBRARIES install-man install-recursive \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am installdirs-recursive maintainer-clean \
-	maintainer-clean-generic maintainer-clean-recursive mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	mostlyclean-recursive tags tags-recursive uninstall \
-	uninstall-am uninstall-info-am uninstall-info-recursive \
-	uninstall-libLIBRARIES uninstall-recursive
+	clean-generic clean-libLTLIBRARIES clean-libtool \
+	clean-recursive distclean distclean-compile distclean-depend \
+	distclean-generic distclean-libtool distclean-recursive \
+	distclean-tags distdir dvi dvi-am dvi-recursive info info-am \
+	info-recursive install install-am install-data install-data-am \
+	install-data-recursive install-exec install-exec-am \
+	install-exec-recursive install-includeHEADERS install-info \
+	install-info-am install-info-recursive install-libLTLIBRARIES \
+	install-man install-recursive install-strip installcheck \
+	installcheck-am installdirs installdirs-am \
+	installdirs-recursive maintainer-clean maintainer-clean-generic \
+	maintainer-clean-recursive mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
+	tags tags-recursive uninstall uninstall-am \
+	uninstall-includeHEADERS uninstall-info-am \
+	uninstall-info-recursive uninstall-libLTLIBRARIES \
+	uninstall-recursive
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

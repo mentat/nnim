@@ -27,4 +27,5 @@ dnl AC_FUNC_VPRINTF
 AC_OUTPUT( crypto/Makefile lib/Makefile lib/common/Makefile \
 	lib/common/expat/Makefile Makefile lib/protocol/Makefile 
 	lib/protocol/icq/Makefile lib/protocol/msn/Makefile \
+	lib/certificates/Makefile \
 	client/Makefile client/wx/Makefile client/wx/src/Makefile)

@@ -7969,7 +7969,7 @@ done
 
 
 
-ac_config_files="$ac_config_files crypto/Makefile lib/Makefile lib/common/Makefile lib/common/expat/Makefile Makefile lib/protocol/Makefile lib/protocol/icq/Makefile lib/protocol/msn/Makefile client/Makefile client/wx/Makefile client/wx/src/Makefile"
+ac_config_files="$ac_config_files crypto/Makefile lib/Makefile lib/common/Makefile lib/common/expat/Makefile Makefile lib/protocol/Makefile lib/protocol/icq/Makefile lib/protocol/msn/Makefile lib/certificates/Makefile client/Makefile client/wx/Makefile client/wx/src/Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -8486,6 +8486,7 @@ do
   "lib/protocol/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/protocol/Makefile" ;;
   "lib/protocol/icq/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/protocol/icq/Makefile" ;;
   "lib/protocol/msn/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/protocol/msn/Makefile" ;;
+  "lib/certificates/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/certificates/Makefile" ;;
   "client/Makefile" ) CONFIG_FILES="$CONFIG_FILES client/Makefile" ;;
   "client/wx/Makefile" ) CONFIG_FILES="$CONFIG_FILES client/wx/Makefile" ;;
   "client/wx/src/Makefile" ) CONFIG_FILES="$CONFIG_FILES client/wx/src/Makefile" ;;

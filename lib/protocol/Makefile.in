@@ -81,8 +81,8 @@ install_sh = @install_sh@
 
 INCLUDES = -I. -I../include -I../../
 SUBDIRS = msn icq
-noinst_LIBRARIES = libprotocol.a
-libprotocol_a_SOURCES = kitprotocol.cpp nnimprotocol.cpp \
+noinst_LTLIBRARIES = libprotocol.la
+libprotocol_la_SOURCES = kitprotocol.cpp nnimprotocol.cpp \
 	protocol.cpp tocprotocol.cpp yahooprotocol.cpp
 
 
@@ -90,14 +90,13 @@ EXTRA_DIST = peer_protocol.cpp emptyprotocol.h old_tocprotocol.cpp emptyprotocol
 subdir = lib/protocol
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
 
-libprotocol_a_AR = $(AR) cru
-libprotocol_a_LIBADD =
-am_libprotocol_a_OBJECTS = kitprotocol.$(OBJEXT) nnimprotocol.$(OBJEXT) \
-	protocol.$(OBJEXT) tocprotocol.$(OBJEXT) \
-	yahooprotocol.$(OBJEXT)
-libprotocol_a_OBJECTS = $(am_libprotocol_a_OBJECTS)
+libprotocol_la_LDFLAGS =
+libprotocol_la_LIBADD =
+am_libprotocol_la_OBJECTS = kitprotocol.lo nnimprotocol.lo protocol.lo \
+	tocprotocol.lo yahooprotocol.lo
+libprotocol_la_OBJECTS = $(am_libprotocol_la_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir)
@@ -105,9 +104,10 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/kitprotocol.Po \
-@AMDEP_TRUE@	$(DEPDIR)/nnimprotocol.Po $(DEPDIR)/protocol.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tocprotocol.Po $(DEPDIR)/yahooprotocol.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/kitprotocol.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/nnimprotocol.Plo $(DEPDIR)/protocol.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/tocprotocol.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/yahooprotocol.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -117,7 +117,7 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(libprotocol_a_SOURCES)
+DIST_SOURCES = $(libprotocol_la_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-info-recursive all-recursive install-data-recursive \
@@ -125,7 +125,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = Makefile.am Makefile.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(libprotocol_a_SOURCES)
+SOURCES = $(libprotocol_la_SOURCES)
 
 all: all-recursive
 
@@ -148,14 +148,10 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 
-AR = ar
-
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libprotocol.a: $(libprotocol_a_OBJECTS) $(libprotocol_a_DEPENDENCIES) 
-	-rm -f libprotocol.a
-	$(libprotocol_a_AR) libprotocol.a $(libprotocol_a_OBJECTS) $(libprotocol_a_LIBADD)
-	$(RANLIB) libprotocol.a
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+libprotocol.la: $(libprotocol_la_OBJECTS) $(libprotocol_la_DEPENDENCIES) 
+	$(CXXLINK)  $(libprotocol_la_LDFLAGS) $(libprotocol_la_OBJECTS) $(libprotocol_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -163,11 +159,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/kitprotocol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nnimprotocol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/protocol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tocprotocol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yahooprotocol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/kitprotocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nnimprotocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/protocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tocprotocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yahooprotocol.Plo@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
@@ -320,7 +316,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LTLIBRARIES)
 installdirs: installdirs-recursive
 installdirs-am:
 
@@ -349,7 +345,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
+clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-recursive
@@ -389,7 +385,7 @@ uninstall-am: uninstall-info-am
 uninstall-info: uninstall-info-recursive
 
 .PHONY: $(RECURSIVE_TARGETS) GTAGS all all-am check check-am clean \
-	clean-generic clean-libtool clean-noinstLIBRARIES \
+	clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	clean-recursive distclean distclean-compile distclean-depend \
 	distclean-generic distclean-libtool distclean-recursive \
 	distclean-tags distdir dvi dvi-am dvi-recursive info info-am \

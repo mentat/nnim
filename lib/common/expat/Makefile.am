@@ -1,8 +1,8 @@
 INCLUDES = -Iinclude
 
-noinst_LIBRARIES = libexpat.a
+noinst_LTLIBRARIES = libexpat.la
 
-libexpat_a_SOURCES = gennmtab.c \
+libexpat_la_SOURCES = gennmtab.c \
 	hashtable.c \
 	xmlparse.c \
 	xmlrole.c \
