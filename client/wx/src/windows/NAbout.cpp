@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NAbout.cpp,v 1.1 2002/06/06 17:21:29 thementat Exp $
+    $Id: NAbout.cpp,v 1.2 2002/06/16 05:14:22 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -84,8 +84,8 @@ wxSizer *About( wxWindow *parent, bool call_fit, bool set_sizer )
     item2->Add( item4, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     wxStaticText *item5 = new wxStaticText( parent, -1, 
-        wxT("Copyright (c) 2002 Jesse Lovelace") wxT("\n")
-        wxT("GNU General Public License\n\nThe blowfish graphic is\npart of the OpenBSD project."),
+        wxT("Copyright (c) 2002 Jesse Lovelace, GPL.") wxT("\n") wxT("Portions Copyright (c) 1995-2001 by Wei Dai.\nAll rights reserved.")
+        wxT("\n\nThe blowfish graphic is part of the\nOpenBSD project and is under their copyright."),
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     item2->Add( item5, 0, wxALIGN_CENTRE|wxALL, 5 );
 
@@ -108,8 +108,11 @@ wxSizer *About( wxWindow *parent, bool call_fit, bool set_sizer )
 
     -----
     $Log: NAbout.cpp,v $
-    Revision 1.1  2002/06/06 17:21:29  thementat
-    Initial revision
+    Revision 1.2  2002/06/16 05:14:22  thementat
+    Updated about screen.
+
+    Revision 1.1.1.1  2002/06/06 17:21:29  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2002/01/17 20:00:50  mentat
     Moved dirs back to normal.
