@@ -1,25 +1,18 @@
 GM: NNIM 
 The wxWindows client for the GNU Messenger Project
 
+---* NNIM needs wxWindows to build! http://www.wxwindows.org *---
 
-Visual C++ Notes:
 
-This project was created with Visual C++ 6 sp5.
+UNIX/Linux Build:
 
-The project assumes that your wxWindows install is
-located on the same drive as the VC project in:
-/cvs/wxWindows
-If this is not the case you will need to modify
-the settings for "C++"->"Preprocessor" 
-and "Link"->"Input" and "Resources"->"Additional Include"
+Run ./configure from the GNU directory, then 'make', 'make install'
 
-The project also assumes that CryptoPP is one level
-below the GM ( gm/src/ ) directory in the directory:
-cryptopp/src/
+Visual C++ .NET
 
-A build of libGM is required to build the wxgui
-project.
-
+Use the included vcproj file to load the project.  In the 'wxgui'
+configuration change the directories for the wxWindows libs and 
+include files.
 
 Jesse
 <jllovela@eos.ncsu.edu>

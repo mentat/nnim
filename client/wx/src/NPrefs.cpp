@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NPrefs.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NPrefs.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -119,7 +119,7 @@ guiPrefs::guiPrefs(const wxString& title, int x, int y, int w, int h, wxWindow* 
   
   m_treeCtrl = (wxGenericTreeCtrl *)FindWindow( wxNNIM::ID_PREF_TREE_CTRL );
   m_treeRoot = m_treeCtrl->AddRoot("root");
-  m_treeCtrl->SetWindowStyle(wxTR_FULL_ROW_HIGHLIGHT | wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_HIDE_ROOT);
+  m_treeCtrl->SetWindowStyle(/*wxTR_FULL_ROW_HIGHLIGHT | */wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_HIDE_ROOT);
 
   // load settings from AuthLoad
   LoadSettings();
@@ -364,6 +364,9 @@ wxSizer *PrefTree( wxWindow *parent, bool call_fit, bool set_sizer )
 /*
     -----
     $Log: NPrefs.cpp,v $
+    Revision 1.2  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
     Revision 1.1  2002/06/19 16:27:18  thementat
     Restructured directories.
 

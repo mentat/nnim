@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactWiz.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NContactWiz.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -114,7 +114,7 @@ bool CWizardP1::TransferDataFromWindow()
 		return false;
 	}
   
-	if (myLoader.C().Exists(m_name.mb_str(wxConvUTF8).data()))
+	if (myLoader.C().Exists(m_name.c_str()))
 	{
 		wxMessageBox(wxT("Sorry, this contact name already exists."), wxT("Name Error"), wxOK, this);
 		return false;
@@ -255,7 +255,7 @@ void CWizardP3::OnWizardPageChanging(wxWizardEvent& event)
 
 	wxLogDebug(wxString("Trying to add ") + name + wxString(" ") + base);
 
-	if (!myLoader.C().Add(name.mb_str(wxConvUTF8).data(),base.mb_str(wxConvUTF8).data()))
+	if (!myLoader.C().Add(name.c_str(),base.c_str()))
 	{
 		wxLogError(wxT("Couldn't add this user to specified folder."));
 		wxWizardEvent event(wxEVT_WIZARD_CANCEL);

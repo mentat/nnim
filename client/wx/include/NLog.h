@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLog.h,v 1.1 2002/06/06 17:21:42 thementat Exp $
+    $Id: NLog.h,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -62,8 +62,11 @@ enum
 /*
     -----
     $Log: NLog.h,v $
-    Revision 1.1  2002/06/06 17:21:42  thementat
-    Initial revision
+    Revision 1.2  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
+    Revision 1.1.1.1  2002/06/06 17:21:42  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2001/12/18 04:09:27  mentat
     Restructuring all files.

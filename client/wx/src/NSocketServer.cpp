@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NSocketServer.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NSocketServer.cpp,v 1.3 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -72,4 +72,3 @@ Network * wxNetworkServer::getIncomming()
 	AcceptWith(*newSock);
 	return newSock;
 }
-

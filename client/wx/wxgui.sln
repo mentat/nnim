@@ -6,13 +6,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxgui", "wxgui.vcproj", "{A0E25F62-74F9-4002-B94D-7A6342B2D5F0}"
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 1
-		SccProjectUniqueName0 = ..\\..\\crypto\\cryptlib.vcproj
-		SccProjectName0 = \u0022$/cryptlib\u0022,\u0020BAAAAAAA
-		SccLocalPath0 = ..\\..\\crypto
-		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
 		ConfigName.1 = Debug DLL
@@ -30,7 +23,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{7789FE06-CD8F-4620-AA6C-658DC34F3684}.Debug.ActiveCfg = Debug|Win32
-		{7789FE06-CD8F-4620-AA6C-658DC34F3684}.Debug.Build.0 = Debug|Win32
 		{7789FE06-CD8F-4620-AA6C-658DC34F3684}.Debug DLL.ActiveCfg = Debug|Win32
 		{7789FE06-CD8F-4620-AA6C-658DC34F3684}.Debug DLL.Build.0 = Debug|Win32
 		{7789FE06-CD8F-4620-AA6C-658DC34F3684}.Debug Unicode.ActiveCfg = Debug|Win32
@@ -48,7 +40,6 @@ Global
 		{7789FE06-CD8F-4620-AA6C-658DC34F3684}.Release Unicode DLL.ActiveCfg = Release|Win32
 		{7789FE06-CD8F-4620-AA6C-658DC34F3684}.Release Unicode DLL.Build.0 = Release|Win32
 		{1DBFEA12-14E4-4931-86FD-628E8C8CF219}.Debug.ActiveCfg = Debug|Win32
-		{1DBFEA12-14E4-4931-86FD-628E8C8CF219}.Debug.Build.0 = Debug|Win32
 		{1DBFEA12-14E4-4931-86FD-628E8C8CF219}.Debug DLL.ActiveCfg = Debug|Win32
 		{1DBFEA12-14E4-4931-86FD-628E8C8CF219}.Debug DLL.Build.0 = Debug|Win32
 		{1DBFEA12-14E4-4931-86FD-628E8C8CF219}.Debug Unicode.ActiveCfg = Debug|Win32

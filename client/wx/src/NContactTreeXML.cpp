@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTreeXML.cpp,v 1.2 2002/06/19 19:14:43 thementat Exp $
+    $Id: NContactTreeXML.cpp,v 1.3 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -256,13 +256,13 @@ void NContactTreeXML::OnDeleteItem(wxCommandEvent& event)
 	if (m_type == ContactTree)
 	{
 		if (((MyTreeItemData *)GetItemData(id))->GetStatus() == STATUS_FOLDER)
-			wxGetApp().AccessLoader().C().DeleteFolder(GetItemText(id).mb_str(wxConvUTF8).data());
+			wxGetApp().AccessLoader().C().DeleteFolder(GetItemText(id).c_str());
 		else
-			wxGetApp().AccessLoader().C().Delete(GetItemText(id).mb_str(wxConvUTF8).data());
+			wxGetApp().AccessLoader().C().Delete(GetItemText(id).c_str());
 	}
 	else
 	{
-		wxGetApp().AccessLoader().C().DeleteInfo(m_user.mb_str(wxConvUTF8).data(), GetItemText(id).mb_str(wxConvUTF8).data());
+		wxGetApp().AccessLoader().C().DeleteInfo(m_user.c_str(), GetItemText(id).c_str());
 	}
 
 	RefreshTree();
@@ -528,7 +528,7 @@ wxString NContactTreeXML::NewFolder(const wxString& base)
 
 	AuthLoad &myLoader = wxGetApp().AccessLoader();
 
-	if (myLoader.C().FolderExists(name.mb_str(wxConvUTF8).data()))
+	if (myLoader.C().FolderExists(name.c_str()))
 	{
 		wxMessageBox(wxT("Sorry, this folder already exists."), wxT("Folder Exists"));
 		return wxT("");
@@ -536,7 +536,7 @@ wxString NContactTreeXML::NewFolder(const wxString& base)
 
 	if (base == wxT(""))
 	{
-		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data()))
+		if (!myLoader.C().AddFolder(name.c_str()))
 		{
 			wxLogError(wxT("Folder not added with no base."));
 			return "";
@@ -545,7 +545,7 @@ wxString NContactTreeXML::NewFolder(const wxString& base)
 			return name;
 	}
 	
-	if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data(), base.mb_str(wxConvUTF8).data()))
+	if (!myLoader.C().AddFolder(name.c_str(), base.c_str()))
 	{
 		wxLogError(wxT("This folder wasn't added."));
 		return wxT("");

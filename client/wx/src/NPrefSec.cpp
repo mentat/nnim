@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NPrefSec.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NPrefSec.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -21,6 +21,9 @@
 
     -----
     $Log: NPrefSec.cpp,v $
+    Revision 1.2  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
     Revision 1.1  2002/06/19 16:27:18  thementat
     Restructured directories.
 

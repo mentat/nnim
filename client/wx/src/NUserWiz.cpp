@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: NUserWiz.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NUserWiz.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    Copyright (C) 2001-2002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ bool UserWizardP1::TransferDataFromWindow()
     return FALSE;
   }
 
-  if (myLoader.Exists((name->GetValue()).mb_str(wxConvUTF8).data()))
+  if (myLoader.Exists((name->GetValue()).c_str()))
   {
     wxMessageBox(wxT("Sorry, this user name already exists, please choose another."), wxT("User Exists"), wxOK, this);
     return FALSE;
@@ -200,12 +200,12 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 	wxString uname = ((UserWizardP1 *)GetPrev())->name->GetValue();
 	wxString pword = ((UserWizardP1 *)GetPrev())->p1->GetValue();
 
-	SecByteBlock pass((const unsigned char *)pword.mb_str(wxConvUTF8).data(), 
-		strlen(pword.mb_str(wxConvUTF8).data()));
+	SecByteBlock pass((const unsigned char *)pword.c_str(), 
+		pword.length());
     
 	AuthLoad &myLoader = wxGetApp().AccessLoader();
 
-	if (!myLoader.CreateNew(uname.mb_str(wxConvUTF8).data(), pass))
+	if (!myLoader.CreateNew(uname.c_str(), pass))
 	{
 		throw("UserWizardP2::OnWizardPageChanging: Could not create new user");
 	}
@@ -265,7 +265,7 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 		default: wxASSERT(false); break;
 		}
 
-		tmp.child("user").setProperty("username", listctrl->GetItemText(it).mb_str(wxConvUTF8).data());
+		tmp.child("user").setProperty("username", listctrl->GetItemText(it).c_str());
 		tmp.child("user").setProperty("password", (const char *)(void *)m_pwords[it]);
       
 	}
@@ -289,6 +289,9 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 /*
     -----
     $Log: NUserWiz.cpp,v $
+    Revision 1.2  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
     Revision 1.1  2002/06/19 16:27:18  thementat
     Restructured directories.
 

@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: NLog.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NLog.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    Copyright (C) 2001-2002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include "NMain.h"
 
 #include "wx/log.h"
+#include "wx/image.h"
 #include "wx/imaglist.h"
 #include "wx/listctrl.h"
 
@@ -35,7 +36,7 @@ DECLARE_APP(wxNNIM)
 
 wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer );
 
-wxWindow * InitLogView(wxWindow * parent)
+wxWindow *InitLogView(wxWindow * parent)
 {
 
   return new guiLog(wxT("NNIM Log"), 320,20,300,200, parent);
@@ -187,6 +188,9 @@ wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer )
 /*
     -----
     $Log: NLog.cpp,v $
+    Revision 1.2  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
     Revision 1.1  2002/06/19 16:27:18  thementat
     Restructured directories.
 
@@ -212,4 +216,3 @@ wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer )
     Revision 1.5  2001/12/02 21:40:26  mentat
     Major restructure of all source, preparing for more changes and release.i
 */
-

@@ -21,9 +21,10 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "
 				Optimization="0"
-				AdditionalIncludeDirectories="include/,src/,src/vc/,../../lib/include,../../,e:/cvs/wxWindows/include,e:/cvs/wxWindows/lib/mswud/"
+				AdditionalIncludeDirectories="include/;src/;src/vc/;../../lib/include;../../;e:/cvs/wxWindows/include;e:/cvs/wxWindows/lib/mswud/;$(NOINHERIT)"
 				PreprocessorDefinitions="__WXDEBUG__,WIN32,_DEBUG,_WINDOWS,__WINDOWS__,__WXMSW__,DEBUG=1,__WIN95__,__WIN32__,WINVER=0x0400,STRICT,BYTE_ORDER_LITTLE_ENDIAN"
 				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Debug/wxgui.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
@@ -37,7 +38,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386 /FIXED:NO"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib wxmswud.lib libgm.lib cryptlib.lib tiffd.lib jpegd.lib regexd.lib zlibd.lib pngd.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib wxmswd.lib libgm.lib cryptlib.lib tiffd.lib jpegd.lib regexd.lib zlibd.lib pngd.lib"
 				OutputFile="Debug\nnim_debug.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -187,7 +188,7 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="../../wxWindows/include;src\vc;$(NoInherit)"/>
+						AdditionalIncludeDirectories="e:/cvs/wxWindows/include;src\vc;$(NoInherit)"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug DLL|Win32">
@@ -289,18 +290,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Windows"
-			Filter="">
-		</Filter>
-		<Filter
-			Name="Wizards"
-			Filter="">
-		</Filter>
-		<Filter
-			Name="Main"
-			Filter="">
-		</Filter>
-		<Filter
 			Name="Source"
 			Filter="">
 			<File
@@ -308,6 +297,12 @@
 			</File>
 			<File
 				RelativePath="src\NAutoTxt.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="src\NChat.cpp">
@@ -380,6 +375,12 @@
 			</File>
 			<File
 				RelativePath="src\NResources_wdr.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="src\NSocket.cpp">
@@ -401,6 +402,11 @@
 			</File>
 			<File
 				RelativePath="src\NUserWiz.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="src\NWizards_wdr.cpp">

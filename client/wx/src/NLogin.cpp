@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NLogin.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -126,12 +126,12 @@ void guiLogin::OnLogin(wxCommandEvent&)
 	wxString l_user(m_username->GetValue());
 	wxString l_pass(m_password->GetValue());
 	
-	SecByteBlock pass((const unsigned char *)l_pass.mb_str(wxConvUTF8).data(), 
-		strlen(l_pass.mb_str(wxConvUTF8).data()));
+	SecByteBlock pass((const unsigned char *)l_pass.c_str(), 
+		l_pass.length());
 
 	try
 	{
-		if (pMyLoader.Login(m_username->GetValue().mb_str(wxConvUTF8).data(), pass))
+		if (pMyLoader.Login(m_username->GetValue().c_str(), pass))
 		{
 			wxGetApp().Login();
 			return;
@@ -266,6 +266,9 @@ wxMenuBar *myLoginMenuBar()
 /*
     -----
     $Log: NLogin.cpp,v $
+    Revision 1.2  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
     Revision 1.1  2002/06/19 16:27:18  thementat
     Restructured directories.
 
@@ -295,3 +298,4 @@ wxMenuBar *myLoginMenuBar()
 
 
 */
+

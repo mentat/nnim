@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.4 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    Copyright (C) 2001-2002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -156,6 +156,9 @@ void wxProtocolManager::c_stateChange(const string &proto,int state)
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.4  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
     Revision 1.3  2002/06/16 04:08:28  thementat
     Hopefully fixed Authload and related classes.
 

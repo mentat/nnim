@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.4 2002/06/14 22:02:24 thementat Exp $
+    $Id: NMain.cpp,v 1.5 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -106,7 +106,7 @@ void wxNNIM::OnRefreshNetwork(gmEvent& event)
 
   bool reLogin = false;
 
-  if (AccessManager().getState(event.getProtocol().mb_str(wxConvUTF8).data()) != Protocol::S_offline)
+  if (AccessManager().getState(event.getProtocol().c_str()) != Protocol::S_offline)
     reLogin = true;
 }
 
@@ -229,6 +229,9 @@ bool wxNNIM::Shutdown() // a callable shutdown command
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.5  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
     Revision 1.4  2002/06/14 22:02:24  thementat
     Large work on revamping IDs in gui, more SSH2 additions.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NPrefGen.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NPrefGen.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -18,17 +18,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-    -----
-    $Log: NPrefGen.cpp,v $
-    Revision 1.1  2002/06/19 16:27:18  thementat
-    Restructured directories.
-
-    Revision 1.1.1.1  2002/06/06 17:21:30  thementat
-    Checkin of new sources BETA 2
-
-    */
-
+*/
 
 #include "NInclude.h"
 
@@ -44,3 +34,16 @@ NPrefGen::NPrefGen(wxWindow * parent, const wxPoint& pos)
   genPrefs(this, true, true);
 
 }
+/*
+    -----
+    $Log: NPrefGen.cpp,v $
+    Revision 1.2  2002/06/20 01:25:00  thementat
+    Removed unicode for the time being to fix linux build.
+
+    Revision 1.1  2002/06/19 16:27:18  thementat
+    Restructured directories.
+
+    Revision 1.1.1.1  2002/06/06 17:21:30  thementat
+    Checkin of new sources BETA 2
+
+*/
