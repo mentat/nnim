@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.h,v 1.1 2002/06/06 17:21:42 thementat Exp $
+    $Id: NChat.h,v 1.2 2002/06/27 11:52:51 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -21,8 +21,11 @@
 
     -----
     $Log: NChat.h,v $
-    Revision 1.1  2002/06/06 17:21:42  thementat
-    Initial revision
+    Revision 1.2  2002/06/27 11:52:51  thementat
+    More event handling fixes.
+
+    Revision 1.1.1.1  2002/06/06 17:21:42  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2001/12/18 04:09:27  mentat
     Restructuring all files.
@@ -134,19 +137,19 @@ public:
 
 private:
 
-  wxString m_sxRealName;
-  wxString m_sxServerId;
-  wxString m_sxProtocol;
+	wxString m_sxRealName;
+	wxString m_sxServerId;
+	wxString m_sxProtocol;
 
-  bool m_window_closing;
+	bool m_window_closing;
 
-  wxNotebook* m_notebook;
+	wxNotebook* m_notebook;
 
-  wxString m_htmlInternalText;
+	wxString m_htmlInternalText;
 
 	wxPanel *m_panel;
 
-  // Chat tab items
+	// Chat tab items
 	wxHtmlWindow *m_html;
 	myTextCtrl *m_outText;
 	

@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.9 2002/06/26 17:40:12 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.10 2002/06/27 11:52:51 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -520,7 +520,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 			c.setServerId(words[1]);
 			c.setNick(words[1]);
 
-			eventRecvdMessage(c, msg);
+			eventRecvdMessageNotBuddy(c, msg);
 			return;
 		}
 
@@ -780,6 +780,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.10  2002/06/27 11:52:51  thementat
+    More event handling fixes.
+
     Revision 1.9  2002/06/26 17:40:12  thementat
     Added the Open-Source ssh2 lib from Bitvise.
 

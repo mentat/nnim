@@ -21,13 +21,15 @@
 				Optimization="0"
 				AdditionalIncludeDirectories="common\expat\include;include\;..\;protocol\icq\;protocol\msn\;protocol\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
-				MinimalRebuild="TRUE"
-				BasicRuntimeChecks="3"
+				MinimalRebuild="FALSE"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				AssemblerOutput="2"
+				ProgramDataBaseFileName="$(IntDir)/libGM.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.9 2002/06/27 02:54:08 thementat Exp $
+    $Id: NMain.cpp,v 1.10 2002/06/27 11:52:51 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -198,7 +198,7 @@ bool wxNNIM::Login(bool newUser)
     SetTopWindow(m_ContactView.get());
 
     // create protocol manager
-    m_ProtoManager.reset ( new wxProtocolManager() );
+    m_ProtoManager.reset ( new wxProtocolManager(*m_ContactView) );
    // m_ProtoManager->SetEventHandler(*this);
 
 
@@ -246,6 +246,9 @@ bool wxNNIM::Shutdown() // a callable shutdown command
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.10  2002/06/27 11:52:51  thementat
+    More event handling fixes.
+
     Revision 1.9  2002/06/27 02:54:08  thementat
     Changes to the Event handling.
 

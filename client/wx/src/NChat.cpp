@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.cpp,v 1.2 2002/06/19 19:14:43 thementat Exp $
+    $Id: NChat.cpp,v 1.3 2002/06/27 11:52:51 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -36,6 +36,7 @@
 #include "authload.h"
 #include "contact.h"
 #include "manager.h"
+#include "gmException.h"
 
 #include "bitmaps/nnim_button_trans2.xpm"
 #include "bitmaps/nnim_button_trans_bw2.xpm"
@@ -44,8 +45,27 @@
 guiChat *
 InitChatView(wxWindow * parent, const wxString& name, Contact c)
 {
-  guiChat * pMyChat = new guiChat(name, 20, 20, 250, 200, parent, c);
+  guiChat * pMyChat = NULL;
+
+  try 
+  {
+	  pMyChat = new guiChat(name, 20, 20, 250, 200, parent, c);
+  }
+  catch(gmException &e)
+  {
+	  throw e;
+	  return NULL;
+  }
+  catch(...)
+  {
+	  wxLogError(wxT("Error in guiChat, constructor threw."));
+	  return NULL;
+  }
+ // if (pMyChat == NULL)
+	//  throw gmException("Window is NULL in InitChatView.", gmException::gMEM);
+ 
   pMyChat->Show(TRUE);
+
   return pMyChat;
 }
 
@@ -513,7 +533,9 @@ void guiChat::DisplayText(const wxString& text)
   // Used for incomming text (from remote user)
   m_htmlInternalText.Prepend(newText2);
   
-  m_html->SetPage(wxString(wxT("<HTML><BODY>")) + m_htmlInternalText + wxString(wxT("</BODY></HTML>")));
+  m_html->SetPage(wxString(wxT("<HTML><BODY>")) + 
+	  m_htmlInternalText + 
+	  wxString(wxT("</BODY></HTML>")));
 
 }
 
@@ -570,6 +592,9 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
 /*
     -----
     $Log: NChat.cpp,v $
+    Revision 1.3  2002/06/27 11:52:51  thementat
+    More event handling fixes.
+
     Revision 1.2  2002/06/19 19:14:43  thementat
     Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.
 

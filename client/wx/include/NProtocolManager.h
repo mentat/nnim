@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.h,v 1.4 2002/06/27 02:54:07 thementat Exp $
+    $Id: NProtocolManager.h,v 1.5 2002/06/27 11:52:51 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -21,6 +21,9 @@
 
     -----
     $Log: NProtocolManager.h,v $
+    Revision 1.5  2002/06/27 11:52:51  thementat
+    More event handling fixes.
+
     Revision 1.4  2002/06/27 02:54:07  thementat
     Changes to the Event handling.
 
@@ -72,7 +75,7 @@ class wxProtocolManager: public ProtocolManager, public wxObject
 {
 public:
   virtual ~wxProtocolManager();
-  wxProtocolManager(): ProtocolManager(), m_handler(NULL) { SetEventHandler(wxGetApp()); }
+  wxProtocolManager(wxEvtHandler& handler): ProtocolManager(), m_handler(NULL) { SetEventHandler(handler); }
 
   // override the c_* functions you are interested in. hopefully the names should be
   // descriptive enough.

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.8 2002/06/27 02:54:08 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.9 2002/06/27 11:52:51 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -177,11 +177,13 @@ void wxProtocolManager::c_stateChange(const string &proto,int state)
 
 void wxProtocolManager::SendEvent(gmEvent & event)
 {
-    wxLogDebug(wxT("SendGMEvent"));
+    wxLogDebug(wxT("SendEvent"));
 
     if (m_handler) {
         m_handler->AddPendingEvent(event);
     }
+	else
+		wxLogDebug(wxT("Not sent."));
 
 }
 
@@ -194,6 +196,9 @@ void wxProtocolManager::SetEventHandler(wxEvtHandler& handler, int id)
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.9  2002/06/27 11:52:51  thementat
+    More event handling fixes.
+
     Revision 1.8  2002/06/27 02:54:08  thementat
     Changes to the Event handling.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.6 2002/06/27 02:54:08 thementat Exp $
+    $Id: NContact.cpp,v 1.7 2002/06/27 11:52:51 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -44,6 +44,7 @@
 #include "contact.h"
 #include "authload.h"
 #include "protocol.h"
+#include "cryptography.h"
 
 wxMenuBar *myContactsMenuBar();
 wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , XMLNode node);
@@ -119,13 +120,15 @@ bool guiContact::RemoveChat(const string& name)
 
 bool guiContact::AddChat(const string& name, guiChat * window)
 {
-    if (m_chatWindows.find(name) == m_chatWindows.end())
+#if 0
+	if (m_chatWindows.find(name) == m_chatWindows.end())
         return false;
  /* for(map<string, shared_ptr<guiChat> >::iterator it=m_chatWindows.begin(); it != m_chatWindows.end(); it++)
     if (it->first == name)
       return false; */
 
   m_chatWindows[name].reset(window);
+#endif
   return true;
 
 }
@@ -143,6 +146,17 @@ void guiContact::OnIdle(wxIdleEvent& event)
 void guiContact::OnGetMessageAnony(gmEvent& event)
 {
     wxLogDebug(wxT("OnGetMessageAnony"));
+	if (m_chatWindows.find(event.getServerId().c_str()) == m_chatWindows.end())
+	{
+		string title(event.getServerId().c_str());
+		title += " on ";
+		title += event.getProtocol().c_str();
+		title += " protocol.";
+		m_chatWindows[event.getServerId().c_str()].reset( InitChatView(this, title.c_str(), event.contact) );
+	}
+	wxLogDebug(event.contact.serverId().c_str());
+
+	m_chatWindows[event.getServerId().c_str()]->DisplayText(event.getMessage());
 
 
 
@@ -150,6 +164,17 @@ void guiContact::OnGetMessageAnony(gmEvent& event)
 void guiContact::OnGetMessage(gmEvent& event)
 {
     wxLogDebug(wxT("OnGetMessage"));
+
+
+	if (m_chatWindows.find(event.getServerId().c_str()) == m_chatWindows.end())
+	{
+		string title(event.getServerId().c_str());
+		title += " on ";
+		title += event.getProtocol().c_str();
+		title += " protocol.";
+		m_chatWindows[event.getServerId().c_str()].reset( InitChatView(this, title.c_str(), event.contact) );
+	}
+
  /* wxLogDebug(wxString(wxT("Got event: ")) + event.getProtocol());
   
   wxString newSearch = event.getServerId().c_str();
@@ -244,6 +269,12 @@ void guiContact::OnQuit(wxCommandEvent& event)
 void guiContact::OnCloseWindow(wxCloseEvent& event)
 {
 	wxGetApp().AccessLoader().CommitToFile();
+	for(map<string, auto_ptr<guiChat> >::iterator it=m_chatWindows.begin(); it != m_chatWindows.end(); it++)
+	{
+		it->second.release();
+
+
+	}
 	wxGetApp().Shutdown();
 
 }
@@ -557,6 +588,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.7  2002/06/27 11:52:51  thementat
+    More event handling fixes.
+
     Revision 1.6  2002/06/27 02:54:08  thementat
     Changes to the Event handling.
 

@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: contact.h,v 1.2 2002/06/23 18:35:51 thementat Exp $
+    $Id: contact.h,v 1.3 2002/06/27 11:52:51 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2002  Henrik Abelsson <henrik@abelsson.com>
@@ -50,6 +50,7 @@ class Contact
  public:
 
   Contact();
+ // Contact(const Contact& cont) { *this = cont; }
   Contact(XMLNode &config);
 
   ~Contact() {};
