@@ -1,7 +1,6 @@
 #ifndef NCONTACTTREEXML_H
 #define NCONTACTTREEXML_H
 
-#include "wx/treebase.h"
 #include "wx/generic/treectlg.h"
 
 #include "NInclude.h"
@@ -15,7 +14,8 @@ public:
     {
         ContactTree, ItemTree
     };
-    
+
+    NContactTreeXML();
     NContactTreeXML(wxWindow *parent, const wxWindowID id,
                        const wxPoint& pos, const wxSize& size,
                        long style, XMLNode xml, int type = ContactTree);
@@ -65,14 +65,14 @@ protected:
         ICON_SECURE = 9,
         ICON_EDITGROUP = 10
     };
-    void PlaceItemsInTree(wxTreeItemId &base,  XMLNode& xml);
-    void PlaceContactsInTree(wxTreeItemId &base,  XMLNode& xml);
+    void PlaceItemsInTree(const wxTreeItemId &base, XMLNode& xml);
+    void PlaceContactsInTree(const wxTreeItemId &base, XMLNode& xml);
 
-    void SetStatus(wxTreeItemId &id, int status);
+    void SetStatus(const wxTreeItemId &id, int status);
 
     void LoadFromXML();
     void CreateImageList(int size = 16);
-    void ShowMenu(wxTreeItemId id, const wxPoint& pt);
+    void ShowMenu(const wxTreeItemId& id, const wxPoint& pt);
 
 private:
 

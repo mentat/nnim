@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NEvent.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
+    $Id: NEvent.cpp,v 1.3 2002/06/20 16:21:56 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace

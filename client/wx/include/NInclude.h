@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NInclude.h,v 1.4 2002/06/19 19:14:43 thementat Exp $
+    $Id: NInclude.h,v 1.5 2002/06/20 16:21:54 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -158,13 +158,16 @@ static wxString bool2string(bool input)
   return wxT("FALSE");
 }
 
-template<class T> inline void destroy(T*& p) { delete p; p = 0; }
+//template<class T> inline void destroy(T*& p) { delete p; p = 0; }
 
 
 #endif
 /*
     -----
     $Log: NInclude.h,v $
+    Revision 1.5  2002/06/20 16:21:54  thementat
+    Many GCC fixes and updates to configure engine.
+
     Revision 1.4  2002/06/19 19:14:43  thementat
     Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.
 

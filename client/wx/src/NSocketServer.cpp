@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NSocketServer.cpp,v 1.3 2002/06/20 01:25:00 thementat Exp $
+    $Id: NSocketServer.cpp,v 1.4 2002/06/20 16:21:57 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -27,16 +27,22 @@
 #include <wx/socket.h>
 #include <wx/protocol/protocol.h>
 
-wxIPV4address ToAddr(int num)
+#include <memory>
+
+using namespace std;
+
+
+auto_ptr<wxIPV4address> ToAddr(int num)
 {
-	wxIPV4address me;
-	me.Service(num);
+	auto_ptr<wxIPV4address> me( new wxIPV4address());
+	me->Service(num);
 	return me;
 }
 
 wxNetworkServer::wxNetworkServer(PeerProtocol *o, unsigned int p)
-: NetworkServer(o, p), wxSocketServer(ToAddr(p))
+: NetworkServer(o, p) ,  wxSocketServer(*ToAddr(p))
 {
+
 }
 
 

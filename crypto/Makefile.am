@@ -78,6 +78,8 @@ gost.cpp \
 gost.h \
 gzip.cpp \
 gzip.h \
+haval.h \
+haval.cpp \
 hex.cpp \
 hex.h \
 hmac.h \

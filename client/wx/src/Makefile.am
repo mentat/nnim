@@ -17,14 +17,12 @@ NEvent.cpp        \
 NLog.cpp          \
 NLogin.cpp        \
 NMain.cpp         \
-NNets.cpp         \
 NPrefGen.cpp      \
 NPrefNet.cpp      \
 NPrefs.cpp        \
 NPrefSec.cpp      \
 NProtocolManager.cpp \
 NProtocol_wdr.cpp \
-NResources_wdr.cpp \
 NSocket.cpp       \
 NSocketServer.cpp \
 NTaskbar.cpp      \
@@ -32,7 +30,7 @@ NTreeCtrlXML.cpp  \
 NUserWiz.cpp      \
 NWizards_wdr.cpp
 
-nnim_LDADD = ../../../libGM.a ../../../crypto/libcryptopp.a
+nnim_LDADD = ../../../lib/libGM.a ../../../crypto/libcryptopp.a
 
 
 

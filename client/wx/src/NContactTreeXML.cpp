@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTreeXML.cpp,v 1.3 2002/06/20 01:25:00 thementat Exp $
+    $Id: NContactTreeXML.cpp,v 1.4 2002/06/20 16:21:56 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -21,16 +21,17 @@
 
 */
 
-#include "boost/smart_ptr.hpp"
-
 #include "NInclude.h"
 #include "NEvent.h"
 #include "NMain.h"
 #include "NContactWiz.h"
 
 #include "wx/treebase.h"
-//#include "wx/treectrl.h"
+#ifdef WIN32
 #include "wx/generic/treectlg.h"
+#else
+#include "wx/treectrl.h"
+#endif
 #include "wx/image.h"
 #include "wx/imaglist.h"
 #include "wx/font.h"
@@ -93,6 +94,10 @@ EVT_MENU(wxNNIM::ID_TREE_RENAME, NContactTreeXML::OnTreeRename)
 
 END_EVENT_TABLE()
 
+NContactTreeXML::NContactTreeXML()
+{
+}
+
 NContactTreeXML::NContactTreeXML(wxWindow *parent, const wxWindowID id,
                        const wxPoint& pos, const wxSize& size,
                        long style, XMLNode xml, int type)
@@ -144,7 +149,7 @@ void NContactTreeXML::LoadFromXML()
 
 }*/
 
-void NContactTreeXML::PlaceItemsInTree(wxTreeItemId &base,  XMLNode& xml)
+void NContactTreeXML::PlaceItemsInTree(const wxTreeItemId &base, XMLNode& xml)
 {
 
 	wxLogDebug(wxT("Placing items in tree."));
@@ -178,7 +183,7 @@ void NContactTreeXML::OnTreeRename(wxCommandEvent &event)
 void NContactTreeXML::OnItemExpanding(wxTreeEvent& event){ event.Skip();}
 void NContactTreeXML::OnItemExpanded(wxTreeEvent& event) { event.Skip(); }
 
-void NContactTreeXML::PlaceContactsInTree(wxTreeItemId &base, XMLNode& xml)
+void NContactTreeXML::PlaceContactsInTree(const wxTreeItemId &base, XMLNode& xml)
 {
 	wxLogDebug(wxT("Placing contacts in tree."));
     wxTreeItemId temp_root;
@@ -366,7 +371,7 @@ void NContactTreeXML::CreateImageList(int size)
   AssignImageList(images);
 }
 
-void NContactTreeXML::ShowMenu(wxTreeItemId id, const wxPoint& pt)
+void NContactTreeXML::ShowMenu(const wxTreeItemId& id, const wxPoint& pt)
 {
   wxString title;
   if ( id.IsOk() )
@@ -433,7 +438,7 @@ wxTreeItemId NContactTreeXML::AddTreeContact(const wxString& name, const wxTreeI
 }
 
 
-void NContactTreeXML::SetStatus(wxTreeItemId &id, int status)
+void NContactTreeXML::SetStatus(const wxTreeItemId &id, int status)
 {
   switch ( status )
   {
@@ -606,6 +611,7 @@ void NContactTreeXML::OnAddFolder(wxCommandEvent& event)
 
 void NContactTreeXML::OnChangeStatus(gmEvent& event)
 {
+
 }
 
 wxTreeItemId NContactTreeXML::AddItem(const wxString&name, const wxString&data, const wxTreeItemId & idParent)

@@ -61,7 +61,7 @@ void HAVAL::TruncatedFinal(byte *hash, unsigned int size)
 	CorrectEndianess(data, data, 120);
 
 	data[29] &= 0xffff;
-	data[29] |= ((word32)digestSize<<25) | ((word32)pass<<19) | ((word32)VERSION<<16);
+	data[29] |= ((word32)digestSize<<25) | ((word32)pass<<19) | ((word32)HVERSION<<16);
 	data[30] = countLo;
 	data[31] = countHi;
 

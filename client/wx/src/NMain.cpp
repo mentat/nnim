@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.5 2002/06/20 01:25:00 thementat Exp $
+    $Id: NMain.cpp,v 1.6 2002/06/20 16:21:56 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -28,7 +28,7 @@
 #include "NContact.h"
 #include "NSocket.h"
 #include "NSocketServer.h"
-#include "NTaskBar.h"
+#include "NTaskbar.h"
 #include "NProtocolManager.h"
 #include "NEvent.h"
 
@@ -105,6 +105,7 @@ void wxNNIM::OnRefreshNetwork(gmEvent& event)
   wxLogDebug(event.getProtocol());
 
   bool reLogin = false;
+
 
   if (AccessManager().getState(event.getProtocol().c_str()) != Protocol::S_offline)
     reLogin = true;
@@ -229,6 +230,9 @@ bool wxNNIM::Shutdown() // a callable shutdown command
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.6  2002/06/20 16:21:56  thementat
+    Many GCC fixes and updates to configure engine.
+
     Revision 1.5  2002/06/20 01:25:00  thementat
     Removed unicode for the time being to fix linux build.
 

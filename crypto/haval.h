@@ -9,7 +9,7 @@ NAMESPACE_BEGIN(CryptoPP)
 class HAVAL : public IteratedHash<word32, false, 128>
 {
 public:
-	enum {DIGESTSIZE = 32, VERSION = 1};
+	enum {DIGESTSIZE = 32, HVERSION = 1};
 
 	/// digestSize can be 16, 20, 24, 28, or 32 (Default=32)<br>
 	/// pass can be 3, 4 or 5 (Default=3)

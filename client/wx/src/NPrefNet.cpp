@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NPrefNet.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
+    $Id: NPrefNet.cpp,v 1.3 2002/06/20 16:21:57 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -21,6 +21,9 @@
 
     -----
     $Log: NPrefNet.cpp,v $
+    Revision 1.3  2002/06/20 16:21:57  thementat
+    Many GCC fixes and updates to configure engine.
+
     Revision 1.2  2002/06/20 01:25:00  thementat
     Removed unicode for the time being to fix linux build.
 
@@ -149,44 +152,44 @@ void NPrefNet::SaveSettings()
 void NPrefNet::OnAddNet(wxCommandEvent &event)
 {
 
-  wxListCtrl * listctrl = (wxListCtrl *)FindWindow(ID_U_CONFNETS);
-  wxListBox * listbox = (wxListBox *)FindWindow(ID_U_ALLNETS);
+    wxListCtrl * listctrl = (wxListCtrl *)FindWindow(ID_U_CONFNETS);
+    wxListBox * listbox = (wxListBox *)FindWindow(ID_U_ALLNETS);
 
-  if (listbox->GetSelection() < 0)
-    return;
+    if (listbox->GetSelection() < 0)
+        return;
 
-  wxString prompt;
-
-  if (listbox->GetStringSelection() == wxT("ICQ"))
-    prompt = wxT("What is this contact's UIN\non ICQ Network");
-  else
-    prompt.Printf(wxT("What is this contact's screen-name\non %s Network"), listbox->GetStringSelection());
+    wxString prompt(wxT("What is this contact's screen-name\non "));
+    prompt += listbox->GetStringSelection();
+    prompt += wxT(" Network?");
   
-  wxString screenname = wxGetTextFromUser(prompt, "Contact Information","", this);
+    wxString screenname = wxGetTextFromUser(prompt, wxT("Contact Information"),wxT(""), this);
 
-  if (screenname == "")
-    return;
+    if (screenname == "")
+        return;
 
-  long fingstr = listctrl->FindItem(-1, screenname);
+    long fingstr = listctrl->FindItem(-1, screenname);
 
-  if (fingstr >= 0)
-  {
-    if (listctrl->GetItemData(fingstr) == listbox->GetSelection())
+    if (fingstr >= 0)
     {
-      wxMessageBox(wxT("Sorry, you can't have the same name/network twice."), wxT("Duplicate Info"), wxOK, this);
-      return;
+        if (listctrl->GetItemData(fingstr) == listbox->GetSelection())
+        {
+            wxMessageBox(wxT("Sorry, you can't have the same name/network twice."), wxT("Duplicate Info"), wxOK, this);
+            return;
+        }
     }
-  }
 
-  wxString prompt2;
-  prompt2.Printf(wxT("Please enter the password for %s\non network %s."), screenname, listbox->GetStringSelection());
-  wxString pw = wxGetPasswordFromUser(prompt2);
+    wxString prompt2(wxT("Please enter the password for "));
+    prompt2 += screenname;
+    prompt2 += wxT("\non network ");
+    prompt2 += listbox->GetStringSelection();
+    prompt2 += wxT('.');
+    wxString pw = wxGetPasswordFromUser(prompt2);
 
-  m_pwords.insert(m_pwords.begin(), pw);
+    m_pwords.insert(m_pwords.begin(), pw);
 
-  listctrl->InsertItem(0, screenname);
-  listctrl->SetItemData(0, listbox->GetSelection());
-  listctrl->SetItem(0,1, listbox->GetStringSelection());
+    listctrl->InsertItem(0, screenname);
+    listctrl->SetItemData(0, listbox->GetSelection());
+    listctrl->SetItem(0,1, listbox->GetStringSelection());
 
 }
 

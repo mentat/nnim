@@ -160,6 +160,8 @@ gost.cpp \
 gost.h \
 gzip.cpp \
 gzip.h \
+haval.h \
+haval.cpp \
 hex.cpp \
 hex.h \
 hmac.h \
@@ -310,8 +312,8 @@ am_libcryptopp_a_OBJECTS = 3way.$(OBJEXT) adler32.$(OBJEXT) \
 	ec2n.$(OBJEXT) eccrypto.$(OBJEXT) ecp.$(OBJEXT) \
 	elgamal.$(OBJEXT) eprecomp.$(OBJEXT) files.$(OBJEXT) \
 	filters.$(OBJEXT) gf2_32.$(OBJEXT) gf256.$(OBJEXT) \
-	gf2n.$(OBJEXT) gost.$(OBJEXT) gzip.$(OBJEXT) hex.$(OBJEXT) \
-	hrtimer.$(OBJEXT) ida.$(OBJEXT) idea.$(OBJEXT) \
+	gf2n.$(OBJEXT) gost.$(OBJEXT) gzip.$(OBJEXT) haval.$(OBJEXT) \
+	hex.$(OBJEXT) hrtimer.$(OBJEXT) ida.$(OBJEXT) idea.$(OBJEXT) \
 	integer.$(OBJEXT) iterhash.$(OBJEXT) luc.$(OBJEXT) \
 	mars.$(OBJEXT) marss.$(OBJEXT) md2.$(OBJEXT) md4.$(OBJEXT) \
 	md5.$(OBJEXT) md5mac.$(OBJEXT) misc.$(OBJEXT) modes.$(OBJEXT) \
@@ -354,12 +356,13 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/files.Po $(DEPDIR)/filters.Po \
 @AMDEP_TRUE@	$(DEPDIR)/gf256.Po $(DEPDIR)/gf2_32.Po \
 @AMDEP_TRUE@	$(DEPDIR)/gf2n.Po $(DEPDIR)/gost.Po \
-@AMDEP_TRUE@	$(DEPDIR)/gzip.Po $(DEPDIR)/hex.Po \
-@AMDEP_TRUE@	$(DEPDIR)/hrtimer.Po $(DEPDIR)/ida.Po \
-@AMDEP_TRUE@	$(DEPDIR)/idea.Po $(DEPDIR)/integer.Po \
-@AMDEP_TRUE@	$(DEPDIR)/iterhash.Po $(DEPDIR)/luc.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mars.Po $(DEPDIR)/marss.Po \
-@AMDEP_TRUE@	$(DEPDIR)/md2.Po $(DEPDIR)/md4.Po $(DEPDIR)/md5.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gzip.Po $(DEPDIR)/haval.Po \
+@AMDEP_TRUE@	$(DEPDIR)/hex.Po $(DEPDIR)/hrtimer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/ida.Po $(DEPDIR)/idea.Po \
+@AMDEP_TRUE@	$(DEPDIR)/integer.Po $(DEPDIR)/iterhash.Po \
+@AMDEP_TRUE@	$(DEPDIR)/luc.Po $(DEPDIR)/mars.Po \
+@AMDEP_TRUE@	$(DEPDIR)/marss.Po $(DEPDIR)/md2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/md4.Po $(DEPDIR)/md5.Po \
 @AMDEP_TRUE@	$(DEPDIR)/md5mac.Po $(DEPDIR)/misc.Po \
 @AMDEP_TRUE@	$(DEPDIR)/modes.Po $(DEPDIR)/modexppc.Po \
 @AMDEP_TRUE@	$(DEPDIR)/mqueue.Po $(DEPDIR)/mqv.Po \
@@ -501,6 +504,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gf2n.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gost.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gzip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/haval.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hrtimer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ida.Po@am__quote@

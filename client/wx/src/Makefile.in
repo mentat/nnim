@@ -99,14 +99,12 @@ NEvent.cpp        \
 NLog.cpp          \
 NLogin.cpp        \
 NMain.cpp         \
-NNets.cpp         \
 NPrefGen.cpp      \
 NPrefNet.cpp      \
 NPrefs.cpp        \
 NPrefSec.cpp      \
 NProtocolManager.cpp \
 NProtocol_wdr.cpp \
-NResources_wdr.cpp \
 NSocket.cpp       \
 NSocketServer.cpp \
 NTaskbar.cpp      \
@@ -115,7 +113,7 @@ NUserWiz.cpp      \
 NWizards_wdr.cpp
 
 
-nnim_LDADD = ../../../libGM.a ../../../crypto/libcryptopp.a
+nnim_LDADD = ../../../lib/libGM.a ../../../crypto/libcryptopp.a
 
 LDFLAGS = `wx-config --libs` \
 	-L../../../crypto -L$(GMDIR)
@@ -129,15 +127,14 @@ PROGRAMS = $(bin_PROGRAMS)
 am_nnim_OBJECTS = NAbout.$(OBJEXT) NAutoTxt.$(OBJEXT) NChat.$(OBJEXT) \
 	NContact.$(OBJEXT) NContactTreeXML.$(OBJEXT) \
 	NContactWiz.$(OBJEXT) NEvent.$(OBJEXT) NLog.$(OBJEXT) \
-	NLogin.$(OBJEXT) NMain.$(OBJEXT) NNets.$(OBJEXT) \
-	NPrefGen.$(OBJEXT) NPrefNet.$(OBJEXT) NPrefs.$(OBJEXT) \
-	NPrefSec.$(OBJEXT) NProtocolManager.$(OBJEXT) \
-	NProtocol_wdr.$(OBJEXT) NResources_wdr.$(OBJEXT) \
+	NLogin.$(OBJEXT) NMain.$(OBJEXT) NPrefGen.$(OBJEXT) \
+	NPrefNet.$(OBJEXT) NPrefs.$(OBJEXT) NPrefSec.$(OBJEXT) \
+	NProtocolManager.$(OBJEXT) NProtocol_wdr.$(OBJEXT) \
 	NSocket.$(OBJEXT) NSocketServer.$(OBJEXT) NTaskbar.$(OBJEXT) \
 	NTreeCtrlXML.$(OBJEXT) NUserWiz.$(OBJEXT) \
 	NWizards_wdr.$(OBJEXT)
 nnim_OBJECTS = $(am_nnim_OBJECTS)
-nnim_DEPENDENCIES = ../../../libGM.a ../../../crypto/libcryptopp.a
+nnim_DEPENDENCIES = ../../../lib/libGM.a ../../../crypto/libcryptopp.a
 nnim_LDFLAGS =
 
 DEFS = @DEFS@
@@ -150,12 +147,10 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/NContactTreeXML.Po \
 @AMDEP_TRUE@	$(DEPDIR)/NContactWiz.Po $(DEPDIR)/NEvent.Po \
 @AMDEP_TRUE@	$(DEPDIR)/NLog.Po $(DEPDIR)/NLogin.Po \
-@AMDEP_TRUE@	$(DEPDIR)/NMain.Po $(DEPDIR)/NNets.Po \
-@AMDEP_TRUE@	$(DEPDIR)/NPrefGen.Po $(DEPDIR)/NPrefNet.Po \
-@AMDEP_TRUE@	$(DEPDIR)/NPrefSec.Po $(DEPDIR)/NPrefs.Po \
-@AMDEP_TRUE@	$(DEPDIR)/NProtocolManager.Po \
-@AMDEP_TRUE@	$(DEPDIR)/NProtocol_wdr.Po \
-@AMDEP_TRUE@	$(DEPDIR)/NResources_wdr.Po $(DEPDIR)/NSocket.Po \
+@AMDEP_TRUE@	$(DEPDIR)/NMain.Po $(DEPDIR)/NPrefGen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/NPrefNet.Po $(DEPDIR)/NPrefSec.Po \
+@AMDEP_TRUE@	$(DEPDIR)/NPrefs.Po $(DEPDIR)/NProtocolManager.Po \
+@AMDEP_TRUE@	$(DEPDIR)/NProtocol_wdr.Po $(DEPDIR)/NSocket.Po \
 @AMDEP_TRUE@	$(DEPDIR)/NSocketServer.Po $(DEPDIR)/NTaskbar.Po \
 @AMDEP_TRUE@	$(DEPDIR)/NTreeCtrlXML.Po $(DEPDIR)/NUserWiz.Po \
 @AMDEP_TRUE@	$(DEPDIR)/NWizards_wdr.Po
@@ -236,14 +231,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NLog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NLogin.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NMain.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NNets.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NPrefGen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NPrefNet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NPrefSec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NPrefs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NProtocolManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NProtocol_wdr.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NResources_wdr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NSocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NSocketServer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/NTaskbar.Po@am__quote@

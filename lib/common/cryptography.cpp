@@ -5,7 +5,7 @@
 // Author:      Jesse Lovelace
 // Modified by:
 // Created:
-// RCS-ID:      $Id: cryptography.cpp,v 1.4 2002/06/19 19:14:45 thementat Exp $
+// RCS-ID:      $Id: cryptography.cpp,v 1.5 2002/06/20 16:21:57 thementat Exp $
 // Copyright:   (c) Jesse Lovelace
 // Licence:     LGPL licence
 /////////////////////////////////////////////////////////////////////////////
@@ -14,6 +14,7 @@
 #ifdef WIN32
 #pragma warning(disable:4786)
 #endif
+
 
 
 #include <string>
@@ -47,7 +48,7 @@
 #include "crypto/sha.h"
 #include "crypto/md2.h"
 #include "crypto/md5.h"
-//#include "crypto/haval.h"
+#include "crypto/haval.h"
 #include "crypto/ripemd.h"
 #include "crypto/tiger.h"
 #include "crypto/default.h"
@@ -272,10 +273,10 @@ SecByteBlock gmCrypto::Hash(SecByteBlock& toHash, const int hash_function)
 	case(SHA_512): hash.reset(new SHA512); break;
 	case(MD_2): hash.reset(new MD2); break;
 	case(MD_5): hash.reset(new MD5); break;
-	/*case(_HAVAL): hash.reset(new HAVAL); break;
+	case(_HAVAL): hash.reset(new HAVAL); break;
 	case(HAVAL_3): hash.reset(new HAVAL3); break;
 	case(HAVAL_4): hash.reset(new HAVAL4); break;
-	case(HAVAL_5): hash.reset(new HAVAL5); break;     */
+	case(HAVAL_5): hash.reset(new HAVAL5); break;
 	case(RIPEMD_160): hash.reset(new RIPEMD160); break;
 	case(_TIGER): hash.reset(new Tiger); break;
 	case(PANAMA_HASH): hash.reset(new PanamaHash<true>); break; // true for big endian
@@ -428,10 +429,10 @@ int gmCrypto::GetDigestSize(int hash_function)
     case(SHA_512): SHA512::DIGESTSIZE; break;
     case(MD_2): MD2::DIGESTSIZE; break;
     case(MD_5): MD5::DIGESTSIZE; break;
-    /*case(_HAVAL): HAVAL::DIGESTSIZE; break;
+    case(_HAVAL): HAVAL::DIGESTSIZE; break;
     case(HAVAL_3): HAVAL3::DIGESTSIZE; break;
     case(HAVAL_4): HAVAL4::DIGESTSIZE; break;
-    case(HAVAL_5): HAVAL5::DIGESTSIZE; break;  */
+    case(HAVAL_5): HAVAL5::DIGESTSIZE; break;
     case(RIPEMD_160): RIPEMD160::DIGESTSIZE; break;
     case(_TIGER): Tiger::DIGESTSIZE; break;
     case(PANAMA_HASH):PanamaHash<true>::DIGESTSIZE; break; // true for big endian
