@@ -1,4 +1,7 @@
 GNU Messenger
+Copyright (c) 2000-2002 by Jesse Lovelace.  All rights reserved.
+
+Portions (Crypto++) Copyright (c) 1995-2001 by Wei Dai.  All rights reserved.
 	
 OVERVIEW:
 GM is yet another instant messanger, with your basic messages, online lists 
