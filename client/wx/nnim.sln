@@ -1,0 +1,28 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nnim", "nnim.vcproj", "{4232E966-6121-4484-9E80-EB6AE64877F1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGM", "..\..\lib\libGM.vcproj", "{3E903444-E7D6-445F-B654-8E8D8C9E76B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+		{4232E966-6121-4484-9E80-EB6AE64877F1}.0 = {3E903444-E7D6-445F-B654-8E8D8C9E76B3}
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{4232E966-6121-4484-9E80-EB6AE64877F1}.Debug.ActiveCfg = Debug|Win32
+		{4232E966-6121-4484-9E80-EB6AE64877F1}.Debug.Build.0 = Debug|Win32
+		{4232E966-6121-4484-9E80-EB6AE64877F1}.Release.ActiveCfg = Release|Win32
+		{4232E966-6121-4484-9E80-EB6AE64877F1}.Release.Build.0 = Release|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Debug.ActiveCfg = Debug|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Debug.Build.0 = Debug|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Release.ActiveCfg = Release|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
