@@ -1,7 +1,11 @@
 Main Authors:
+
 Jesse Lovelace <jllovela@eos.ncsu.edu>
 Henrik Abelsson <henrik@mailbox.calypso.net>
 Emil Styrke <estyrke@linux.nu>
 
-Crypto++ (crypto/ subdir and files in it)
-Copyright (c) 1995-2001 by Wei Dai.  All rights reserved.
+crypto/ CryptoPP 4.2 Copyright (c) 1995-2001 by Wei Dai.  
+	All rights reserved. http://www.cryptopp.com
+
+boost/ Boost Libraries are copyright their respective authors.
+	http://www.boost.org
