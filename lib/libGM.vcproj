@@ -204,6 +204,14 @@
 				RelativePath=".\common\log.cpp">
 			</File>
 			<File
+				RelativePath="common\ssh.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\common\xml.cpp">
 			</File>
 			<File
@@ -493,6 +501,28 @@
 		<Filter
 			Name="Crypto"
 			Filter="">
+		</Filter>
+		<Filter
+			Name="boost"
+			Filter="">
+			<File
+				RelativePath="..\boost\scoped_array.hpp">
+			</File>
+			<File
+				RelativePath="..\boost\scoped_ptr.hpp">
+			</File>
+			<File
+				RelativePath="..\boost\shared_array.hpp">
+			</File>
+			<File
+				RelativePath="..\boost\shared_ptr.hpp">
+			</File>
+			<File
+				RelativePath="..\boost\smart_ptr.hpp">
+			</File>
+			<File
+				RelativePath="..\boost\weak_ptr.hpp">
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\AUTHORS">

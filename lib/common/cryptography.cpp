@@ -5,7 +5,7 @@
 // Author:      Jesse Lovelace
 // Modified by:
 // Created:
-// RCS-ID:      $Id: cryptography.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
+// RCS-ID:      $Id: cryptography.cpp,v 1.3 2002/06/13 16:38:50 thementat Exp $
 // Copyright:   (c) Jesse Lovelace
 // Licence:     LGPL licence
 /////////////////////////////////////////////////////////////////////////////
@@ -415,5 +415,26 @@ SecByteBlock gmCrypto::Decode(const string& input, bool hexDec)
 	decoding->Get(out, out.Size());
 
 	return out;
+}
+
+int gmCrypto::GetDigestSize(int hash_function)
+{
+	switch (hash_function)
+	{
+    case(_SHA): return SHA::DIGESTSIZE; break;
+    case(SHA_256): return SHA256::DIGESTSIZE; break;
+    case(SHA_384): return SHA384::DIGESTSIZE; break;
+    case(SHA_512): SHA512::DIGESTSIZE; break;
+    case(MD_2): MD2::DIGESTSIZE; break;
+    case(MD_5): MD5::DIGESTSIZE; break;
+    case(_HAVAL): HAVAL::DIGESTSIZE; break;
+    case(HAVAL_3): HAVAL3::DIGESTSIZE; break;
+    case(HAVAL_4): HAVAL4::DIGESTSIZE; break;
+    case(HAVAL_5): HAVAL5::DIGESTSIZE; break;
+    case(RIPEMD_160): RIPEMD160::DIGESTSIZE; break;
+    case(_TIGER): Tiger::DIGESTSIZE; break;
+    case(PANAMA_HASH):PanamaHash<true>::DIGESTSIZE; break; // true for big endian
+	default: throw gmException("No such hash function available.", gmException::gUSER);
+	}
 }
 

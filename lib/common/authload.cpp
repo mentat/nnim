@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.4 2002/06/10 13:28:04 thementat Exp $
+    $Id: authload.cpp,v 1.5 2002/06/13 16:38:50 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -24,18 +24,9 @@
     #pragma warning(disable:4786)
 #endif
 
-#include "crypto/config.h"
+#include "boost/smart_ptr.hpp"
+#include "crypto/cryptlib.h"
 #include "crypto/misc.h"
-#include "crypto/sha.h"
-#include "crypto/hex.h"
-#include "crypto/files.h"
-#include "crypto/mars.h"
-#include "crypto/cbc.h"
-#include "crypto/osrng.h"
-#include "crypto/zlib.h"
-#include "crypto/hmac.h"
-#include "crypto/base64.h"
-#include "crypto/ripemd.h"
 
 #include "authload.h"
 #include "cryptography.h"
@@ -49,12 +40,10 @@
 
 using namespace std;
 using namespace CryptoPP;
-
-template<class T> inline void destroy(T*& p) { delete p; p = NULL; }
-
+using namespace boost;
 
 AuthLoad::AuthLoad(const string& directory)
-: m_config(NULL)
+: m_contacts(this), m_
 {
 	// set initial status to offline - no user logged in
     m_status = OFFLINE;
@@ -62,9 +51,6 @@ AuthLoad::AuthLoad(const string& directory)
 	// set initial user directory to whatever is passed to constructor
     m_directory = directory;
 
-	m_contacts.reset( new Contacts(this) );
-	m_user.reset( new User(this) );
-	m_global.reset( new Globals(this));
 }
 
 AuthLoad::~AuthLoad()
@@ -80,7 +66,7 @@ bool AuthLoad::Logoff()
     m_status = OFFLINE;
 
 	// set the config to a empty xml node
-    m_config.reset( NULL );
+    m_config.reset();
 
 	// resize the disk password to zero length
     m_diskPass.CleanNew(0);
@@ -107,7 +93,7 @@ bool AuthLoad::CreateNew(const string& username, SecByteBlock &password)
     m_filename = gmCrypto::Encode(username) + string(".kim");
 
 	// hash the user's password to use as file key
-    m_diskPass.CleanNew(SHA384::DIGESTSIZE);
+    m_diskPass.CleanNew(gmCrypto::GetDigestSize(gmCrypto::SHA_384));
     m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
 	// set up initial values in the xml node
@@ -133,7 +119,7 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
 
     m_filename = gmCrypto::Encode(username) + string(".kim");
 
-    m_diskPass.CleanNew(SHA384::DIGESTSIZE);
+    m_diskPass.CleanNew(gmCrypto::GetDigestSize(gmCrypto::SHA_384));
     m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
 #if 0
@@ -384,7 +370,7 @@ AuthLoad::SetActivePassword(SecByteBlock& password)
 
     //m_config.setProperty("password", (const char*)(void *)Hash(password));
 	
-    m_diskPass.CleanNew(SHA384::DIGESTSIZE);
+    m_diskPass.CleanNew(gmCrypto::GetDigestSize(gmCrypto::SHA_384));
 	// set new password
     m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
@@ -408,6 +394,9 @@ AuthLoad::GetActiveLogin()
 /*
     -----
     $Log: authload.cpp,v $
+    Revision 1.5  2002/06/13 16:38:50  thementat
+    Major work on the SSH2 protocol and authload changes.
+
     Revision 1.4  2002/06/10 13:28:04  thementat
     Fixed file digest bug.
 

@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: ssh.h,v 1.1 2002/06/06 17:21:53 thementat Exp $
- 
-    GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    $Id: 
+
+    wxSSH - Cross platform ssh2 implementation
+    Copyright (C) 002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,18 +19,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-    -----
-    $Log: ssh.h,v $
-    Revision 1.1  2002/06/06 17:21:53  thementat
-    Initial revision
-
-    Revision 1.3  2001/10/06 16:49:09  thementat
-    Added GNU text.
-
 */
-
-#ifndef GM_SSH_H
-#define GM_SSH_H
 
 #define SSH_IDENTIFICATION "SSH-2.0-GM_BETA1\013\010"
 
@@ -87,4 +76,144 @@
 #define CIPHERS "3des-cbc, blowfish-cbc, twofish256-cbc, twofish-cbc, twofish192-cbc, twofish128-cbc, aes256-cbc, aes192-cbc, aes128-cbc, serpent256-cbc, serpent192-cbc, serpent128-cbc, arcfour, idea-cbc, cast128-cbc"
 #define COMPRESSION "none, zlib"
 
-#endif
+#define MAX_PACKET_LENGTH 35000
+#define MAX_PAYLOAD_LENGTH 32768
+
+#include "crypto/misc.h"
+#include <string>
+
+using namespace std;
+using namespace CryptoPP;
+
+typedef unsigned char byte;
+typedef word32 uint32;
+typedef word64 unit64;
+
+SecByteBlock sshString(const string& str);
+
+class SSH2
+{
+public:
+    SSH2();
+    ~SSH2();
+    
+    SecByteBlock MakeConnection();
+
+    /* Decrypts inbound traffic */
+    SecByteBlock Receive(const char * inbound);
+    SecByteBlock Receive(const string& inbound);
+    SecByteBlock Receive(const SecByteBlock& inbound);
+
+    /* Encrypts outbound traffic */
+    SecByteBlock Send(const char * outbound);
+    SecByteBlock Send(const string& outbound);
+    SecByteBlock Send(const SecByteBlock& outbound);
+
+    void DropConnection();
+
+protected:
+
+    // only for non-encrypted packet
+    SecByteBlock MakeBinaryPacket(const SecByteBlock& payload,
+            const SecByteBlock& random_padding,
+            const SecByteBlock& mac);
+
+    SecByteBlock MakeBinaryPacketNoMAC(const SecByteBlock& payload,
+        const SecByteBlock& random_padding);
+
+    SecByteBlock EncryptPacket(const SecByteBlock& packet_minus_mac);
+    SecByteBlock DecryptPacket(const SecByteBlock& cipher_text);
+
+    SecByteBlock MakeNegotiationPacket();
+
+    SecByteBlock MakeDisconnectPacket(unsigned long reason_code, const char * description, 
+                                              const char * lang_code);
+    SecByteBlock MakeServiceRequestPacket(const char * service_name);
+
+    SecByteBlock MakeMAC(const SecByteBlock& packet);
+    bool VerifyMAC(const SecByteBlock& packet, const SecByteBlock& hmac);
+
+    SecByteBlock CompressPayload(const SecByteBlock& packet);
+    SecByteBlock DecompressPayload(const SecByteBlock& packet);
+
+    unsigned long IncrementSequence() { 
+        if (m_sequenceNumber == 4294967296) // check with ietf
+            m_sequenceNumber = 0;
+        return m_sequenceNumber++;
+    }
+
+    unsigned long IncrementRemoteSequence()
+    {
+        if (m_remoteSequenceNumber == 4294967296) // check with ietf
+            m_remoteSequenceNumber = 0;
+        return m_remoteSequenceNumber++;
+    }
+
+private:
+
+    uint32 m_remoteSequenceNumber;
+    uint32 m_sequenceNumber;
+
+    int m_remoteMacType;
+    int m_macType;
+
+    int m_remoteCipherType;
+    int m_cipherType;
+
+    SecByteBlock m_sessionKey;
+
+    SecByteBlock m_remoteIV;
+    SecByteBlock m_IV;
+
+protected:
+
+
+    // public key types
+	enum { RSA = 0, DSA, ELGAMAL, NR, BLUMGOLDWASSER,
+		RABIN, RW, LUC, LUCELG, ECURVE, DH, UNIFIED_DH, ECNR,
+		EC_DHC, EC_MQVC, EC_DHAES};
+
+
+	// block cipher types
+	enum { _IDEA = 100, _DES, DES_EDE2, DES_EDE3, DESX, RC2,
+		RC5, BLOWFISH, DIAMOND2, _TEA, SAFER_K64, SAFER_K128,
+		SAFER_SK64, SAFER_SK128, _3WAY, GOST, SHARK, CAST_128,
+		CAST_256, SQUARE, RC6, MARS, RIJNDAEL, TWOFISH, SERPENT,
+		SKIPJACK };
+
+	enum { DEFAULT_PK = 0 };
+	enum { DEFAULT_BLOCK = 107 };
+	enum { DEF_BLOCKSIZE = 16 };
+	enum { DEF_KEYSIZE = 16 };
+	enum { DEFAULT_COMPRESS_LEVEL = 5 };
+
+	enum { DEF_PKSIZE = 1024 };
+
+	// stream cipher methods
+	enum { ARC4 = 200, SEAL, WAKE, Sapphire, BlumBlumShub,
+		_PANAMA_STREAM };
+
+	// macs
+	enum { MD5_MAC = 300, _HMAC, XOR_MAC, CBC_MAC, DMAC };
+
+    // ssh2 hmacs
+    enum { NO_HMAC, HMAC_SHA1, HMAC_SHA1_96, HMAC_MD5, HMAC_MD5_96 };
+
+    // ssh2 ciphers
+    enum { THREE_DES_CBC, BLOWFISH_CBC, TWOFISH256_CBC, TWOFISH192_CBC, 
+        TWOFISH128_CBC, AES256_CBC, AES192_CBC, AES128_CBC, 
+        SERPENT256_CBC, SERPENT192_CBC, SERPENT128_CBC, ARCFOUR,
+        IDEA_CBC, CAST128_CBC, NO_CIPHER, MARS256_CBC };
+
+	// one-way hash functions
+
+	enum { _SHA = 400, SHA_256, SHA_384, SHA_512, MD_2, MD_5, _HAVAL,
+		HAVAL_3, HAVAL_4, HAVAL_5, RIPEMD_160, _TIGER, PANAMA_HASH };
+
+	// modes
+
+	enum { CBC_RAW = 500, CBC_PADDED, CBC_CTS, CFB, COUNTER, PGP_CFB };
+
+        
+};
+

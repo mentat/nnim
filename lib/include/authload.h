@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.h,v 1.3 2002/06/09 20:28:47 thementat Exp $
+    $Id: authload.h,v 1.4 2002/06/13 16:38:50 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -25,15 +25,18 @@
 
 #include <string>
 
-#include "crypto/config.h"
-#include "crypto/misc.h"
-#include "gmException.h"
+#include "boost/smart_ptr.hpp"
+#include "boost/weak_ptr.hpp"
 
+#include "crypto/misc.h"
+
+#include "gmException.h"
 #include "globals.h"
 #include "xml.h"
 
 using namespace std;
 using namespace CryptoPP;
+using namespace boost;
 
 class Contact;
 class AuthLoad
@@ -88,8 +91,8 @@ protected:
 	class Contacts
 	{
 	public:
-		Contacts(AuthLoad* auth):m_auth(auth) {}
-		XMLNode GetConfig() { return *m_contact(); }
+		Contacts(weak_ptr<XMLNode> conf):m_conf(conf) {}
+		weak_ptr<XMLNode> GetConfig() { return m_conf; }
 		enum Type { FOLDER, BASEFOLDER, CONTACT, CONTACTBASE, PROTOCOL };
 
 		/// Deletes all net tags in XML
@@ -140,43 +143,44 @@ protected:
 		bool Exists(const string& name);
  
 	private:
-		XMLNode *m_contact() 
+        // ugly interface to a non-shared pointer class
+		XMLNode m_contact() 
 		{ 
-			if (!m_auth->m_config.get()) 
+            if (m_conf.expired()) 
 				throw gmException("Pointer Error", gmException::gFATAL); 
 			else 
-				return &m_auth->m_config->child("contacts").child("folder");
+				return m_conf.get()->child("contacts").child("folder");
 		}
 
-		AuthLoad* m_auth;
+		weak_ptr<XMLNode> m_conf;
 	};
 
 	class Globals
 	{
 	public:
-		Globals(AuthLoad* auth):m_auth(auth) {}
+		Globals(weak_ptr<XMLNode> conf):m_conf(conf) {}
 		bool GetWindowPos(int &x, int &y, int &w, int &h, const string& windowname);
 		bool GetValue(const string& value, string &result_string);
 		bool SetValue(const string& value, const string& setting);
 		bool SetWindowPos(int x, int y, int w, int h, const string& windowname);
 
 	private:
-		XMLNode* m_global() 
+		XMLNode m_global() 
 		{ 
-			if (!m_auth->m_config.get()) 
+			if (m_conf.expired()) 
 				throw gmException("Pointer Error", gmException::gFATAL); 
 			else 
-				return &m_auth->m_config->child("global");
+				return m_conf.get()->child("global");
 		}
 
-		AuthLoad* m_auth;
+		weak_ptr<XMLNode> m_conf;
 
 	};
 
-	class User
+	class Users
 	{
 	public:
-		User(AuthLoad* auth):m_auth(auth) {}
+		Users(weak_ptr<XMLNode> conf):m_conf(conf) {}
 
 		void SetPrivateKey(const string & key);
 		void SetPublicKey(const string & key);
@@ -192,14 +196,14 @@ protected:
 		bool DeleteNet(const string& netname);
       
 	private:
-		XMLNode *m_user() 
+		XMLNode m_user() 
 		{ 
-			if (!m_auth->m_config.get()) 
+			if (m_conf.expired()) 
 				throw gmException("Pointer Error", gmException::gFATAL); 
 			else 
-				return &m_auth->m_config->child("user");
+				return m_conf.get()->child("user");
 		}
-		AuthLoad* m_auth;
+		weak_ptr<XMLNode> m_conf;
 		
 	};
 
@@ -214,15 +218,11 @@ protected:
 private:
 
 	/// The base config XML node
-    auto_ptr<XMLNode> m_config;
-//XMLNode * m_config;
+    shared_ptr<XMLNode> m_config;
  
-    auto_ptr<Contacts> m_contacts;
-    auto_ptr<User> m_user;
-    auto_ptr<Globals> m_global;
-	//Contacts *m_contacts;
-	//User *m_user;
-	//Globals *m_global;
+    Contacts m_contacts;
+    Users m_user;
+    Globals m_global;
 
 	/// The directory that the config is stored in
 	string m_directory;
@@ -237,9 +237,17 @@ private:
 
 public:
 
- 	Contacts& C() { return *m_contacts; }
-	User& U() { return *m_user; }
-	Globals& G() { return *m_global; }
+    weak_ptr<Contacts> C() { if (m_contacts.get()) 
+        return weak_ptr<Contacts> (m_contacts); 
+        throw gmException("Fatal error", gmException::gFATAL); }
+
+	weak_ptr<User> U() { if (m_user.get())
+        return weak_ptr<User> (m_user); 
+        throw gmException("Fatal error", gmException::gFATAL); }
+
+	weak_ptr<Globals> G() { if (m_global.get())
+        return weak_ptr<Globals> (m_global); 
+        throw gmException("Fatal error", gmException::gFATAL); }
 
 	const XMLNode ReturnXML() { return *m_config; }
 
@@ -250,6 +258,9 @@ public:
 /*
     -----
     $Log: authload.h,v $
+    Revision 1.4  2002/06/13 16:38:50  thementat
+    Major work on the SSH2 protocol and authload changes.
+
     Revision 1.3  2002/06/09 20:28:47  thementat
     Tried to fix referencing in authload, moved crypto out of authload, more auto_ptrs
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: cryptography.h,v 1.2 2002/06/06 18:43:02 thementat Exp $
+    $Id: cryptography.h,v 1.3 2002/06/13 16:38:50 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace - jllovela@eos.ncsu.edu
@@ -129,6 +129,8 @@ public:
 
 	void setBlockCipherMode(unsigned short mode) { m_mode = mode; }
 
+    static int GetDigestSize(int hash_function);
+
 protected:
 
 	byte * MakeTransportPacket(byte payload[], const unsigned long payload_length, 
@@ -206,6 +208,9 @@ public:
 /*
     -----
     $Log: cryptography.h,v $
+    Revision 1.3  2002/06/13 16:38:50  thementat
+    Major work on the SSH2 protocol and authload changes.
+
     Revision 1.2  2002/06/06 18:43:02  thementat
     Added copyrights, fixed cryptography compile errors, lib builds in vc7
 
