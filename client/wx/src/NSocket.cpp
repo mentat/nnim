@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NSocket.cpp,v 1.3 2002/06/23 14:50:01 thementat Exp $
+    $Id: NSocket.cpp,v 1.4 2002/06/23 18:35:51 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -21,6 +21,7 @@
 
 */
 #include <string>
+#include <sstream>
 #include "NInclude.h"
 
 #include <wx/string.h>
@@ -32,23 +33,24 @@
 #include "NSocket.h"
 
 #include "protocol.h"
+#include "buffer.hpp"
 
 using namespace std;
 
-wxString ConvertString(const char * data, int len)
+wxString ConvertString(const byte * data, int len)
 {
-  wxString temp;
+  stringstream temp;
   for (int i = 0; i < len; i++)
   {
     if ((data[i] > 31) && (data[i] < 127))
-      temp += data[i];
+      temp << data[i];
     else
     {
-      temp += '\\';
-      temp += WXITOA((int)((unsigned char)data[i]));
+      temp << '\\';
+      temp << (int)data[i];
     }
   }
-  return temp;
+  return temp.str().c_str();
 }
 
 wxNetwork::wxNetwork(Protocol *proto) :  Network(proto)
@@ -95,11 +97,23 @@ void wxNetwork::sendData(const char *data,int len)
 {
   SetFlags(wxSOCKET_WAITALL);
  
-  wxLogMessage(wxString(wxT("Sending: ")) + ConvertString(data, len));
+  wxLogMessage(wxString(wxT("Sending: ")) + ConvertString((const byte *)data, len));
   Write(data, len);
 
   int lCount = LastCount();
   wxLogMessage(wxString(wxT("Send LCount is: ")) + WXITOA(lCount));
+}
+
+void wxNetwork::sendData(const vbuf& data)
+{
+    SetFlags(wxSOCKET_WAITALL);
+
+    wxLogMessage(wxString(wxT("Sending: ")) + ConvertString(data.data(), data.size()));
+    Write((const char *)data.data(), data.size());
+
+    int lCount = LastCount();
+    wxLogMessage(wxString(wxT("Send LCount is: ")) + WXITOA(lCount));
+
 }
 
 void wxNetwork::disconnect()
@@ -149,6 +163,47 @@ void wxNetwork::socketData(string &data)
   data = dataBuffer;
 
 #undef READ_CHUNK_SIZE
+}
+
+void wxNetwork::socketData(vbuf& data)
+{
+#define READ_CHUNK_SIZE 300
+
+  if (!IsData())
+  {
+    wxLogDebug(wxT("IsData is false"));
+    return;
+  }
+
+  SetTimeout(1);
+  SetFlags(wxSOCKET_NONE);
+
+  unsigned int lCount = 0,
+        it = 0;
+
+  char charBuffer[READ_CHUNK_SIZE];
+
+  Read(charBuffer, READ_CHUNK_SIZE);
+
+  lCount = LastCount();
+
+  data += vbuf(charBuffer, lCount);
+
+  wxLogMessage(wxString(wxT("Receive LCount is: ")) + WXITOA(lCount));
+
+  while (READ_CHUNK_SIZE == lCount)
+  {
+
+    Read(charBuffer, READ_CHUNK_SIZE);
+    lCount = LastCount();
+
+    data += vbuf(charBuffer, lCount);
+
+    wxLogMessage(wxString(wxT("Receive LCount is: ")) + WXITOA(lCount));
+  }
+
+#undef READ_CHUNK_SIZE
+
 }
 
 void wxNetwork::socketData(char* &data,int &len)
@@ -207,7 +262,7 @@ void wxNetwork::socketData(char* &data,int &len)
 
 void wxNetwork::checkForData()
 {
-  string buf;
+  vbuf buf;
   int avail = 0;
 
   socketData(buf);
@@ -218,7 +273,7 @@ void wxNetwork::checkForData()
     return;
   }
 
-  wxLogMessage(wxString(wxT("Receiving: ")) + ConvertString(buf.c_str(), buf.length()));
+  wxLogDebug(wxString(wxT("Receiving: ")) + ConvertString(buf.data(), buf.size()));
 
 
   if (owner)

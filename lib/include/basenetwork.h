@@ -4,6 +4,7 @@
 #include <string>
 #include <dstring.h>
 #include <xml.h>
+#include <buffer.hpp>
 
 /* Low-Level Network Error Codes */
 #define KIM_NETWORK_NOERROR   101 // No error happened.  Connect() calls should use this.
@@ -73,6 +74,7 @@ public:
   virtual void sendData(const XMLNode &data){string tmp=data; sendData(tmp.c_str(),tmp.length());};
   virtual void sendData(const dstring &data) { sendData((const char*)data.data(), data.length());};
 
+  virtual void sendData(const vbuf& data) = 0;
   /**
       Disconnect
   */
@@ -83,6 +85,7 @@ public:
   */
   virtual void socketData(char* &data,int &len)=0;
   virtual void socketData(string& data) = 0;
+  virtual void socketData(const vbuf& data) = 0;
 
   /**
      update socket and check for data

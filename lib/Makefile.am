@@ -9,7 +9,7 @@ include_HEADERS = include/authload.h include/basenetwork.h include/contact.h \
  include/platform.h \
  include/protocol.h include/securecomm.h include/sign.h \
  include/tocprotocol.h include/WString.h include/xml.h include/xmlnode.h \
- include/yahooprotocol.h	
+ include/yahooprotocol.h include/buffer.hpp	
 
 lib_LTLIBRARIES = libGM.la
 libGM_la_SOURCES = null.c

@@ -1,4 +1,25 @@
 // -*- C++ -*-
+/*
+    $Id: protocol.h,v 1.2 2002/06/23 18:35:51 thementat Exp $
+
+    GNU Messenger - The secure instant messenger
+
+	Copyright (C) 1999-2002  Henrik Abelsson <henrik@abelsson.com>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 #ifndef KIM_PROTOCOL_H
 #define KIM_PROTOCOL_H
 
@@ -6,6 +27,7 @@
 #include <list>
 #include "xmlnode.h"
 #include "contact.h"
+#include "buffer.hpp"
 
 using namespace std;
 
@@ -29,6 +51,7 @@ class Network;
     \item Protocol::S_offline      - Disconnected.
     \item Protocol::S_registring   - While registering a new account
     \item Protocol::S_away         - When the user is online, but away.
+
     \item Protocol::S_getPubKey    - When a public rsa key is needed (internal to kit protocol only)
  \end{itemize}
 
@@ -150,7 +173,8 @@ public:
   /**
     Parse this data.
    */
-  virtual void handleData(Network *net,const string& data)=0;
+  virtual void handleData(Network *net, const string& data)=0;
+  virtual void handleData(Network *net, const vbuf& data) = 0;
 
   /**
     A socket or network error has occured, tell the protocol about it.

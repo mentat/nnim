@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.2 2002/06/23 14:50:01 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.3 2002/06/23 18:35:51 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -38,6 +38,7 @@
 #include "protocol.h"
 #include "tocprotocol.h"
 #include "crypto/misc.h"
+#include "buffer.hpp"
 
 using namespace std;
 using namespace CryptoPP;
@@ -53,14 +54,14 @@ public:
 		m_len=0;
 	}
 
-	unsigned char m_ast;
-	unsigned char m_type;
-	unsigned short m_seq;
-	unsigned short m_len;
+	byte m_ast;
+	byte m_type;
+	word16 m_seq;
+	word16 m_len;
 
-	dstring getHdr()
+	vbuf getHdr()
 	{
-		dstring header;
+		vbuf header;
 
 		header += m_ast;
 		header += m_type;
@@ -106,9 +107,9 @@ TocProtocol::aim_encode(const string& s)
   return buf;
 }
 
-dstring TocProtocol::aim_normalize(const string& s)
+string TocProtocol::aim_normalize(const string& s)
 {
-	dstring buf;
+	string buf;
 
 	for (unsigned int i=0; i<s.length(); i++)
 	{
@@ -151,15 +152,15 @@ unsigned char *TocProtocol::roast_password(const char *pass)
   return (unsigned char *) rp;
 }
 
-void TocProtocol::send_flap(int type, const dstring& data)
+void TocProtocol::send_flap(int type, const vbuf& data)
 {
 	m_net->sendData(return_flap(type, data));
 }
 
-dstring TocProtocol::return_flap(int type, const dstring& data)
+vbuf TocProtocol::return_flap(int type, const vbuf& data)
 {
 	// output buffer object
-	dstring buffer;
+	vbuf buffer;
 
 	/*
 	* FLAP Header (6 bytes)
@@ -175,7 +176,7 @@ dstring TocProtocol::return_flap(int type, const dstring& data)
 	flapHdr fh;
 
 	// set length to payload length
-	int len = data.length();
+	int len = data.size();
 
 	// set flap type
 	fh.m_type = type;
@@ -193,7 +194,7 @@ dstring TocProtocol::return_flap(int type, const dstring& data)
 
 void TocProtocol::toc_send_keep_alive()
 {
-  send_flap(TYPE_KEEPALIVE,"");
+  send_flap(TYPE_KEEPALIVE, vbuf());
 }
 
 
@@ -241,12 +242,13 @@ void TocProtocol::logout()
 
 void TocProtocol::sendMessage(const Contact &c, const string &message)
 {
-  string msg="toc_send_im ";
-  msg+=aim_normalize(c.serverId())+" \"";
-  msg+=aim_encode(message)+"\"";
+    string msg="toc_send_im ";
+    msg+=aim_normalize(c.serverId())+" \"";
+    msg+=aim_encode(message)+"\"";
 
-  send_flap(TYPE_DATA,msg);
+    send_flap(TYPE_DATA,vbuf(msg));
 }
+
 
 void TocProtocol::sendMessageAuto(const Contact &c, const string &message)
 {
@@ -255,7 +257,7 @@ void TocProtocol::sendMessageAuto(const Contact &c, const string &message)
 	msg+=aim_normalize(c.serverId())+" \"";
 	msg+=aim_encode(message)+"\" \"auto\"";
 
-	send_flap(TYPE_DATA,msg);
+	send_flap(TYPE_DATA,vbuf(msg));
 }
 
 void TocProtocol::addBuddy(const Contact &c)
@@ -284,9 +286,12 @@ void TocProtocol::delBuddy(const Contact &c)
 // some kind of error occured.
 void TocProtocol::connectionError(Network *net,int e)
 {
-  (void)e;
+  eventError(e, "A Network error occured.");
+
   m_state = S_offline;
+
   debug() << "Connection closed!";
+
   m_net->disconnect();
 
   for(buddy_t::iterator i=m_buddies.begin(); i!=m_buddies.end(); i++)
@@ -294,13 +299,14 @@ void TocProtocol::connectionError(Network *net,int e)
     i->second.setStatus(Contact::Offline);
     eventStatusChange(i->second);
   }
+
   eventStateChange(S_offline);
 }
 
 void TocProtocol::connectedToServer(Network *net)
 {
 	// when socket tells that we are connected, start TOC process
-	string flap("FLAPON\r\n\r\n");
+	vbuf flap("FLAPON\r\n\r\n", 10);
 	m_net->sendData(flap);
 
 	debug() << ("FLAPON");
@@ -314,35 +320,40 @@ void TocProtocol::signup()
 	debug() << "doing FLAP SIGNON" ;
 
 	string normalizedUsername(aim_normalize(m_conf.child("user").property("username")));
-	unsigned short usernameLength = byteReverse((unsigned short)normalizedUsername.length());
+	word16 usernameLength = byteReverse((word16)normalizedUsername.length());
 
-	unsigned char postHeader[8];
-	postHeader[0] = 0;
-	postHeader[1] = 0;
-	postHeader[2] = 0;
-	postHeader[3] = 1;
-	postHeader[4] = 0;
-	postHeader[5] = 1;
-	postHeader[6] = (unsigned char) (usernameLength & 0xff);
-	postHeader[7] = (unsigned char) ((usernameLength >> 8) & 0xff);
-	  
-	string msg((char *)postHeader, 8);
-	msg += normalizedUsername;
+	vbuf flapOn;
+	flapOn += (byte)0;
+	flapOn += (byte)0;
+	flapOn += (byte)0;
+	flapOn += (byte)1;
+	flapOn += (byte)0;
+	flapOn += (byte)1;
+	flapOn += (byte) (usernameLength & 0xff);
+	flapOn += (byte) ((usernameLength >> 8) & 0xff);
+	
+	flapOn += normalizedUsername;
 
-	m_net->sendData(msg.c_str(), 8 + normalizedUsername.length());
+	m_net->sendData(flapOn);
 
   /*
    * toc_signon <authorizer host> <authorizer port> <User Name> <Password>
    *            <language> <version>
    */
 
-	stringstream buffer;
-	buffer << "toc_signon " << m_conf.child("loginserver").property("host") 
-		<< " " << m_conf.child("loginserver").intProperty("port") << " "
-		<< normalizedUsername << " " << roast_password(m_conf.child("user").property("password").c_str())
-		<< " " << "english" << " " << "\"NNIM\"" << "\0";
+	vbuf tocSignon;
+    tocSignon += string("toc_signon ");
+    tocSignon += m_conf.child("loginserver").property("host");
+    tocSignon += (byte)' ';
+    tocSignon += m_conf.child("loginserver").intProperty("port");
+    tocSignon += (byte)' ';
+    tocSignon += normalizedUsername;
+    tocSignon += (byte)' ';
+    tocSignon += roast_password(m_conf.child("user").property("password").c_str());
+    tocSignon += string(" english \"NNIM\"");
+    tocSignon += (byte)0;
 
-	send_flap(TYPE_SIGNON, buffer.str());
+	send_flap(TYPE_SIGNON, tocSignon);
 
 	m_state=S_online;
 }
@@ -388,22 +399,22 @@ vector<string> splitStrLF(const string& str)
 
 void TocProtocol::handleData(Network *net)
 {
-	string data;
+	vbuf data;
 	net->socketData(data);
 
-	if (data.length() == 0)
+	if (data.size() == 0)
 		return;
 
 	handleData(net,data);
 
 }
 
-void TocProtocol::handleData(Network *net, const string &data)
+void TocProtocol::handleData(Network *net, const vbuf &data)
 {
 
-	if (!m_buffer.empty())
+	if (m_buffer.size() != 0)
 	{ 
-		string newData;
+		vbuf newData;
 		// do concat buffer with present data
 		newData += m_buffer;
 		m_buffer.clear();
@@ -414,26 +425,26 @@ void TocProtocol::handleData(Network *net, const string &data)
 	}
 
 	// extract payload length from data
-	unsigned short payLoadLength;
-	payLoadLength = (unsigned int)data[4];
-	payLoadLength |= (unsigned int)(data[5] << 8);
+	word16 payLoadLength;
+	payLoadLength = (word16)data[4];
+	payLoadLength |= (word16)(data[5] << 8);
 
-	// convert to network byte order
-	payLoadLength = byteReverse((unsigned short)payLoadLength);
+	// convert from network byte order
+	payLoadLength = byteReverse(payLoadLength);
 
 	// see if payload length is greater then actual payload, 
 	// if so, more on the way
 
-	if (payLoadLength > (data.length() - 6))
+	if (payLoadLength > (data.size() - 6))
 		m_buffer +=  data;
 	else
 	{
-		handleRealData(net, data.substr(6,payLoadLength));
+		handleRealData(net, string(data.data()+6, payLoadLength));
 		
 		// recurse if there is more than one command in data stream
-		if (data.length() > (payLoadLength+6))
+		if (data.size() > (payLoadLength+6))
 		{
-			handleData(net, data.substr(payLoadLength + 6, data.length()));
+			handleData(net, data.sub(payLoadLength + 6));
 		}
 	}
 }
@@ -444,7 +455,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 	string command;
 
 	// if we are connecting, we should just go to signup
-	// but the actual data should be "FLAPON"
+	// but the actual data should be the flap signon msg
 	if (m_state == S_connecting)
 	{
 		signup();
@@ -715,6 +726,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.3  2002/06/23 18:35:51  thementat
+    Added vbuf class and changing all protocol to use.
+
     Revision 1.2  2002/06/23 14:50:01  thementat
     Work on TOC protocol and new buffer class.
 

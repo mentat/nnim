@@ -1,23 +1,25 @@
 //#define TEST
-
+     /*
 #ifndef byte
 typedef unsigned char byte;
 #endif
 #ifndef uint32
 typedef unsigned int uint32;
 #endif
-
+*/
+  /*
 #ifndef WIN32
 #include <sys/time.h>
 #include <netinet/in.h>
 #else
 #include <windows.h>
-#endif
+#endif    */
 
 #include <string>
 #include <stdio.h>
 #include <list>
 #include <utility>
+#include "crypto/misc.h"
 
 using namespace std;
 #include "gmstorage.h"
@@ -48,9 +50,9 @@ int dumphex (const dstring &data)
   return 0;
 }
 
-uint32 Storage::char2int(unsigned char *buf)
+word32 Storage::char2int(unsigned char *buf)
 {
-  uint32 i;
+  word32 i;
 
   i= buf[0];
   i <<= 8;
@@ -59,14 +61,14 @@ uint32 Storage::char2int(unsigned char *buf)
   i+= buf[2];
   i <<= 8;
   i+= buf[3];
-  i=ntohl(i);
+  i=byteReverse(i);
 
   return i;
 }
 
-void Storage::int2char(unsigned char *buf,uint32 num)
+void Storage::int2char(unsigned char *buf,word32 num)
 {
-  num=htonl(num);
+  num=byteReverse(num);
 
   buf[0] = ( unsigned char ) ((num)>>24)& 0x000000FF;
   buf[1] = ( unsigned char ) ((num)>>16)& 0x000000FF;

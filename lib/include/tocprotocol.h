@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: tocprotocol.h,v 1.2 2002/06/23 14:50:01 thementat Exp $
+    $Id: tocprotocol.h,v 1.3 2002/06/23 18:35:51 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -29,6 +29,11 @@
 #define __TOCPROTOCOL_H
 
 #include "protocol.h"
+#include "crypto/misc.h"
+#include "buffer.hpp"
+
+using namespace std;
+using namespace CryptoPP;
 
 class Network;
 class XMLNode;
@@ -63,12 +68,14 @@ public:
 	virtual void logout();
 	virtual void sendMessage(const Contact &recipient, const string &message);
 	virtual void addBuddy(const Contact &c);
+
+
 	virtual void delBuddy(const Contact &c);
 	virtual void newUser();
 	virtual void getPubkey();
 
 	virtual void handleData(Network *net);
-	virtual void handleData(Network *net, const string& data);
+	virtual void handleData(Network *net, const vbuf& data);
 	virtual void connectionError(Network *net,int error);
 	virtual void connectedToServer(Network *net);
 
@@ -77,8 +84,8 @@ public:
 
 private:
 
-	void send_flap(int type, const string& data);
-	string return_flap(int type, const string& data);
+	void send_flap(int type, const vbuf& data);
+	vbuf return_flap(int type, const vbuf& data);
 	void toc_send_keep_alive();
 	void signup();
 	string aim_encode(const string& s);
@@ -93,14 +100,12 @@ private:
 
 	bool m_paused;
 
-	bool m_bufferEmpty;
-	//vector<char> m_buffer;
+	vbuf m_buffer;
 
 	string m_screenName;
-	string m_buffer;
 	string m_awayMessage;
 
-	int m_realLength;
+	unsigned long m_realLength;
 
 	map <string, string> m_buddiesFromServer;
 
@@ -108,7 +113,7 @@ private:
   
 protected:
 
-	void handleRealData(Network *net, const string& data);
+	void handleRealData(Network *net, const vbuf& data);
     Network *m_net;
 
 };

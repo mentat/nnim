@@ -3,6 +3,9 @@
 
 #include "basenetwork.h"
 #include "wx/socket.h"
+#include "buffer.hpp"
+
+using namespace std;
 
 class Protocol;
 
@@ -56,6 +59,7 @@ public:
      Send data
   */
   virtual void sendData(const char *data,int len);
+  virtual void sendData(const vbuf& data);
  
   /**
       Disconnect
@@ -67,6 +71,7 @@ public:
   */
   virtual void socketData(char* &data,int &len);
   virtual void socketData(string & data);
+  virtual void socketData(vbuf & data);
 
   /**
      update socket and check for data
