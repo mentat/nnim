@@ -5,7 +5,7 @@
 // Author:      Jesse Lovelace
 // Modified by:
 // Created:
-// RCS-ID:      $Id: cryptography.cpp,v 1.1 2002/06/06 17:21:54 thementat Exp $
+// RCS-ID:      $Id: cryptography.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
 // Copyright:   (c) Jesse Lovelace
 // Licence:     LGPL licence
 /////////////////////////////////////////////////////////////////////////////
@@ -17,6 +17,7 @@
 
 
 #include <string>
+#include <memory>
 #include <math.h>
 
 #include "crypto/config.h"
@@ -242,73 +243,47 @@ gmCrypto::~gmCrypto()
 
 string gmCrypto::HashEncode(SecByteBlock& toHash, const int hash_function, bool hexOR64)
 {
-	auto_ptr<HashModule *> hash;
+	SecByteBlock block(Hash(toHash, hash_function));
+	auto_ptr<Filter> encoding;
+
+	string outString;
+
+	if (hexOR64)
+		encoding.reset(new HexEncoder(new StringSink(outString)));
+	else
+		encoding.reset(new Base64Encoder(new StringSink(outString), false));
+	
+	encoding->Put(block, block.Size());
+	encoding->MessageEnd();
+
+	return outString;
+}
+
+
+SecByteBlock gmCrypto::Hash(SecByteBlock& toHash, const int hash_function)
+{
+	auto_ptr<HashModule> hash;
 
 	switch (hash_function)
 	{
-	case(_SHA): hash = new SHA; break;
-	case(SHA_256): hash = new SHA256; break;
-	case(SHA_384): hash = new SHA384; break;
-	case(SHA_512): hash = new SHA512; break;
-	case(MD_2): hash = new MD2; break;
-	case(MD_5): hash = new MD5; break;
-	case(_HAVAL): hash = new HAVAL; break;
-	case(HAVAL_3): hash = new HAVAL3; break;
-	case(HAVAL_4): hash = new HAVAL4; break;
-	case(HAVAL_5): hash = new HAVAL5; break;
-	case(RIPEMD_160): hash = new RIPEMD160; break;
-	case(_TIGER): hash = new Tiger; break;
-	case(PANAMA_HASH): hash = new PanamaHash<true>; break; // true for big endian
+	case(_SHA): hash.reset(new SHA); break;
+	case(SHA_256): hash.reset(new SHA256); break;
+	case(SHA_384): hash.reset(new SHA384); break;
+	case(SHA_512): hash.reset(new SHA512); break;
+	case(MD_2): hash.reset(new MD2); break;
+	case(MD_5): hash.reset(new MD5); break;
+	case(_HAVAL): hash.reset(new HAVAL); break;
+	case(HAVAL_3): hash.reset(new HAVAL3); break;
+	case(HAVAL_4): hash.reset(new HAVAL4); break;
+	case(HAVAL_5): hash.reset(new HAVAL5); break;
+	case(RIPEMD_160): hash.reset(new RIPEMD160); break;
+	case(_TIGER): hash.reset(new Tiger); break;
+	case(PANAMA_HASH): hash.reset(new PanamaHash<true>); break; // true for big endian
 	default: throw gmException("No such hash function available.", gmException::gUSER);
 	}
 
 	SecByteBlock retBlock(hash->DigestSize());
-
 	hash->CalculateDigest(retBlock, toHash, toHash.Size());
-	
- 	string outstring;
-
-	auto_ptr<Filter *> encoder;
-
-	if (hexOR64)
-		encoder = new HexEncoder(new StringSink(outstring));
-	else
-		encoder = new Base64Encoder(new StringSink(outstring), false);
-
-	encoder->Put(retBlock, retBlock.Size());
-	encoder->MessageEnd();
-
-	return outstring;
-}
-
-template <class T>
-SecByteBlock gmCrypto::Hash(SecByteBlock& toHash, const int hash_function)
-{
-	auto_ptr<IteratedHash<T> *> hash;
-
-	switch (hash_function)
-	{
-	case(_SHA): hash = new SHA; break;
-	case(SHA_256): hash = new SHA256; break;
-	case(SHA_384): hash = new SHA384; break;
-	case(SHA_512): hash = new SHA512; break;
-	case(MD_2): hash = new MD2; break;
-	case(MD_5): hash = new MD5; break;
-	case(_HAVAL): hash = new HAVAL; break;
-	case(HAVAL_3): hash = new HAVAL3; break;
-	case(HAVAL_4): hash = new HAVAL4; break;
-	case(HAVAL_5): hash = new HAVAL5; break;
-	case(RIPEMD_160): hash = new RIPEMD160; break;
-	case(_TIGER): hash = new Tiger; break;
-	case(PANAMA_HASH): hash = new PanamaHash<true>; break; // true for big endian
-	default: throw gmException("No such hash function available.", gmException::gUSER);
-	}
-
- 	SecByteBlock retBlock(hash->DigestSize());
-
-	hash->Detach(new ArraySink(retBlock, retBlock.Size()));
-	
-	hash->Put(toHash, toHash.Size());
 
 	return retBlock;
 
@@ -370,26 +345,38 @@ string gmCrypto::BlockDecryptText(const string& ciphertext/*, const string& IV*/
 
 string gmCrypto::Encode(const string& input, bool hexEnc)
 {
-
-	string out;
+	auto_ptr<Filter> encoding;
+	string outString;
 
 	if (hexEnc)
-	{
-		HexEncoder e(new StringSink(out), false);
-		e.Put((const unsigned char *)input.c_str(), input.length());
-		e.MessageEnd();
-	}
+		encoding.reset(new HexEncoder(new StringSink(outString)));
 	else
-	{
-		Base64Encoder e(new StringSink(out), false);
-		e.Put((const unsigned char *)input.c_str(), input.length());
-		e.MessageEnd();
-	}
+		encoding.reset(new Base64Encoder(new StringSink(outString), false));
+	
+	encoding->Put((const unsigned char *)input.c_str(), input.length());
+	encoding->MessageEnd();
 
-	return out;
+	return outString;
 
 }
 
+string gmCrypto::Encode(const SecByteBlock& input, bool hexEnc)
+{
+	auto_ptr<Filter> encoding;
+
+	string outString;
+
+	if (hexEnc)
+		encoding.reset(new HexEncoder(new StringSink(outString)));
+	else
+		encoding.reset(new Base64Encoder(new StringSink(outString), false));
+	
+	encoding->Put(input, input.Size());
+	encoding->MessageEnd();
+
+	return outString;
+}
+/*
 string gmCrypto::Decode(const string& input, bool hexDec)
 {
 	string out;
@@ -409,3 +396,24 @@ string gmCrypto::Decode(const string& input, bool hexDec)
 
 	return out;
 }
+*/
+SecByteBlock gmCrypto::Decode(const string& input, bool hexDec)
+{
+	auto_ptr<Filter> decoding;
+
+	SecByteBlock out;
+
+	if (hexDec)
+		decoding.reset(new HexDecoder);
+	else
+		decoding.reset(new Base64Decoder);
+	
+	decoding->Put((const unsigned char *)input.c_str(), input.length());
+	decoding->MessageEnd();
+
+	out.Resize(decoding->MaxRetrievable());
+	decoding->Get(out, out.Size());
+
+	return out;
+}
+

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.1 2002/06/06 17:21:53 thementat Exp $
+    $Id: authload.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -122,7 +122,7 @@ bool AuthLoad::CreateNew(const string& username, SecByteBlock &password)
     m_config = new XMLNode();
 
 	// create a new file to hold user data
-    m_filename = KimCrypto::Encode(username) + string(".kim");
+    m_filename = gmCrypto::Encode(username) + string(".kim");
 
 	// hash the user's password to use as file key
     m_diskPass = Hash(password);
@@ -160,7 +160,7 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
 	destroy(m_config);
     m_config = new XMLNode();
 
-    m_filename = KimCrypto::Encode(username) + string(".kim");
+    m_filename = gmCrypto::Encode(username) + string(".kim");
 
     m_diskPass = Hash(password);
 
@@ -390,7 +390,7 @@ AuthLoad::Exists(const string& username)
 {
     ifstream in;
 
-    string filename = KimCrypto::Encode(username);
+    string filename = gmCrypto::Encode(username);
 
     string toOpen = m_directory + filename + string(".kim");
     in.open(toOpen.c_str());
@@ -481,7 +481,7 @@ AuthLoad::Encrypt(const string& filename, const SecByteBlock& key, const string&
 	LogText((const char *)(const unsigned char *)myMac);
 
 	LogText("Ciphertext:");
-	LogText(KimCrypto::Encode(cipherText, cipherText.Size()));
+	LogText(gmCrypto::Encode(cipherText, cipherText.Size()));
 
     // output all to file
 
@@ -551,8 +551,11 @@ AuthLoad::Decrypt(const string& filename, const SecByteBlock &key)
 /*
     -----
     $Log: authload.cpp,v $
-    Revision 1.1  2002/06/06 17:21:53  thementat
-    Initial revision
+    Revision 1.2  2002/06/06 18:43:02  thementat
+    Added copyrights, fixed cryptography compile errors, lib builds in vc7
+
+    Revision 1.1.1.1  2002/06/06 17:21:53  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.21  2001/12/17 18:33:42  mentat
     Importing changes for NNIM Beta 1 client.

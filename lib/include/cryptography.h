@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: cryptography.h,v 1.1 2002/06/06 17:21:53 thementat Exp $
+    $Id: cryptography.h,v 1.2 2002/06/06 18:43:02 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace - jllovela@eos.ncsu.edu
@@ -19,20 +19,8 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-    -----
-    $Log: cryptography.h,v $
-    Revision 1.1  2002/06/06 17:21:53  thementat
-    Initial revision
+	*/
 
-    Revision 1.9  2001/12/12 01:40:02  mentat
-    Fixed compilation error with gcc3.0.2 and CryptoPP also added new #defines
-
-    Revision 1.8  2001/10/27 18:29:13  estyrke
-    Fixed icq parser bug.. #475544
-
-    Revision 1.7  2001/10/06 16:46:04  thementat
-    Added GNU text.
-*/
 
 #ifndef GM_CRYPTOGRAPHY_H
 #define GM_CRYPTOGRAPHY_H
@@ -64,10 +52,9 @@ public:
 
 	// public key types
 	enum { RSA = 0, DSA, ELGAMAL, NR, BLUMGOLDWASSER,
-		RABIN,RW, LUC, LUCELG, ECURVE, DH, UNIFIED_DH, ECNR,
+		RABIN, RW, LUC, LUCELG, ECURVE, DH, UNIFIED_DH, ECNR,
 		EC_DHC, EC_MQVC, EC_DHAES};
 
-	enum { DEFAULT_PK = 0 };
 
 	// block cipher types
 	enum { _IDEA = 100, _DES, DES_EDE2, DES_EDE3, DESX, RC2,
@@ -76,10 +63,13 @@ public:
 		CAST_256, SQUARE, RC6, MARS, RIJNDAEL, TWOFISH, SERPENT,
 		SKIPJACK };
 
+	enum { DEFAULT_PK = 0 };
 	enum { DEFAULT_BLOCK = 107 };
 	enum { DEF_BLOCKSIZE = 16 };
 	enum { DEF_KEYSIZE = 16 };
 	enum { DEFAULT_COMPRESS_LEVEL = 5 };
+
+	enum { DEF_PKSIZE = 1024 };
 
 	// stream cipher methods
 	enum { ARC4 = 200, SEAL, WAKE, Sapphire, BlumBlumShub,
@@ -92,8 +82,6 @@ public:
 
 	enum { _SHA = 400, SHA_256, SHA_384, SHA_512, MD_2, MD_5, _HAVAL,
 		HAVAL_3, HAVAL_4, HAVAL_5, RIPEMD_160, _TIGER, PANAMA_HASH };
-
-	enum { DEF_PKSIZE = 1024 };
 
 	// modes
 
@@ -193,7 +181,10 @@ public:
 
 	/* base encode/decode functions */
 	static string Encode(const string& input, bool hexEnc = true);
-	static string Decode(const string& input, bool hexDec = true);
+	static string Encode(const SecByteBlock& input, bool hexEnc = true);
+
+//	static string Decode(const string& input, bool hexDec = true);
+	static SecByteBlock Decode(const string& input, bool hexDec = true);
 
     /* file decryption/enc functions */
     /* Note: need to make multi-cipher functions */
@@ -211,3 +202,22 @@ public:
 };
 
 #endif
+
+/*
+    -----
+    $Log: cryptography.h,v $
+    Revision 1.2  2002/06/06 18:43:02  thementat
+    Added copyrights, fixed cryptography compile errors, lib builds in vc7
+
+    Revision 1.1.1.1  2002/06/06 17:21:53  thementat
+    Checkin of new sources BETA 2
+
+    Revision 1.9  2001/12/12 01:40:02  mentat
+    Fixed compilation error with gcc3.0.2 and CryptoPP also added new #defines
+
+    Revision 1.8  2001/10/27 18:29:13  estyrke
+    Fixed icq parser bug.. #475544
+
+    Revision 1.7  2001/10/06 16:46:04  thementat
+    Added GNU text.
+*/

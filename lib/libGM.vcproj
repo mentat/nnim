@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../crypto;common/;common/expat;protocol/;protocol/msn/;protocol/icq;include/;common/expat/include/;.;win32/"
+				AdditionalIncludeDirectories="..;common/;common/expat;protocol/;protocol/msn/;protocol/icq;include/;common/expat/include/;.;win32/"
 				PreprocessorDefinitions="_DEBUG,WIN32,_LIB,HAVE_CRYPTO,_WINDOWS,USE_PRECOMPILED_HEADERS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -119,10 +119,10 @@
 				RelativePath=".\include\cryptography.h">
 			</File>
 			<File
-				RelativePath=".\certificates\dstring.h">
+				RelativePath=".\include\dstring.h">
 			</File>
 			<File
-				RelativePath=".\include\dstring.h">
+				RelativePath=".\certificates\dstring.h">
 			</File>
 			<File
 				RelativePath=".\include\expat.h">
@@ -158,10 +158,10 @@
 				RelativePath=".\include\peerprotocol.h">
 			</File>
 			<File
-				RelativePath=".\include\platform.h">
+				RelativePath=".\certificates\platform.h">
 			</File>
 			<File
-				RelativePath=".\certificates\platform.h">
+				RelativePath=".\include\platform.h">
 			</File>
 			<File
 				RelativePath=".\include\protocol.h">

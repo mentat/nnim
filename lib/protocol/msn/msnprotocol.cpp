@@ -1,5 +1,5 @@
 /*
-    $Id: msnprotocol.cpp,v 1.1 2002/06/06 17:21:50 thementat Exp $
+    $Id: msnprotocol.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Henrik Abelsson <henrik@abelsson.com>
@@ -20,8 +20,11 @@
 
     -----
     $Log: msnprotocol.cpp,v $
-    Revision 1.1  2002/06/06 17:21:50  thementat
-    Initial revision
+    Revision 1.2  2002/06/06 18:43:02  thementat
+    Added copyrights, fixed cryptography compile errors, lib builds in vc7
+
+    Revision 1.1.1.1  2002/06/06 17:21:50  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.11  2001/12/12 01:47:26  mentat
     Adding gm_config.h.in and more #ifdef WIN32s to get rid of MSW template warning.
@@ -60,10 +63,10 @@
 #include <list>
 #ifdef HAVE_CRYPTO
 
-#include <pch.h>
-#include <md5.h>
-#include <hex.h>
-#include <filters.h>
+#include <crypto/pch.h>
+#include <crypto/md5.h>
+#include <crypto/hex.h>
+#include <crypto/filters.h>
 #include <stdio.h>
 
 using namespace CryptoPP;

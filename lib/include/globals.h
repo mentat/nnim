@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: globals.h,v 1.1 2002/06/06 17:21:53 thementat Exp $
+    $Id: globals.h,v 1.2 2002/06/06 18:43:02 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -21,8 +21,11 @@
 
     -----
     $Log: globals.h,v $
-    Revision 1.1  2002/06/06 17:21:53  thementat
-    Initial revision
+    Revision 1.2  2002/06/06 18:43:02  thementat
+    Added copyrights, fixed cryptography compile errors, lib builds in vc7
+
+    Revision 1.1.1.1  2002/06/06 17:21:53  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.6  2001/12/12 01:40:02  mentat
     Fixed compilation error with gcc3.0.2 and CryptoPP also added new #defines
@@ -66,12 +69,6 @@ typedef unsigned char byte;
 #define _BLOCK          601
 #define _PK             602
 
-// Other Defaults
-
-#define DEF_RANDOMSIZE  16
-#define DEF_BLOCKSIZE   8
-#define DEF_KEYSIZE     16
-#define DEF_PKSIZE      1024 // bits
 
 //////////////////////////// SSH2 Emulation ///////////////////////////
 

@@ -1,5 +1,5 @@
 /*
-    $Id: kitprotocol.cpp,v 1.1 2002/06/06 17:21:48 thementat Exp $
+    $Id: kitprotocol.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Henrik Abelsson <henrik@abelsson.com>
@@ -20,8 +20,11 @@
 
     -----
     $Log: kitprotocol.cpp,v $
-    Revision 1.1  2002/06/06 17:21:48  thementat
-    Initial revision
+    Revision 1.2  2002/06/06 18:43:02  thementat
+    Added copyrights, fixed cryptography compile errors, lib builds in vc7
+
+    Revision 1.1.1.1  2002/06/06 17:21:48  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.17  2001/12/12 01:40:02  mentat
     Fixed compilation error with gcc3.0.2 and CryptoPP also added new #defines
@@ -62,15 +65,15 @@
 
 #ifdef HAVE_CRYPTO
 
-#include <pch.h>
-#include <default.h>
-#include <base64.h>
-#include <hex.h>
-#include <rsa.h>
-#include <osrng.h>
-#include <randpool.h>
-#include <gzip.h>
-#include <files.h>
+#include <crypto/pch.h>
+#include <crypto/default.h>
+#include <crypto/base64.h>
+#include <crypto/hex.h>
+#include <crypto/rsa.h>
+#include <crypto/osrng.h>
+#include <crypto/randpool.h>
+#include <crypto/gzip.h>
+#include <crypto/files.h>
 
 using namespace CryptoPP;
 
