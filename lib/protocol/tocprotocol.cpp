@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.4 2002/06/24 12:07:40 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.5 2002/06/24 18:00:50 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -70,14 +70,15 @@ public:
 		header += (byte) m_len;
 		header += (byte) ((m_len >> 8)& 0xff);
 
+        m_seq = byteReverse(real_seq++);
 		return header;
 	}
 
 private:
-	static unsigned short real_seq;
+	static word16 real_seq;
 };
 
-unsigned short flapHdr::real_seq=0;
+word16 flapHdr::real_seq=0;
 
 string 
 TocProtocol::aim_encode(const string& s)
@@ -238,6 +239,7 @@ void TocProtocol::logout()
 	eventStateChange(S_offline);
 	m_state = S_offline;
 
+
 }
 
 void TocProtocol::sendMessage(const Contact &c, const string &message)
@@ -329,6 +331,7 @@ void TocProtocol::signup()
 	flapOn += (byte)1;
 	flapOn += (byte)0;
 	flapOn += (byte)1;
+
 	flapOn += (byte) (usernameLength & 0xff);
 	flapOn += (byte) ((usernameLength >> 8) & 0xff);
 	
@@ -654,14 +657,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 	}
 
 	debug() << "TOC: unknown command OR got other half (or more) of user config\n";
-	/*
-	if (avail-(len+6)>6)
-	{
-		memmove(_data,_data+len+6,avail-(len+6));
-		avail-=len+6;
-		goto again;
-	}
-*/
+
 }
 
 void TocProtocol::update()
@@ -730,6 +726,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.5  2002/06/24 18:00:50  thementat
+    Fixed TOC sequence bug.
+
     Revision 1.4  2002/06/24 12:07:40  thementat
     Toc fixes.
 

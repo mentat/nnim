@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NInclude.h,v 1.5 2002/06/20 16:21:54 thementat Exp $
+    $Id: NInclude.h,v 1.6 2002/06/24 18:00:48 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -124,7 +124,7 @@ Datatype prefixes are as follows:
 #define TOC_SERVER        "toc.oscar.aol.com"
 #define TOC_SERVER_PORT   "9898"
 #define TOC_LOGIN_SERVER  "login.oscar.aol.com"
-#define TOC_LOGIN_PORT    "5190"
+#define TOC_LOGIN_PORT    "1234"
 
 #define ICQ_SERVER        "login.icq.com"
 #define ICQ_PORT          "5190"
@@ -165,6 +165,9 @@ static wxString bool2string(bool input)
 /*
     -----
     $Log: NInclude.h,v $
+    Revision 1.6  2002/06/24 18:00:48  thementat
+    Fixed TOC sequence bug.
+
     Revision 1.5  2002/06/20 16:21:54  thementat
     Many GCC fixes and updates to configure engine.
 

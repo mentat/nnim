@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NUserWiz.cpp,v 1.4 2002/06/23 14:50:01 thementat Exp $
+    $Id: NUserWiz.cpp,v 1.5 2002/06/24 18:00:49 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -106,15 +106,15 @@ UserWizardP2::UserWizardP2(wxWizard *parent)
   wxListBox * listbox = (wxListBox *)FindWindow(ID_U_ALLNETS);
 
   listbox->Clear();
-  listbox->Append("AIM");
+  listbox->Append(wxT("AIM"));
   
-  listbox->Append("MSN");
+  listbox->Append(wxT("MSN"));
   
-  listbox->Append("Yahoo");
+  listbox->Append(wxT("Yahoo"));
   
-  listbox->Append("ICQ");
+  listbox->Append(wxT("ICQ"));
   
-  listbox->Append("GNU");
+  listbox->Append(wxT("GNU"));
 
 }
 
@@ -127,12 +127,16 @@ void UserWizardP2::OnAddNet(wxCommandEvent &event)
   if (listbox->GetSelection() < 0)
     return;
 
-  wxString prompt;
+  wxString prompt(wxT("What is your "));
 
-  if (listbox->GetStringSelection() == "ICQ")
-    prompt = wxT("What is this your UIN\non ICQ Network");
+  if (listbox->GetStringSelection() == wxT("ICQ"))
+    prompt += wxT("UIN\non ICQ Network");
   else
-    prompt.Printf(wxT("What is your screen-name\non %s Network"), listbox->GetStringSelection());
+  {
+    prompt += wxT(" screen-name\non ");
+    prompt += listbox->GetStringSelection();
+    prompt += wxT(" Network?");
+  }
   
   wxString screenname = wxGetTextFromUser(prompt, wxT("Contact Information"),wxT(""), this);
 
@@ -150,12 +154,14 @@ void UserWizardP2::OnAddNet(wxCommandEvent &event)
     }
   }
 
-  wxString prompt2;
-  prompt2.Printf(wxT("Please enter the password for %s\non network %s."), screenname, listbox->GetStringSelection());
+  wxString prompt2(wxT("Please enter the password for "));
+  prompt2 += screenname;
+  prompt2 += wxT(" on network ");
+  prompt2 += listbox->GetStringSelection();
   wxString pw = wxGetPasswordFromUser(prompt2);
 
   m_pwords.insert(m_pwords.begin(), SecByteBlock((const unsigned char *)pw.c_str(), pw.length()));
-  pw = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+  //pw = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
   listctrl->InsertItem(0, screenname);
   listctrl->SetItemData(0, listbox->GetSelection());
@@ -259,6 +265,7 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 		default: wxASSERT(false); break;
 		}
 
+
 		wxLogDebug(listctrl->GetItemText(it).c_str());
 
 		tmp.child("user").setProperty("username", listctrl->GetItemText(it).c_str());
@@ -285,6 +292,9 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 /*
     -----
     $Log: NUserWiz.cpp,v $
+    Revision 1.5  2002/06/24 18:00:49  thementat
+    Fixed TOC sequence bug.
+
     Revision 1.4  2002/06/23 14:50:01  thementat
     Work on TOC protocol and new buffer class.
 
