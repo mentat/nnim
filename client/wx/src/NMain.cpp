@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.1 2002/06/06 17:21:29 thementat Exp $
+    $Id: NMain.cpp,v 1.2 2002/06/09 19:45:03 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -59,7 +59,7 @@ void wxNNIM::OnServerEvent(wxSocketEvent &event)
 {
 	wxLogDebug(wxT("Server event."));
 
-	if (!m_pContactView || !m_pProtoManager)
+	if (!m_ContactView.get() || !m_ProtoManager.get())
 		return;
 
 	wxSocketBase * sock = event.GetSocket();
@@ -69,31 +69,31 @@ void wxNNIM::OnServerEvent(wxSocketEvent &event)
 void wxNNIM::OnSocketEvent(wxSocketEvent &event)
 {
 
-  if (!m_pContactView || !m_pProtoManager)
-    return;
+    if (!m_ContactView.get() || !m_ProtoManager.get())
+        return;
 
-  wxNetwork * inboundSocket(NULL);
+    wxNetwork * inboundSocket(NULL);
 
-  switch(event.GetSocketEvent())
-  {
+    switch(event.GetSocketEvent())
+    {
     case wxSOCKET_INPUT:
-      wxLogDebug(wxT("Socket Event: wxSOCKET_INPUT"));
-      inboundSocket = (wxNetwork *)event.GetSocket();
-      inboundSocket->checkForData();
-      break;
+        wxLogDebug(wxT("Socket Event: wxSOCKET_INPUT"));
+        inboundSocket = (wxNetwork *)event.GetSocket();
+        inboundSocket->checkForData();
+        break;
     case wxSOCKET_LOST: 
-      wxLogDebug(wxT("Socket Event: wxSOCKET_LOST"));
-      inboundSocket = (wxNetwork *)event.GetSocket();
-      inboundSocket->errClosed();
-      break;
+        wxLogDebug(wxT("Socket Event: wxSOCKET_LOST"));
+        inboundSocket = (wxNetwork *)event.GetSocket();
+        inboundSocket->errClosed();
+        break;
     case wxSOCKET_CONNECTION: 
-      wxLogDebug(wxT("Socket Event: wxSOCKET_CONNECTION"));
-      inboundSocket = (wxNetwork *)event.GetSocket();
-      inboundSocket->connected();
-      break;
+        wxLogDebug(wxT("Socket Event: wxSOCKET_CONNECTION"));
+        inboundSocket = (wxNetwork *)event.GetSocket();
+        inboundSocket->connected();
+        break;
     default: 
-      wxLogDebug(wxT("Unexpected event !")); 
-      break;
+        wxLogDebug(wxT("Unexpected event !")); 
+        break;
   }
 
 }
@@ -116,20 +116,26 @@ void wxNNIM::OnRefreshContacts(gmEvent& event)
 
 bool wxNNIM::OnInit()
 { 
-	m_pAuthLoader = NULL;
+/*	m_pAuthLoader = NULL;
 	m_pProtoManager = NULL;
 	m_pContactView = NULL;
 	m_pLoginView = NULL;
-	m_pLogView = NULL;
+	m_pLogView = NULL;*/
 
-	m_pLogView = InitLogView(NULL);
-	m_pLoginView = InitLoginView(NULL);
+	//m_pLogView = InitLogView(NULL);
+
+    m_LogView.reset( InitLogView(NULL) );
+
+	m_LoginView.reset( InitLoginView(NULL) );
 	
-	SetTopWindow(m_pLoginView);
+	SetTopWindow(m_LoginView.get());
 
-    m_pAuthLoader = new myAuthLoad();
+	// Special directory access needs to be gathered from registry/home dir here and passed
+	// to the AuthLoad constructor.
+    m_AuthLoader.reset( new myAuthLoad() );
 
 #ifdef _WIN32
+    // If compiled for win32, add taskbar icon
 	wxIcon appIcon;
 	appIcon.CopyFromBitmap(wxBitmap(nnim_i_xpm));
 	if (!m_TaskBarIcon.SetIcon(appIcon, wxT("GM: NNIM")))   
@@ -141,20 +147,23 @@ bool wxNNIM::OnInit()
 
 bool wxNNIM::Logout()
 {
-	m_pAuthLoader->CommitToFile();
-	delete m_pAuthLoader;
+    // do a final save
+	m_AuthLoader->CommitToFile();
 
-	if (m_pContactView)
-	{
-		m_pContactView->Destroy();
-		m_pContactView = NULL;
-	}
+    // destroy configuration manager
+	m_AuthLoader.reset( NULL );
 
-	m_pLoginView = InitLoginView(NULL);
+    // if the contact view exits, destroy it
+	m_ContactView.reset( NULL );
+
+    // recreate the login winodw
+	m_LoginView.reset( InitLoginView(NULL) );
 	
-	SetTopWindow(m_pLoginView);
+    // set it as top
+	SetTopWindow(m_LoginView.get());
 
-    m_pAuthLoader = new myAuthLoad();
+    // recreate the auth loader
+    m_AuthLoader.reset( new myAuthLoad() );
   
 	return true;
 
@@ -169,29 +178,27 @@ int wxNNIM::OnExit() // Called as App is dying
 
 void wxNNIM::SendEvent(gmEvent& event)
 {
-  if (m_pContactView)
-    m_pContactView->ProcessEvent(event);
+    // if Contact view is ok send event
+    if (m_ContactView.get())
+        m_ContactView->ProcessEvent(event);
 
 }
 
 bool wxNNIM::Login(bool newUser)
 {
-	if (!m_pContactView)
-	{
-		m_pContactView = InitContactView(NULL, false);
-		SetTopWindow(m_pContactView);
-	}
+    // create contact window
+    m_ContactView.reset (InitContactView(NULL, false) );
+	SetTopWindow(m_ContactView.get());
 
-	if (!m_pProtoManager)
-		m_pProtoManager = new wxProtocolManager();
+    // create protocol manager
+	m_ProtoManager.reset ( new wxProtocolManager() );
 
+    // Load all protocol network information into the protocol manager 
+    // from the authload class
 	InitProtoManager(AccessLoader(), AccessManager());
 
-	if (m_pLoginView)
-	{
-		m_pLoginView->Destroy();
-		m_pLoginView = NULL;
-	}
+    // destroy the login window
+	m_LoginView.reset( NULL );
 
   return true;
 
@@ -200,30 +207,30 @@ bool wxNNIM::Login(bool newUser)
 AuthLoad& 
 wxNNIM::AccessLoader()
 {
-  if (!m_pAuthLoader)
-	  throw gmException("Pointer Error", gmException::gFATAL);
-  return *m_pAuthLoader;
+    if (!m_AuthLoader.get())
+        throw gmException("Pointer Error", gmException::gFATAL);
+    return *m_AuthLoader;
 
 }
 
 ProtocolManager&
 wxNNIM::AccessManager()
 {
-	if (!m_pProtoManager)
-	  throw gmException("Pointer Error", gmException::gFATAL);
+    if (!m_ProtoManager.get())
+        throw gmException("Pointer Error", gmException::gFATAL);
 
-	return *m_pProtoManager;
+    return *m_ProtoManager;
 }
 
 bool wxNNIM::Shutdown() // a callable shutdown command
 {
 
-	if (m_pLogView)
+/*	if (m_pLogView)
 	{
 		m_pLogView->Destroy();
 		m_pLogView = NULL;
-	}
-
+	}*/
+/*
 	if (m_pAuthLoader)
 	{
 		delete m_pAuthLoader;
@@ -247,14 +254,17 @@ bool wxNNIM::Shutdown() // a callable shutdown command
 		m_pLoginView->Destroy();
 		m_pLoginView = NULL;
 	}
-
+*/
 	return true;
 }
 /*
     -----
     $Log: NMain.cpp,v $
-    Revision 1.1  2002/06/06 17:21:29  thementat
-    Initial revision
+    Revision 1.2  2002/06/09 19:45:03  thementat
+    Liberal use of auto_ptr.
+
+    Revision 1.1.1.1  2002/06/06 17:21:29  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.10  2002/01/17 20:00:51  mentat
     Moved dirs back to normal.

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.h,v 1.1 2002/06/06 17:21:42 thementat Exp $
+    $Id: NMain.h,v 1.2 2002/06/09 19:45:00 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -72,14 +72,15 @@ protected:
 
 private:
 
-	AuthLoad *m_pAuthLoader;
-	ProtocolManager *m_pProtoManager;
-	wxWindow *m_pContactView;
-	wxWindow *m_pLoginView;
-	wxWindow *m_pLogView;
+    auto_ptr<wxWindow> m_LogView;
+    auto_ptr<wxWindow> m_LoginView;
+    auto_ptr<wxWindow> m_ContactView;
+    auto_ptr<ProtocolManager> m_ProtoManager;
+    auto_ptr<AuthLoad> m_AuthLoader;
 
 	DECLARE_EVENT_TABLE()
 
+    // ugly, needs to be removed
 	friend class guiContact;
 	friend class guiLogin;
 	friend class guiLog;
@@ -90,8 +91,11 @@ private:
 /*
     -----
     $Log: NMain.h,v $
-    Revision 1.1  2002/06/06 17:21:42  thementat
-    Initial revision
+    Revision 1.2  2002/06/09 19:45:00  thementat
+    Liberal use of auto_ptr.
+
+    Revision 1.1.1.1  2002/06/06 17:21:42  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2001/12/18 04:09:27  mentat
     Restructuring all files.

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLog.cpp,v 1.1 2002/06/06 17:21:30 thementat Exp $
+    $Id: NLog.cpp,v 1.2 2002/06/09 19:45:03 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -91,7 +91,10 @@ guiLog::guiLog(const wxString& title, int x, int y, int w, int h, wxWindow * par
 
 guiLog::~guiLog()
 {		
-	wxGetApp().m_pLogView = NULL;	
+    // reset pointer to log window in main app
+	wxGetApp().m_LogView.release();
+    wxGetApp().m_LogView.reset( NULL );
+
 	wxLog::SetActiveTarget(new wxLogStderr);
 	delete m_listctrl->GetImageList(wxIMAGE_LIST_SMALL);
 }
@@ -184,8 +187,11 @@ wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer )
 /*
     -----
     $Log: NLog.cpp,v $
-    Revision 1.1  2002/06/06 17:21:30  thementat
-    Initial revision
+    Revision 1.2  2002/06/09 19:45:03  thementat
+    Liberal use of auto_ptr.
+
+    Revision 1.1.1.1  2002/06/06 17:21:30  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.9  2002/01/17 20:00:51  mentat
     Moved dirs back to normal.
