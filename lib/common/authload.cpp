@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.3 2002/06/09 20:28:46 thementat Exp $
+    $Id: authload.cpp,v 1.4 2002/06/10 13:28:04 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -107,19 +107,11 @@ bool AuthLoad::CreateNew(const string& username, SecByteBlock &password)
     m_filename = gmCrypto::Encode(username) + string(".kim");
 
 	// hash the user's password to use as file key
-    m_diskPass = gmCrypto::Hash(password);
+    m_diskPass.CleanNew(SHA384::DIGESTSIZE);
+    m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
 	// set up initial values in the xml node
     m_config->setName("config").setProperty("username", username);
-
-#if 0
-	/* This extra store of the password with a different hash
-	might be unneeded because file is encrypted. */
-
-    gmCrypto::Hash(password);
-
-    m_config->setProperty("password", gmCrypto::HashEncode(password));
-#endif
 
 	// set status to online - user logged in
     m_status = ONLINE;
@@ -141,9 +133,11 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
 
     m_filename = gmCrypto::Encode(username) + string(".kim");
 
-    m_diskPass = gmCrypto::Hash(password);
+    m_diskPass.CleanNew(SHA384::DIGESTSIZE);
+    m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
 #if 0
+    // plain text read in of config for testing
 	ifstream in;
     string tmp, inbound;
     in.open("test.xml");
@@ -390,8 +384,9 @@ AuthLoad::SetActivePassword(SecByteBlock& password)
 
     //m_config.setProperty("password", (const char*)(void *)Hash(password));
 	
+    m_diskPass.CleanNew(SHA384::DIGESTSIZE);
 	// set new password
-    m_diskPass = gmCrypto::Hash(password);
+    m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
 	// save with new password
 	CommitToFile();
@@ -413,6 +408,9 @@ AuthLoad::GetActiveLogin()
 /*
     -----
     $Log: authload.cpp,v $
+    Revision 1.4  2002/06/10 13:28:04  thementat
+    Fixed file digest bug.
+
     Revision 1.3  2002/06/09 20:28:46  thementat
     Tried to fix referencing in authload, moved crypto out of authload, more auto_ptrs
 
