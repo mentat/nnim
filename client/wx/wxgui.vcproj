@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "
 				Optimization="0"
-				AdditionalIncludeDirectories="include/,src/,src/vc/,../../lib/include,../../wxWindows/lib/mswd,../../wxWindows/include,../../wxWindows/lib/mswud/,../../"
+				AdditionalIncludeDirectories="include/,src/,src/vc/,../../lib/include,../../,e:/cvs/wxWindows/include,e:/cvs/wxWindows/lib/mswud/"
 				PreprocessorDefinitions="__WXDEBUG__,WIN32,_DEBUG,_WINDOWS,__WINDOWS__,__WXMSW__,DEBUG=1,__WIN95__,__WIN32__,WINVER=0x0400,STRICT,BYTE_ORDER_LITTLE_ENDIAN"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/wxgui.pch"
@@ -41,7 +41,7 @@
 				OutputFile="Debug\nnim_debug.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../../crypto/debug,../../lib/Debug,../../wxWindows/lib"
+				AdditionalLibraryDirectories="../../crypto/debug,../../lib/Debug,e:/cvs/wxWindows/lib"
 				IgnoreDefaultLibraryNames="libcd.lib,libcid.lib,msvcrt.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="Debug\nnim.pdb"
@@ -291,411 +291,121 @@
 		<Filter
 			Name="Windows"
 			Filter="">
-			<File
-				RelativePath=".\src\windows\NAbout.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NChat.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NContact.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NContactEdit.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug DLL|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NLog.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NLogin.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NNets.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug DLL|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NPrefGen.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NPrefNet.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NPrefSec.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NPrefs.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NProtocol_wdr.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\windows\NResources_wdr.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<Filter
-				Name="Trees"
-				Filter="">
-				<File
-					RelativePath=".\src\windows\NContactTree.cpp">
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="TRUE">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\src\windows\NContactTreeXML.cpp">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-					</FileConfiguration>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Wizards"
 			Filter="">
-			<File
-				RelativePath=".\src\wizards\NContactWiz.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\wizards\NUserWiz.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\wizards\NWizards_wdr.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Main"
 			Filter="">
+		</Filter>
+		<Filter
+			Name="Source"
+			Filter="">
 			<File
-				RelativePath=".\src\NEvent.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
+				RelativePath="src\NAbout.cpp">
 			</File>
 			<File
-				RelativePath=".\src\NMain.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
+				RelativePath="src\NAutoTxt.cpp">
 			</File>
 			<File
-				RelativePath=".\src\NProtocolManager.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
+				RelativePath="src\NChat.cpp">
 			</File>
 			<File
-				RelativePath=".\src\NSocket.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
+				RelativePath="src\NContact.cpp">
 			</File>
 			<File
-				RelativePath=".\src\NSocketServer.cpp">
+				RelativePath="src\NContactEdit.cpp">
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug DLL|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="src\NContactTree.cpp">
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
 					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
+						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="src\NContactTreeXML.cpp">
+			</File>
+			<File
+				RelativePath="src\NContactWiz.cpp">
+			</File>
+			<File
+				RelativePath="src\NEvent.cpp">
+			</File>
+			<File
+				RelativePath="src\NLog.cpp">
+			</File>
+			<File
+				RelativePath="src\NLogin.cpp">
+			</File>
+			<File
+				RelativePath="src\NMain.cpp">
+			</File>
+			<File
+				RelativePath="src\NNets.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="src\NPrefGen.cpp">
+			</File>
+			<File
+				RelativePath="src\NPrefNet.cpp">
+			</File>
+			<File
+				RelativePath="src\NPrefSec.cpp">
+			</File>
+			<File
+				RelativePath="src\NPrefs.cpp">
+			</File>
+			<File
+				RelativePath="src\NProtocolManager.cpp">
+			</File>
+			<File
+				RelativePath="src\NProtocol_wdr.cpp">
+			</File>
+			<File
+				RelativePath="src\NResources_wdr.cpp">
+			</File>
+			<File
+				RelativePath="src\NSocket.cpp">
+			</File>
+			<File
+				RelativePath="src\NSocketServer.cpp">
+			</File>
+			<File
+				RelativePath="src\NTaskbar.cpp">
+			</File>
+			<File
+				RelativePath="src\NTreeCtrlXML.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="src\NUserWiz.cpp">
+			</File>
+			<File
+				RelativePath="src\NWizards_wdr.cpp">
+			</File>
 		</Filter>
-		<File
-			RelativePath=".\src\windows\NTaskbar.cpp">
-			<FileConfiguration
-				Name="Debug|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalOptions="&quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot;  &quot; &quot; &quot; &quot; &quot;  /I /cvs/wxWindows/include&quot; /I /cvs/kim/src/client/wx/&quot; /I /cvs/wxWindows/include/&quot; /I /cvs/wxWindows/include&quot; /I /cvs/wxWindows/include&quot; "/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalOptions="&quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot;  &quot;  /I /cvs/wxWindows&quot; /I /cvs/wxWindows/include&quot; "/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\README">
-		</File>
-		<File
-			RelativePath=".\TODO.wx">
-		</File>
-		<File
-			RelativePath=".\standard.txt">
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
