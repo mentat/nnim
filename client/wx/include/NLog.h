@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLog.h,v 1.2 2002/06/20 01:25:00 thementat Exp $
+    $Id: NLog.h,v 1.3 2002/06/26 04:27:07 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -22,9 +22,10 @@
 
 class wxListCtrl;
 
-wxWindow * InitLogView(wxWindow * parent);
+wxFrame * InitLogView(wxWindow * parent);
 
 class guiLog: public wxLog, public wxFrame
+
 {
 public:
 
@@ -40,6 +41,7 @@ protected:
 private:
 
   wxListCtrl * m_listctrl;
+  DECLARE_EVENT_TABLE()
 
 };
 
@@ -62,6 +64,9 @@ enum
 /*
     -----
     $Log: NLog.h,v $
+    Revision 1.3  2002/06/26 04:27:07  thementat
+    Event fixes.
+
     Revision 1.2  2002/06/20 01:25:00  thementat
     Removed unicode for the time being to fix linux build.
 

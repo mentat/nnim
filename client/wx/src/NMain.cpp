@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.7 2002/06/23 14:50:01 thementat Exp $
+    $Id: NMain.cpp,v 1.8 2002/06/26 04:27:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -173,31 +173,38 @@ int wxNNIM::OnExit() // Called as App is dying
 	return 0;
 }
 
-void wxNNIM::SendEvent(gmEvent& event)
+void wxNNIM::SendNEvent(gmEvent& event)
 {
+    wxLogDebug(wxT("wxNNIM::SendEvent"));
     // if Contact view is ok send event
-    if (m_ContactView.get())
+    if (m_ContactView.get() != NULL)
+    {
+        wxLogDebug(wxT("Sending event..."));
         m_ContactView->ProcessEvent(event);
+        return;
+    }
+    wxLogDebug(wxT("Event not sent..."));
 
 }
 
 bool wxNNIM::Login(bool newUser)
 {
     // create contact window
-    m_ContactView.reset (InitContactView(NULL, false) );
-	SetTopWindow(m_ContactView.get());
+    m_ContactView.reset(InitContactView(NULL, false) );
+    SetTopWindow(m_ContactView.get());
 
     // create protocol manager
-	m_ProtoManager.reset ( new wxProtocolManager() );
+    m_ProtoManager.reset ( new wxProtocolManager(this) );
 
     // Load all protocol network information into the protocol manager 
     // from the authload class
-	InitProtoManager(AccessLoader(), AccessManager());
+    InitProtoManager(AccessLoader(), AccessManager());
 
     // destroy the login window
-	m_LoginView.reset( NULL );
 
-  return true;
+    m_LoginView.reset( NULL );
+
+    return true;
 
 }
 
@@ -233,6 +240,9 @@ bool wxNNIM::Shutdown() // a callable shutdown command
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.8  2002/06/26 04:27:08  thementat
+    Event fixes.
+
     Revision 1.7  2002/06/23 14:50:01  thementat
     Work on TOC protocol and new buffer class.
 

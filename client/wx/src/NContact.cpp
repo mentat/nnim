@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.4 2002/06/23 14:50:01 thementat Exp $
+    $Id: NContact.cpp,v 1.5 2002/06/26 04:27:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -26,8 +26,6 @@
 
 #include "wx/notebook.h"
 #include "wx/treebase.h"
-
-
 
 #include "wx/generic/treectlg.h"
 #include "wx/wizard.h"
@@ -55,7 +53,7 @@ wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , XMLNode nod
 
 DECLARE_APP(wxNNIM)
 
-wxWindow *
+wxFrame *
 InitContactView(wxWindow * pParent, bool newUser)
 {
   /* Get window placement/size prefs here */
@@ -77,7 +75,9 @@ void ResetContactTree()
 BEGIN_EVENT_TABLE(guiContact, wxFrame)
 	EVT_IDLE(guiContact::OnIdle)
 	EVT_CLOSE(guiContact::OnCloseWindow)
-	EVT_CUSTOM(gmEVT_MESSAGE ,-1, guiContact::OnGetMessage)
+
+	EVT_CUSTOM(gmEVT_MESSAGE,wxNNIM::ID_CONTACTS_INCOMMING_MESSAGE, guiContact::OnGetMessage)
+    EVT_CUSTOM(gmEVT_MESSAGE_ANONY,wxNNIM::ID_CONTACTS_INCOMMING_MESSAGE_ANONY, guiContact::OnGetMessageAnony)
 	EVT_CUSTOM(gmEVT_STATUS_CHANGE, -1, guiContact::OnChangeStatus)
 //	EVT_CUSTOM(gmEVT_LIST_ADD, -1, guiContact::OnListAdd)
     EVT_BUTTON(wxNNIM::ID_CONTACTS_BUTT, guiContact::OnStart)
@@ -141,9 +141,16 @@ void guiContact::OnIdle(wxIdleEvent& event)
  
 }
 
+void guiContact::OnGetMessageAnony(gmEvent& event)
+{
+    wxLogDebug(wxT("OnGetMessageAnony"));
 
+
+
+}
 void guiContact::OnGetMessage(gmEvent& event)
 {
+    wxLogDebug(wxT("OnGetMessage"));
  /* wxLogDebug(wxString(wxT("Got event: ")) + event.getProtocol());
   
   wxString newSearch = event.getServerId().c_str();
@@ -176,6 +183,7 @@ void guiContact::OnGetMessage(gmEvent& event)
 
 void guiContact::OnChangeStatus(gmEvent& event)
 {
+    wxLogDebug(wxT("OnChangeStatus"));
   int treeStatus;
   switch(event.contact.status())
   {
@@ -270,6 +278,7 @@ void guiContact::OnStart(wxCommandEvent& event)
 
 void guiContact::OnSetAway(wxCommandEvent& event)
 {
+    wxLogDebug(wxT("OnSetAway"));
 /*
   ProtocolManager* pMyManager = AccessManager();
   if (!pMyManager)
@@ -548,6 +557,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.5  2002/06/26 04:27:08  thementat
+    Event fixes.
+
     Revision 1.4  2002/06/23 14:50:01  thementat
     Work on TOC protocol and new buffer class.
 

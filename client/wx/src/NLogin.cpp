@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.cpp,v 1.4 2002/06/24 12:07:40 thementat Exp $
+    $Id: NLogin.cpp,v 1.5 2002/06/26 04:27:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -44,7 +44,7 @@ DECLARE_APP(wxNNIM)
 wxMenuBar *myLoginMenuBar();
 wxSizer *NNIMLogin( wxWindow *parent, bool call_fit = TRUE, bool set_sizer = TRUE );
 
-wxWindow * 
+wxFrame *
 InitLoginView(wxWindow * parent)
 {
   guiLogin * pMyLogin = new guiLogin(wxT("NNIM Login"), 20, 20, parent);
@@ -267,6 +267,9 @@ wxMenuBar *myLoginMenuBar()
 /*
     -----
     $Log: NLogin.cpp,v $
+    Revision 1.5  2002/06/26 04:27:08  thementat
+    Event fixes.
+
     Revision 1.4  2002/06/24 12:07:40  thementat
     Toc fixes.
 

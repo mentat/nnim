@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.h,v 1.5 2002/06/25 19:09:10 thementat Exp $
+    $Id: NMain.h,v 1.6 2002/06/26 04:27:07 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -27,8 +27,10 @@
 
 #include "authload.h"
 #include "contact.h"
+#include "boost/smart_ptr.hpp"
 
 class ProtocolManager;
+
 class wxSocketEvent;
 class gmEvent;
 
@@ -44,6 +46,8 @@ class gmEvent;
  * @version 0.1
  */
 
+using namespace boost;
+
 class wxNNIM: public wxApp
 {
 public:
@@ -58,7 +62,7 @@ public:
 	bool Login(bool newUser = false);
 	bool Logout();
 
-	void SendEvent(gmEvent& event);
+	void SendNEvent(gmEvent& event);
 
 	void OnSocketEvent(wxSocketEvent& event);
 	void OnServerEvent(wxSocketEvent& event);
@@ -72,11 +76,11 @@ protected:
 
 private:
 
-    auto_ptr<wxWindow> m_LogView;
-    auto_ptr<wxWindow> m_LoginView;
-    auto_ptr<wxWindow> m_ContactView;
-    auto_ptr<ProtocolManager> m_ProtoManager;
-    auto_ptr<AuthLoad> m_AuthLoader;
+    scoped_ptr<wxFrame> m_LogView;
+    scoped_ptr<wxFrame> m_LoginView;
+    scoped_ptr<wxFrame> m_ContactView;
+    scoped_ptr<ProtocolManager> m_ProtoManager;
+    scoped_ptr<AuthLoad> m_AuthLoader;
 
 	DECLARE_EVENT_TABLE()
 
@@ -84,6 +88,7 @@ private:
 	friend class guiContact;
 	friend class guiLogin;
 	friend class guiLog;
+    friend class wxProtocolManager;
 
 public:
 
@@ -148,6 +153,7 @@ public:
         ID_TREE_ADD_FOLDER,
         ID_TREE_RENAME,
         ID_MENU_QUIT,
+
         ID_MENU_ABOUT,
         ID_MENU_CHECKVERSION,
         ID_MENU_OPTIONS,
@@ -168,6 +174,7 @@ public:
         ID_MENU_POPUP_PREFS,
         ID_MENU_POPUP_WIZARD,
         ID_MENU_POPUP_ADD_CONTACT,
+
         ID_MENU_POPUP_QUIT,
         ID_PREF_TREE_CTRL,
         ID_PREF_SPLIT,
@@ -209,6 +216,9 @@ public:
 /*
     -----
     $Log: NMain.h,v $
+    Revision 1.6  2002/06/26 04:27:07  thementat
+    Event fixes.
+
     Revision 1.5  2002/06/25 19:09:10  thementat
     Added anonymous incoming message handling.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLog.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
+    $Id: NLog.cpp,v 1.3 2002/06/26 04:27:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -11,6 +11,7 @@
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
+
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -34,9 +35,13 @@
 
 DECLARE_APP(wxNNIM)
 
+BEGIN_EVENT_TABLE(guiLog, wxFrame)
+    EVT_CLOSE(guiLog::OnCloseWindow)
+END_EVENT_TABLE()
+
 wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer );
 
-wxWindow *InitLogView(wxWindow * parent)
+wxFrame *InitLogView(wxWindow * parent)
 {
 
   return new guiLog(wxT("NNIM Log"), 320,20,300,200, parent);
@@ -90,11 +95,15 @@ guiLog::guiLog(const wxString& title, int x, int y, int w, int h, wxWindow * par
 
 }
 
+void guiLog::OnCloseWindow(wxCloseEvent& event)
+{
+    // destroy main app pointer
+    wxGetApp().m_LogView.reset();
+
+}
+
 guiLog::~guiLog()
-{		
-    // reset pointer to log window in main app
-	wxGetApp().m_LogView.release();
-    wxGetApp().m_LogView.reset( NULL );
+{
 
 	wxLog::SetActiveTarget(new wxLogStderr);
 	delete m_listctrl->GetImageList(wxIMAGE_LIST_SMALL);
@@ -188,6 +197,9 @@ wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer )
 /*
     -----
     $Log: NLog.cpp,v $
+    Revision 1.3  2002/06/26 04:27:08  thementat
+    Event fixes.
+
     Revision 1.2  2002/06/20 01:25:00  thementat
     Removed unicode for the time being to fix linux build.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.6 2002/06/25 19:09:11 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.7 2002/06/26 04:27:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -42,6 +42,7 @@ DECLARE_APP(wxNNIM)
 void
 InitProtoManager(AuthLoad & myLoader, ProtocolManager& myMan)
 {
+    wxLogDebug(wxT("InitProtoManager"));
 	XMLNode config;
 	
 	myLoader.U().GetNet("toc", config);
@@ -121,7 +122,7 @@ void wxProtocolManager::c_statusChange(const string &proto,const Contact &c)
   gmEvent myEvent(gmEVT_STATUS_CHANGE, wxNNIM::ID_CONTACTS_STATUS_CHANGE);
   myEvent.contact = c;
 
-  wxGetApp().SendEvent(myEvent);
+  SendGMEvent(myEvent);
 }
 
 void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, const string &message)
@@ -134,7 +135,7 @@ void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, con
 	myEvent.setServerId(wxString(c.nick().c_str(), wxConvUTF8));
 	myEvent.setMessage(wMessage);
 
-	wxGetApp().SendEvent(myEvent);
+	SendGMEvent(myEvent);
 
 	wxLogMessage(wxString(wxT("Message from ")) + wxString(c.nick().c_str(), wxConvUTF8) + 
 		wxString(wxT(":")) + wMessage );
@@ -142,18 +143,19 @@ void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, con
 
 void wxProtocolManager::c_recvdMessageAnony(const string& proto, const Contact &c, const string& message)
 {
-    wxString wProto(proto.c_str(), wxConvUTF8);
-	wxString wMessage(message.c_str(), wxConvUTF8);
+    //wxString wProto(proto.c_str(), wxConvUTF8);
+	//wxString wMessage(message.c_str(), wxConvUTF8);
 	
 	gmEvent myEvent(gmEVT_MESSAGE_ANONY,wxNNIM::ID_CONTACTS_INCOMMING_MESSAGE_ANONY);
-	myEvent.setProtocol(wProto);
-	myEvent.setServerId(wxString(c.nick().c_str(), wxConvUTF8));
-	myEvent.setMessage(wMessage);
+	myEvent.setProtocol(proto.c_str());
+	myEvent.setServerId(c.nick().c_str());
+	myEvent.setMessage(message.c_str());
 
-	wxGetApp().SendEvent(myEvent);
+	SendGMEvent(myEvent);
 
-	wxLogMessage(wxString(wxT("Anonymous Message from ")) + wxString(c.nick().c_str(), wxConvUTF8) +
-		wxString(wxT(":")) + wMessage );
+	wxLogMessage(wxString(wxT("Anonymous Message from ")) +
+        wxString(c.nick().c_str()) + wxString(wxT(":")) +
+        wxString(message.c_str())  );
 }
 
 void wxProtocolManager::c_error(const string &proto,int err_no,const string &error)
@@ -170,9 +172,24 @@ void wxProtocolManager::c_stateChange(const string &proto,int state)
   if (state==Protocol::S_offline)
    wxLogMessage(wxT("Current state is offline"));
 }
+
+void wxProtocolManager::SendGMEvent(gmEvent & event)
+{
+    wxLogDebug(wxT("SendGMEvent"));
+
+    if (m_owner != NULL) {
+        wxLogDebug(wxT("event send ok."));
+        m_owner->SendNEvent(event);
+    }
+
+
+}
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.7  2002/06/26 04:27:08  thementat
+    Event fixes.
+
     Revision 1.6  2002/06/25 19:09:11  thementat
     Added anonymous incoming message handling.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.h,v 1.2 2002/06/25 16:48:09 thementat Exp $
+    $Id: NProtocolManager.h,v 1.3 2002/06/26 04:27:07 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -21,6 +21,9 @@
 
     -----
     $Log: NProtocolManager.h,v $
+    Revision 1.3  2002/06/26 04:27:07  thementat
+    Event fixes.
+
     Revision 1.2  2002/06/25 16:48:09  thementat
     Got TOC done! (mostly)
 
@@ -42,7 +45,10 @@
 #ifndef WX_PROTOCOL_H
 #define WX_PROTOCOL_H
 
+#include "NInclude.h"
+#include "NMain.h"
 #include "protocol.h"
+#include "NEvent.h"
 
 class AuthLoad;
 
@@ -59,6 +65,7 @@ class wxProtocolManager: public ProtocolManager
 {
 public:
   virtual ~wxProtocolManager();
+  wxProtocolManager(wxNNIM * app = NULL): ProtocolManager(), m_owner(app) {}
 
   // override the c_* functions you are interested in. hopefully the names should be
   // descriptive enough.
@@ -78,6 +85,11 @@ public:
   void c_error(const string &proto,int err_no,const string &error);
   
   void c_stateChange(const string &proto,int state);
+
+  void SendGMEvent(gmEvent & event);
+
+  private:
+  wxNNIM * m_owner;
 
 };
 

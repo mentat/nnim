@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.h,v 1.1 2002/06/06 17:21:43 thementat Exp $
+    $Id: NLogin.h,v 1.2 2002/06/26 04:27:07 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -27,7 +27,7 @@ using namespace std;
 
 class wxWindow;
 
-wxWindow * InitLoginView(wxWindow * parent = NULL);
+wxFrame * InitLoginView(wxWindow * parent = NULL);
 
 /**
  * Login Window
@@ -51,6 +51,7 @@ public:
     * @param w Window width
     * @param l Window length
   */
+
 	guiLogin(const wxString& title, int x, int y, wxWindow * parent);
 	
   virtual ~guiLogin();
@@ -86,8 +87,11 @@ private:
 /*
     -----
     $Log: NLogin.h,v $
-    Revision 1.1  2002/06/06 17:21:43  thementat
-    Initial revision
+    Revision 1.2  2002/06/26 04:27:07  thementat
+    Event fixes.
+
+    Revision 1.1.1.1  2002/06/06 17:21:43  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2001/12/18 04:09:27  mentat
     Restructuring all files.

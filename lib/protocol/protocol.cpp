@@ -1,5 +1,5 @@
 /*
-    $Id: protocol.cpp,v 1.3 2002/06/25 19:09:11 thementat Exp $
+    $Id: protocol.cpp,v 1.4 2002/06/26 04:27:08 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Emil Styrke <emil@lysator.liu.se>
@@ -20,6 +20,9 @@
 
     -----
     $Log: protocol.cpp,v $
+    Revision 1.4  2002/06/26 04:27:08  thementat
+    Event fixes.
+
     Revision 1.3  2002/06/25 19:09:11  thementat
     Added anonymous incoming message handling.
 
@@ -109,21 +112,22 @@ void Protocol::eventGotPubkey(const string &key)
 }
 
 Network *Protocol::addNet()
-    {
-        Network *n = m_manager->createNet(this);
-        n->setOwner(this);
-        m_nets.push_back(n);
-        for (list<Network *>::iterator it=m_nets.begin();it!=m_nets.end();it++)
-            debug() << "Net ";
-        debug() << endl;
-        return n;
-    }
+{
+    Network *n = m_manager->createNet(this);
+    n->setOwner(this);
+    m_nets.push_back(n);
+    for (list<Network *>::iterator it=m_nets.begin();it!=m_nets.end();it++)
+        debug() << "Net ";
+    debug() << endl;
+    return n;
+}
 
 void Protocol::removeNet(Network *n)
-    {
-        m_nets.remove(n);
-        m_manager->removeNet(n);
-    }
+{
+    m_nets.remove(n);
+    m_manager->removeNet(n);
+
+}
 
 void Protocol::eventGotBuddy(const Contact &c)
 {

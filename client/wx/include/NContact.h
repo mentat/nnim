@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.h,v 1.3 2002/06/21 19:38:21 thementat Exp $
+    $Id: NContact.h,v 1.4 2002/06/26 04:27:07 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -69,6 +69,7 @@ public:
     void OnSetAway(wxCommandEvent& event);
     void OnSetInfo(wxCommandEvent& event);
     void OnGetMessage(gmEvent& event);
+    void OnGetMessageAnony(gmEvent& event);
     void OnChangeStatus(gmEvent& event);
     void OnLeaveAway(wxCommandEvent& event);
 
@@ -88,12 +89,15 @@ private:
 
 };
 
-wxWindow *
+wxFrame *
 InitContactView(wxWindow * pParent = NULL, bool newUser = false);
 
 /*
     -----
     $Log: NContact.h,v $
+    Revision 1.4  2002/06/26 04:27:07  thementat
+    Event fixes.
+
     Revision 1.3  2002/06/21 19:38:21  thementat
     Trying to get online...
 

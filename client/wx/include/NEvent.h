@@ -6,21 +6,30 @@
 #include "wx/treebase.h"
 
 BEGIN_DECLARE_EVENT_TYPES()
-	DECLARE_EVENT_TYPE(gmEVT_STATUS_CHANGE, 50)
-	DECLARE_EVENT_TYPE(gmEVT_STATE_CHANGE, 51)
-	DECLARE_EVENT_TYPE(gmEVT_ERROR, 52)
-	DECLARE_EVENT_TYPE(gmEVT_MESSAGE, 53)
-	DECLARE_EVENT_TYPE(gmEVT_REFRESH_CONTACTS, 54)
-	DECLARE_EVENT_TYPE(gmEVT_REFRESH_NETWORK, 55)
-	DECLARE_EVENT_TYPE(gmEVT_SETTING_CHANGED, 56)
-	DECLARE_EVENT_TYPE(gmEVT_LIST_ADD, 57)
-    DECLARE_EVENT_TYPE(gmEVT_MESSAGE_ANONY, 58)
+	DECLARE_EVENT_TYPE(gmEVT_STATUS_CHANGE, 13000)
+	DECLARE_EVENT_TYPE(gmEVT_STATE_CHANGE, 13001)
+	DECLARE_EVENT_TYPE(gmEVT_ERROR, 13002)
+	DECLARE_EVENT_TYPE(gmEVT_MESSAGE, 13003)
+	DECLARE_EVENT_TYPE(gmEVT_REFRESH_CONTACTS, 13004)
+	DECLARE_EVENT_TYPE(gmEVT_REFRESH_NETWORK, 13005)
+	DECLARE_EVENT_TYPE(gmEVT_SETTING_CHANGED, 13006)
+	DECLARE_EVENT_TYPE(gmEVT_LIST_ADD, 13007)
+    DECLARE_EVENT_TYPE(gmEVT_MESSAGE_ANONY, 13008)
 END_DECLARE_EVENT_TYPES()
 
 class gmEvent : public wxEvent
 {
 public:
   gmEvent(wxEventType commandType = wxEVT_NULL, int id = 0);
+  gmEvent(const gmEvent& event) : wxEvent(event)
+  {
+    m_status = event.m_status;
+    m_serverId = event.m_serverId;
+    m_message = event.m_message;
+    m_protocol = event.m_protocol;
+    contact = event.contact;
+  }
+
 
   void setProtocol(const wxString& proto) { m_protocol = proto; }
   void setServerId(const wxString& id) { m_serverId = id; }
@@ -53,6 +62,11 @@ public:
   enum { ADDCONTACT, REMOVECONTACT, LAUNCHCHAT };
 
   gmContactListEvent(wxEventType commandType = wxEVT_NULL,int id = 0);
+  gmContactListEvent(const gmContactListEvent& event):
+    wxEvent(event),
+    m_contact(event.m_contact),
+    m_type(event.m_type)
+    {}
 
 
   int GetType() { return m_type; }

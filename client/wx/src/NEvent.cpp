@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NEvent.cpp,v 1.4 2002/06/25 19:09:11 thementat Exp $
+    $Id: NEvent.cpp,v 1.5 2002/06/26 04:27:08 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -39,13 +39,13 @@ IMPLEMENT_DYNAMIC_CLASS(gmContactListEvent, wxEvent)
 IMPLEMENT_DYNAMIC_CLASS(gmEvent, wxEvent)
 
 gmEvent::gmEvent(wxEventType commandType, int id)
-    : wxEvent(id) 
+    : wxEvent(id, commandType)
 {
-	SetEventType(commandType);
+	//SetEventType(commandType);
 }
 
 gmContactListEvent::gmContactListEvent(wxEventType commandType, int id)
-    : wxEvent(id)
+    : wxEvent(id, commandType)
 {
-	SetEventType(commandType);
+	//SetEventType(commandType);
 }

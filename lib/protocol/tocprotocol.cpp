@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.7 2002/06/25 16:48:14 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.8 2002/06/26 04:27:08 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -143,6 +143,7 @@ const char * TocProtocol::roast_password(const char *pass)
 
 
   char rp[256];
+
 
 
 
@@ -517,7 +518,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 			c.setServerId(words[1]);
 			c.setNick(words[1]);
 
-			eventRecvdMessageNotBuddy(c, msg);
+			eventRecvdMessage(c, msg);
 			return;
 		}
 
@@ -777,6 +778,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.8  2002/06/26 04:27:08  thementat
+    Event fixes.
+
     Revision 1.7  2002/06/25 16:48:14  thementat
     Got TOC done! (mostly)
 
