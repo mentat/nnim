@@ -1,14 +1,40 @@
+INCLUDES = `wx-config --cflags` \
+    -I../../../crypto -I../../../lib/include \
+    -I../include -I../../../lib/protocol/msn \
+	-I../../../lib/protocol/icq \
+    -I../../../ -I.
+
 bin_PROGRAMS = nnim
 
-nnim_SOURCES = gui_chat.cpp gui_contact.cpp gui_contact_tree.cpp \
-	gui_log.cpp gui_login.cpp gui_prefs.cpp gui_xpms.cpp \
-	wx_main.cpp wx_protocol.cpp wxgui_wdr.cpp gui_taskbar.cpp \
-	wxnetwork.cpp
+nnim_SOURCES =    \
+NAbout.cpp        \
+NAutoTxt.cpp      \
+NChat.cpp         \
+NContact.cpp      \
+NContactTreeXML.cpp \
+NContactWiz.cpp   \
+NEvent.cpp        \
+NLog.cpp          \
+NLogin.cpp        \
+NMain.cpp         \
+NNets.cpp         \
+NPrefGen.cpp      \
+NPrefNet.cpp      \
+NPrefs.cpp        \
+NPrefSec.cpp      \
+NProtocolManager.cpp \
+NProtocol_wdr.cpp \
+NResources_wdr.cpp \
+NSocket.cpp       \
+NSocketServer.cpp \
+NTaskbar.cpp      \
+NTreeCtrlXML.cpp  \
+NUserWiz.cpp      \
+NWizards_wdr.cpp
 
-INCLUDES= $(all_includes) `$(WXCONFIG) --cxxflags` \
-    -I$(CRYPTODIR) -I$(GMDIR) \
-	`$(GTKCONFIG) --cflags` -I../include -I$(GMDIR)/protocol/msn \
-	-I$(GMDIR)/protocol/icq
+nnim_LDADD = ../../../libGM.a ../../../crypto/libcryptopp.a
 
-LDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` \
-	-L$(CRYPTODIR) -L$(GMDIR)  `$(GTKCONFIG) --libs` -lgm -lcryptopp -lstdc++
+
+
+LDFLAGS = `wx-config --libs` \
+	-L../../../crypto -L$(GMDIR)

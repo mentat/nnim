@@ -1,15 +1,12 @@
 #ifndef NCONTACTTREEXML_H
 #define NCONTACTTREEXML_H
 
-#include "boost/smart_ptr.hpp"
-
 #include "wx/treebase.h"
 #include "wx/generic/treectlg.h"
 
 #include "NInclude.h"
 
 using namespace std;
-using namespace boost;
 
 class NContactTreeXML: public wxGenericTreeCtrl
 {

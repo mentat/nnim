@@ -1,5 +1,5 @@
 /*
-    $Id: kitprotocol.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
+    $Id: kitprotocol.cpp,v 1.3 2002/06/19 19:14:45 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Henrik Abelsson <henrik@abelsson.com>
@@ -20,6 +20,9 @@
 
     -----
     $Log: kitprotocol.cpp,v $
+    Revision 1.3  2002/06/19 19:14:45  thementat
+    Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.
+
     Revision 1.2  2002/06/06 18:43:02  thementat
     Added copyrights, fixed cryptography compile errors, lib builds in vc7
 
@@ -60,10 +63,7 @@
 #include <iostream>
 #include <string>
 
-#include <gm_config.h>
 #include <stdio.h>
-
-#ifdef HAVE_CRYPTO
 
 #include <crypto/pch.h>
 #include <crypto/default.h>
@@ -77,7 +77,6 @@
 
 using namespace CryptoPP;
 
-#endif
 
 #include "kitprotocol.h"
 #include "log.h"
@@ -121,7 +120,7 @@ KitProtocol::~KitProtocol()
 void KitProtocol::sendData(const string &data)
 {
   cout << "Sending **********\n"<< data << "**************\n";
-#ifdef HAVE_CRYPTO
+
   if (m_connectionEncrypted)
     {
       string out;
@@ -138,7 +137,7 @@ void KitProtocol::sendData(const string &data)
       m_net->sendData(n);
     }
   else
-#endif
+
     m_net->sendData(data.c_str(),data.length());
 
 }
@@ -333,13 +332,11 @@ void KitProtocol::customRequest(XMLNode n)
     XMLNode r;
     r.setName("setvar");
     r["name"]="config";
-#ifdef HAVE_CRYPTO
+
     string str;
     str=n;
     StringSource(str,true,new Gzip(new Base64Encoder(new StringSink(out),false)));
-#else
-#error Broken
-#endif
+
     r["value"]=out;
     sendData(r);
   }
@@ -407,7 +404,6 @@ void KitProtocol::rootTagRecieved(XMLNode &root)
 
   XMLNode n;
 
-#ifdef HAVE_CRYPTO
 
   // if we dont have a public key
   if (m_conf.child("server").property("pubkey").length() == 0)
@@ -456,12 +452,12 @@ void KitProtocol::rootTagRecieved(XMLNode &root)
   n.setName("format");
   n.setProperty("encryption","default");
   n.setProperty("sessionkey",outstr);
-#else
+
 
   n.setName("signon");
   n.setProperty("user",m_conf.child("user").property("username"));
   n.setProperty("password",m_conf.child("user").property("password"));
-#endif
+
 
   sendData(r+string(n));
 }
@@ -665,7 +661,6 @@ void KitProtocol::recievedTag(XMLNode &n)
       in = n["value"];
       XMLNode conf;
 
-#ifdef HAVE_CRYPTO
       try {
       StringSource(in,true,new Base64Decoder(new Gunzip(new StringSink(out))));
       }
@@ -676,8 +671,7 @@ void KitProtocol::recievedTag(XMLNode &n)
 //    cout << "Got config:";
 //    cout << out;
 //    cout << endl;
-#else
-#endif
+
 
       if (conf.name()!="config")
         conf.setName("config");

@@ -1,0 +1,30 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(lib/protocol/emptyprotocol.cpp)
+AM_INIT_AUTOMAKE(NNIM, 0.1)
+dnl Checks for programs.
+AC_PROG_CXX
+dnl AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_INSTALL
+dnl AC_PROG_LN_S
+
+AM_PROG_LIBTOOL
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h vector sstream string)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+dnl AC_C_CONST
+dnl AC_TYPE_SIZE_T
+
+dnl Checks for library functions.
+dnl AC_FUNC_MEMCMP
+dnl AC_FUNC_VPRINTF
+
+AC_OUTPUT( crypto/Makefile lib/Makefile lib/common/Makefile \
+	lib/common/expat/Makefile Makefile lib/protocol/Makefile 
+	lib/protocol/icq/Makefile lib/protocol/msn/Makefile \
+	client/Makefile client/wx/Makefile client/wx/src/Makefile)

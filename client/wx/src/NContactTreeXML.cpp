@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTreeXML.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NContactTreeXML.cpp,v 1.2 2002/06/19 19:14:43 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -29,7 +29,7 @@
 #include "NContactWiz.h"
 
 #include "wx/treebase.h"
-#include "wx/treectrl.h"
+//#include "wx/treectrl.h"
 #include "wx/generic/treectlg.h"
 #include "wx/image.h"
 #include "wx/imaglist.h"
@@ -111,7 +111,7 @@ NContactTreeXML::NContactTreeXML(wxWindow *parent, const wxWindowID id,
     wxTreeItemId rootId = AddRoot("", ICON_SECURE, ICON_SECURE, new MyTreeItemData("Root Node"));
     ((MyTreeItemData *)GetItemData(rootId))->SetStatus(STATUS_FOLDER);
 
-    SetWindowStyle(wxTR_NO_BUTTONS | wxTR_FULL_ROW_HIGHLIGHT | wxTR_NO_LINES | wxTR_HIDE_ROOT);
+    SetWindowStyle(wxTR_NO_BUTTONS /*| wxTR_FULL_ROW_HIGHLIGHT */| wxTR_NO_LINES | wxTR_HIDE_ROOT);
 
     SetIndent(5);
     SetSpacing(0);
@@ -399,6 +399,7 @@ wxTreeItemId NContactTreeXML::AddTreeFolder(const wxString& name, const wxTreeIt
 {
   wxTreeItemId realParent, id;
 
+
   if (((MyTreeItemData *)GetItemData(idParent))->GetStatus() != STATUS_FOLDER)
   {
     realParent = GetParent(idParent);
@@ -520,7 +521,35 @@ void NContactTreeXML::SetStatus(wxTreeItemId &id, int status)
 }
 wxString NContactTreeXML::NewFolder(const wxString& base)
 {
-	wxString name = wxGetTextFromUser(wxT("New Folder Name"), wxT("New Folder"), "", this);	if (name == wxT(""))		return wxT("");	AuthLoad &myLoader = wxGetApp().AccessLoader();	if (myLoader.C().FolderExists(name.mb_str(wxConvUTF8).data()))	{		wxMessageBox(wxT("Sorry, this folder already exists."), wxT("Folder Exists"));		return wxT("");	}	if (base == wxT(""))	{		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data()))		{			wxLogError(wxT("Folder not added with no base."));			return "";		}		else			return name;	}		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data(), base.mb_str(wxConvUTF8).data()))	{		wxLogError(wxT("This folder wasn't added."));		return wxT("");	}
+	wxString name = wxGetTextFromUser(wxT("New Folder Name"), wxT("New Folder"), "", this);
+
+	if (name == wxT(""))
+		return wxT("");
+
+	AuthLoad &myLoader = wxGetApp().AccessLoader();
+
+	if (myLoader.C().FolderExists(name.mb_str(wxConvUTF8).data()))
+	{
+		wxMessageBox(wxT("Sorry, this folder already exists."), wxT("Folder Exists"));
+		return wxT("");
+	}
+
+	if (base == wxT(""))
+	{
+		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data()))
+		{
+			wxLogError(wxT("Folder not added with no base."));
+			return "";
+		}
+		else
+			return name;
+	}
+	
+	if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data(), base.mb_str(wxConvUTF8).data()))
+	{
+		wxLogError(wxT("This folder wasn't added."));
+		return wxT("");
+	}
 
 	return name;
 }

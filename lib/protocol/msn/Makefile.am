@@ -1,8 +1,3 @@
-INCLUDES = $(all_includes) -I../../include -I$(CRYPTODIR)
-
-noinst_LTLIBRARIES = libmsn.la
-
-libmsn_la_SOURCES = msnprotocol.cpp
-
-noinst_HEADERS = command.h  errors.h 
-
+INCLUDES = -I../../include -I../../../
+noinst_LIBRARIES = libmsn.a
+libmsn_a_SOURCES = msnprotocol.cpp command.h errors.h

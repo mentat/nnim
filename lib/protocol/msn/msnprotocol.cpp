@@ -1,5 +1,5 @@
 /*
-    $Id: msnprotocol.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
+    $Id: msnprotocol.cpp,v 1.3 2002/06/19 19:14:45 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Henrik Abelsson <henrik@abelsson.com>
@@ -20,6 +20,9 @@
 
     -----
     $Log: msnprotocol.cpp,v $
+    Revision 1.3  2002/06/19 19:14:45  thementat
+    Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.
+
     Revision 1.2  2002/06/06 18:43:02  thementat
     Added copyrights, fixed cryptography compile errors, lib builds in vc7
 
@@ -49,19 +52,15 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include "gm_config.h"
-#endif
-
 #ifdef WIN32
 #pragma warning(disable:4786)
 #endif
 
 #include <iostream>
-#include <strstream> // gcc sucks
+#include <sstream> // gcc sucks
 #include <string>
 #include <list>
-#ifdef HAVE_CRYPTO
+
 
 #include <crypto/pch.h>
 #include <crypto/md5.h>
@@ -71,7 +70,7 @@
 
 using namespace CryptoPP;
 
-#endif
+
 
 #include "manager.h"
 #include "msnprotocol.h"
@@ -209,14 +208,13 @@ void MsnProtocol::sendMD5Auth(string challenge)
   string in,out,cmd;
   in=deSpaceify(challenge)+m_conf.child("user").property("password");
   debug() << "'" << in << "'\n";
-#ifdef HAVE_CRYPTO
+
 
   MD5 md5;
 
   StringSource(in,true,new HashFilter(md5,new HexEncoder(new StringSink(out))));
-#else
-  // MSN Support will be broken, due to no md5 code
-#endif
+
+
   for (unsigned int i=0;i<out.length();i++)
     out[i]=tolower(out[i]);
   cmd="MD5 S "+out;
@@ -444,10 +442,10 @@ void MsnProtocol::handleNS(Network *net,vector<string> &words)
     string in;
 
     in = words[2]+"Q1P7W2E4J9R8U3S5";
-#ifdef HAVE_CRYPTO
+
     MD5 md5;
     StringSource(in,true,new HashFilter(md5,new HexEncoder(new StringSink(out))));
-#endif
+
     for (unsigned int i=0;i<out.length();i++)
       out[i]=tolower(out[i]);
 
@@ -627,9 +625,9 @@ void MsnProtocol::sendPendingMsgs(Network *net)
   for (unsigned int i=0;i<send.pendingMsgs.size();i++)
   {
     string msg= m_mimeheader + send.pendingMsgs[i];
-    strstream hej;
+    stringstream hej;
     hej << "MSG 123 N " << msg.length() << "\r\n" << msg << '\0';
-    hej.freeze();
+    //hej.freeze();
     debug() << "sending: " << hej.str() << endl;
     net->sendData(hej.str());
   }

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NChat.cpp,v 1.2 2002/06/19 19:14:43 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -48,6 +48,8 @@ InitChatView(wxWindow * parent, const wxString& name, Contact c)
   pMyChat->Show(TRUE);
   return pMyChat;
 }
+
+
 
 DECLARE_APP(wxNNIM)
 
@@ -501,7 +503,7 @@ void guiChat::DisplayText(const wxString& text)
 
   newText2 = newText.BeforeFirst('>');
   newText2 += wxT("><TR><TD><b><FONT COLOR=\"#FF0000\">");
-  newText2 += wxConvUTF8.cMB2WC(m_Contact.nick().c_str());
+  newText2 += wxString(m_Contact.nick().c_str(), wxConvUTF8);
   newText2 += wxT(": </FONT></b>");
   newText2 += newText.AfterFirst('>');
 
@@ -568,6 +570,9 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
 /*
     -----
     $Log: NChat.cpp,v $
+    Revision 1.2  2002/06/19 19:14:43  thementat
+    Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.
+
     Revision 1.1  2002/06/19 16:27:18  thementat
     Restructured directories.
 
@@ -575,6 +580,7 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
     Large work on revamping IDs in gui, more SSH2 additions.
 
     Revision 1.1.1.1  2002/06/06 17:21:29  thementat
+
     Checkin of new sources BETA 2
 
     Revision 1.11  2002/01/17 20:00:50  mentat
@@ -601,3 +607,4 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
 
 
 */
+

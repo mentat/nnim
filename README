@@ -1,0 +1,76 @@
+GNU Messenger
+Copyright (c) 2000-2002 by Jesse Lovelace.  All rights reserved.
+
+Portions (Crypto++) Copyright (c) 1995-2001 by Wei Dai.  All rights reserved.
+	
+OVERVIEW:
+GM is yet another instant messanger, with your basic messages, online lists 
+and contact features. However, it was designed from the grond up to be 
+extensible and secure. The GM protocol is XML based, but with strong
+authentication and encryption. The protocol is encrypted using the 
+crypto++ lib. [http://www.cryptopp.com]
+You can easily write plugins for KiT to add new functions and features - in 
+fact, most of the server is implemented using plugins.
+
+The server, and client implementation is licensed under the GNU Public
+License (GPL) version 2 or at your option, any later version. Once the 
+clientside protocol implementation (libkit) is separated from the client 
+(soon!), it will be licenced under the Lesser GNU Public License (LGPL).
+
+FEATURES:
+	* Buddy list - See what friends you have online.
+	* Messages   - Send a message to someone.
+	* Encryption - Make sure no one else reads your message
+	* Plugins    - Extend the server and client in any way imaginable. 
+	* AIM/ICQ    - Connect to legacy IM networks
+
+SERVER:
+The GM server is in an early stage of development, and is evolving quite 
+rapidly. Installing it on a mission critical machine is _not_ recommended, 
+until it has been thouroly tested. Just a word of warning. 
+
+GM requires a database for storing user info. Currently the only one supported
+is MySql (available from tcx.se). Please see the instructions in INSTALL on
+how to create the needed tables for kit. Adding new database support is quite
+easy, all you need to do is to create a new plugin, there is no need to
+modify the server at all.
+
+
+CLIENT(s): KiT and NNIM
+
+KiT:
+The X-Windows client is written using Qt 2. As a result, to run the client 
+you need to get Qt [http://www.trolltech.com]. However, our goal is to keep 
+the protocol implementation separate from the GUI, and we would welcome 
+versions of the client for other enviroments (such as QT/KDE, Console, 
+Win32 and Mac).
+
+NNIM:
+NNIM is written using the wxWindows toolkit.  It runs on all unix type
+environments with X-Windows and/or GTK.  It also compiles on Win32, OS/2
+Mac (classic and X).
+
+
+PROTOCOL:
+The GM protocol as it is defined now is not likely to go through any major
+changes, but many additions. Since the protocol is XML based it's fairly 
+flexible. Current documentation is limited to Read-The-Source 
+or Use-a-sniffer :)
+
+PLATFORMS:
+All GM code has been developed under i386 Linux, with glibc2.1 (Debian Testing) 
+and Win32 on VC7.net. Please help out by trying out KiT on different platforms 
+and tell me how it goes :)
+
+CONTACT:
+The main authors of GM are Henrik Abelsson <henrik@abelsson.com> 
+and Jesse Lovelace <jllovela@eos.ncsu.edu> with help from Emil Styrke. 
+
+If you wish to ask any question about GM or send a bugreport,
+please send it either to Henrik or to Jesse. 
+
+
+Copyright (C) 2002 Jesse Lovelace. All rights reserved.
+Copyright (C) 2002 Henrik Abelsson. Usage in any form permitted as long as
+content remains accurate :)
+

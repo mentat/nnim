@@ -1,13 +1,8 @@
+MAINTAINERCLEANFILES    = Makefile.in
 SUBDIRS = expat
-INCLUDES = -Iexpat/include -g -I$(CRYPTODIR) -I../include
-
-noinst_LTLIBRARIES = libcommon.la
-
-libcommon_la_SOURCES = xml.cpp xmlnode.cpp contact.cpp expat.cpp cryptography.cpp \
-authload.cpp log.cpp
-
-check_PROGRAMS = test
-test_SOURCES = test.cpp
-test_INCLUDES = -I.
-test_LDFLAGS = -L. -L$(CRYPTODIR)
-
+CXXFLAGS = -g
+INCLUDES = -I../../ -I../include
+noinst_LIBRARIES      = libcommon.a
+libcommon_a_SOURCES   = auth_contact.cpp auth_global.cpp auth_user.cpp \
+	authload.cpp contact.cpp cryptography.cpp expat.cpp log.cpp \
+	xml.cpp xmlnode.cpp

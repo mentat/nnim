@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NInclude.h,v 1.3 2002/06/14 22:02:23 thementat Exp $
+    $Id: NInclude.h,v 1.4 2002/06/19 19:14:43 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -165,6 +165,9 @@ template<class T> inline void destroy(T*& p) { delete p; p = 0; }
 /*
     -----
     $Log: NInclude.h,v $
+    Revision 1.4  2002/06/19 19:14:43  thementat
+    Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.
+
     Revision 1.3  2002/06/14 22:02:23  thementat
     Large work on revamping IDs in gui, more SSH2 additions.
 
