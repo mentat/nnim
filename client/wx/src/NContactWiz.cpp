@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactWiz.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
+    $Id: NContactWiz.cpp,v 1.3 2002/06/25 04:46:20 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -156,6 +156,7 @@ CWizardP2::CWizardP2(wxWizard * parent, NContactTreeXML * owner)
   
 	listbox->Append("ICQ");
   
+
 	listbox->Append("GNU");
 }
 
@@ -168,13 +169,16 @@ void CWizardP2::OnAddNet(wxCommandEvent &event)
   if (listbox->GetSelection() < 0)
     return;
 
-  wxString prompt;
+  wxString prompt(wxT("What is this contact's"));
 
-  if (listbox->GetStringSelection() == "ICQ")
-    prompt = wxT("What is this contact's UIN\non ICQ Network");
+   if (listbox->GetStringSelection() == wxT("ICQ"))
+    prompt += wxT("UIN\non ICQ Network");
   else
-    prompt.Printf(wxT("What is this contact's screen-name\non %s Network"), listbox->GetStringSelection());
-  
+  {
+    prompt += wxT(" screen-name\non ");
+    prompt += listbox->GetStringSelection();
+    prompt += wxT(" Network?");
+  }
   wxString screenname = wxGetTextFromUser(prompt, wxT("Contact Information"),"", this);
 
   if (screenname == "")

@@ -6,6 +6,8 @@
 #include <xml.h>
 #include <buffer.hpp>
 
+#include "crypto/misc.h"
+
 /* Low-Level Network Error Codes */
 #define KIM_NETWORK_NOERROR   101 // No error happened.  Connect() calls should use this.
 #define KIM_NETWORK_INVOP     102 // Invalid operation.
@@ -21,6 +23,11 @@
 #define KIM_NETWORK_ALLOCERR  112 // Allocation error, specifically a "new" call
 
 using namespace std;
+using namespace CryptoPP;
+
+template <class T>
+T NBO(const T& in) { if (CheckEndianess(false)) return byteReverse(in); else return in; }
+
 
 /**
    Network interface

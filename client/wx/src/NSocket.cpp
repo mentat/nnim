@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NSocket.cpp,v 1.5 2002/06/24 12:07:40 thementat Exp $
+    $Id: NSocket.cpp,v 1.6 2002/06/25 04:46:20 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -46,9 +46,8 @@ wxString ConvertString(const byte * data, int len)
       temp << char(data[i]);
     else
     {
-      temp << "0x";
-	  temp.width(2);
-	  temp << ios::hex << ((unsigned int)data[i]);
+      temp << ' ';
+	  temp << ((unsigned short)data[i]);
     }
   }
   return temp.str().c_str();

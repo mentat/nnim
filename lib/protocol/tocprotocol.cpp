@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.5 2002/06/24 18:00:50 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.6 2002/06/25 04:46:21 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -50,13 +50,15 @@ public:
 	{ 
 		m_ast=(byte)'*';
 		m_type=(byte)2;
-		m_seq = byteReverse(real_seq++);
+		m_seq = NBO(real_seq++);
 		m_len=(byte)0;
 	}
 
+ private:
 	byte m_ast;
-	byte m_type;
 	word16 m_seq;
+ public:
+ 	byte m_type;
 	word16 m_len;
 
 	vbuf getHdr()
@@ -65,12 +67,11 @@ public:
 
 		header += m_ast;
 		header += m_type;
-		header += (byte) m_seq;
-		header += (byte)((m_seq >> 8)& 0xff);
-		header += (byte) m_len;
+		header += (byte) (m_seq & 0xff);
+		header += (byte) ((m_seq >> 8)& 0xff);
+		header += (byte) (m_len & 0xff);
 		header += (byte) ((m_len >> 8)& 0xff);
 
-        m_seq = byteReverse(real_seq++);
 		return header;
 	}
 
@@ -78,7 +79,7 @@ private:
 	static word16 real_seq;
 };
 
-word16 flapHdr::real_seq=0;
+word16 flapHdr::real_seq=1;
 
 string 
 TocProtocol::aim_encode(const string& s)
@@ -120,28 +121,29 @@ string TocProtocol::aim_normalize(const string& s)
 	}
 	return buf;
 }
-#if 0
-string TocProtocol::roast_password(const string& pass)
+
+string TocProtocol::roastPassword(const string& pass)
 {
-	/* Trivial "encryption" */
-	stringstream roastedPassword;
-	string roast("Tic/Toc");
+    /* Trivial "encryption" */
+    stringstream pword;
+    pword << "0x";
+    string roast("Tic/Toc");
 
-	roastedPassword << "0x";
-  
-	for (unsigned int x = 0; (x < 150) && (x < pass.length()); x++)
-		roastedPassword << ios::hex << setw(2) << (pass[x] ^ roast[x % roast.length()]);
+    for (unsigned int i = 0; i < pass.length(); i++)
+    {
+        pword << hex << setfill('0') << setw(2) << (word16)(pass[i] ^ roast[i % roast.length()]);
+    }
 
-	roastedPassword << '\0';
-
-	return roastedPassword.str();
+	return pword.str();
 }
-#endif
-
+#if 0
 const char * TocProtocol::roast_password(const char *pass)
 {
   /* Trivial "encryption" */
+
+
   char rp[256];
+
   char roast[] =  "Tic/Toc";
   int pos = 2;
   int x;
@@ -152,7 +154,7 @@ const char * TocProtocol::roast_password(const char *pass)
   rp[pos] = '\0';
   return rp;
 }
-
+#endif
 void TocProtocol::send_flap(int type, const vbuf& data)
 {
 	m_net->sendData(return_flap(type, data));
@@ -166,6 +168,7 @@ vbuf TocProtocol::return_flap(int type, const vbuf& data)
 	/*
 	* FLAP Header (6 bytes)
 	* -----------
+
 	* Offset   Size  Type
 	* 0        1     ASTERISK (literal ASCII '*')
 	* 1        1     Frame Type
@@ -182,13 +185,14 @@ vbuf TocProtocol::return_flap(int type, const vbuf& data)
 	// set flap type
 	fh.m_type = (byte)type;
 	// put length in network byte order
-	fh.m_len = byteReverse(len);
+	fh.m_len = NBO(len);
 
 	// get the header and return it to the output buffer
 	buffer = fh.getHdr();
 
 	if (len > 0)
 		buffer += data;
+
 
 	return buffer;
 }
@@ -241,6 +245,7 @@ void TocProtocol::logout()
 
 
 }
+
 
 void TocProtocol::sendMessage(const Contact &c, const string &message)
 {
@@ -322,9 +327,17 @@ void TocProtocol::signup()
 	debug() << "doing FLAP SIGNON" ;
 
 	string normalizedUsername(aim_normalize(m_conf.child("user").property("username")));
-	word16 usernameLength = byteReverse((word16)normalizedUsername.length());
+	word16 usernameLength = (word16)normalizedUsername.length();
 
-	vbuf flapOn;
+    // create pre-flapon packet (same packet really)
+    flapHdr pre;
+    pre.m_type = (byte)TYPE_SIGNON;
+    pre.m_len = NBO(word16(usernameLength + 8));
+
+    usernameLength = NBO(usernameLength);
+
+    // create flapon packet
+    vbuf flapOn;
 	flapOn += (byte)0;
 	flapOn += (byte)0;
 	flapOn += (byte)0;
@@ -337,7 +350,12 @@ void TocProtocol::signup()
 	
 	flapOn += normalizedUsername;
 
-	send_flap(TYPE_SIGNON, flapOn);
+    // send pre flapon
+    m_net->sendData(pre.getHdr());
+    // send flapon
+    m_net->sendData(flapOn);
+
+	//send_flap(TYPE_SIGNON, flapOn);
 
   /*
    * toc_signon <authorizer host> <authorizer port> <User Name> <Password>
@@ -352,7 +370,7 @@ void TocProtocol::signup()
     tocSignon += (byte)' ';
     tocSignon += normalizedUsername;
     tocSignon += (byte)' ';
-    tocSignon += string(roast_password(m_conf.child("user").property("password").c_str()));
+    tocSignon += roastPassword(m_conf.child("user").property("password"));
     tocSignon += string(" english \"NNIM\"");
     tocSignon += (byte)0;
 
@@ -374,6 +392,7 @@ vector<string> splitStr(const string& str)
 		i++;
 		debug() << ( "word:" + tmp);
 		words.push_back(tmp);
+
 		tmp="";
 	}
 
@@ -386,6 +405,7 @@ vector<string> splitStrLF(const string& str)
 	unsigned int i=0;
 	vector<string> words;
 	string tmp;
+
 
 	while (i<str.length())
 	{
@@ -419,6 +439,7 @@ void TocProtocol::handleData(Network *net, const vbuf &data)
 	{ 
 		vbuf newData;
 		// do concat buffer with present data
+
 		newData += m_buffer;
 		m_buffer.clear();
 
@@ -433,10 +454,12 @@ void TocProtocol::handleData(Network *net, const vbuf &data)
 	payLoadLength |= (word16)(data[5] << 8);
 
 	// convert from network byte order
-	payLoadLength = byteReverse(payLoadLength);
+	payLoadLength = NBO(payLoadLength);
 
 	// see if payload length is greater then actual payload, 
 	// if so, more on the way
+
+    debug() << "Payload length: " << payLoadLength << "\nData length: " << data.size() << endl;
 
 	if (payLoadLength > (data.size() - 6))
 		m_buffer +=  data;
@@ -447,6 +470,7 @@ void TocProtocol::handleData(Network *net, const vbuf &data)
 		// recurse if there is more than one command in data stream
 		if (data.size() > (payLoadLength+6))
 		{
+            debug() << "More than one command in data stream.\n";
 			handleData(net, data.sub(payLoadLength + 6));
 		}
 	}
@@ -454,6 +478,8 @@ void TocProtocol::handleData(Network *net, const vbuf &data)
 
 void TocProtocol::handleRealData(Network *net, const string& data)
 {
+
+    debug() << "Got Data: " << data << endl;
 
 	string command;
 
@@ -465,9 +491,13 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 		return;
 	}
 
-	unsigned int position(data.find(":", 0));
+	unsigned int position(data.find(':', 0));
 
-	command = data.substr(0, position-1);
+
+
+	command = data.substr(0, position);
+
+    debug() << command << endl;
 
 	if (command == "IM_IN")
 	{
@@ -476,6 +506,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 		string msg = words[3];
 
 		if (m_buddies.find(words[1])==m_buddies.end())
+
 		{	
 			// if we can't find the user, we prompt for acceptance
 			Contact c;
@@ -502,6 +533,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 		eventRecvdMessage(m_buddies[words[1]],msg);
 		return;
 	}
+
 
 	if (command == "UPDATE_BUDDY")
 	{
@@ -548,27 +580,37 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 	}
 	if (command == "SIGN_ON")
 	{
+        debug() << "CONNECTED TO TOC!" << endl;
 		return;
 	}
 	if (command == "CONFIG")
 	{
-		vbuf setInfo(string("toc_set_info \"Visit NNIM at "
-			"<A HREF=\"http://nnim.sourceforge.net\">http://nnim.sourceforge.net</A>.\""));
-		send_flap(TYPE_DATA, setInfo);
+		vbuf setInfo("toc_set_info ");
+        setInfo += aim_encode("\"Visit NNIM at <A HREF=\"http://nnim.sourceforge.net\">http://nnim.sourceforge.net</A>.\"");
+		setInfo += (byte)0;
+        send_flap(TYPE_DATA, setInfo);
 		
-		vbuf addBuddy(string("toc_add_buddy "));
-		addBuddy += screenName();
-		addBuddy += (byte)' ';
+		if (m_buddies.empty())
+        {
+            vbuf addBuddy("toc_add_buddy");
+		    //addBuddy += aim_normalize(screenName());
+		
 				
-		for (buddy_t::iterator i=m_buddies.begin(); i!=m_buddies.end(); i++)
-		{
-			addBuddy +=aim_normalize(i->second.serverId());
-			addBuddy += (byte)' ';
-		}
+		    for (buddy_t::iterator i=m_buddies.begin(); i!=m_buddies.end(); i++)
+		    {
+                addBuddy += (byte)' ';
+			    addBuddy +=aim_normalize(i->second.serverId());
+		    }
 
-		//tempConfigWhole += return_flap(TYPE_DATA,str);
-		send_flap(TYPE_DATA, addBuddy);
-		//tempConfigWhole += return_flap(TYPE_DATA, string("toc_init_done"));
+		    //tempConfigWhole += return_flap(TYPE_DATA,str);
+		    send_flap(TYPE_DATA, addBuddy);
+		    //tempConfigWhole += return_flap(TYPE_DATA, string("toc_init_done"));
+        }
+
+        vbuf initDone(string("toc_init_done"));
+        initDone += (byte)0;
+
+        send_flap(TYPE_DATA, initDone);
 
 		eventStateChange(S_online);
 
@@ -587,6 +629,8 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 
 	if (command == "ERROR")
 	{
+        eventError(Protocol::E_network, data);
+        debug() << data << endl;
 		return;
 	}
 	if (command == "EVILED")
@@ -646,6 +690,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 	}
 
 	if (command == "PAUSE")
+
 	{
 		return;
 
@@ -688,6 +733,7 @@ void TocProtocol::setAway(const string& msg)
     m_awayMessage = aim_encode(msg);
   }
 
+
   string temp = "toc_set_away \"" + aim_encode(msg) + '\"';
   send_flap(TYPE_DATA, temp);
 
@@ -726,6 +772,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.6  2002/06/25 04:46:21  thementat
+    More toc work.
+
     Revision 1.5  2002/06/24 18:00:50  thementat
     Fixed TOC sequence bug.
 
@@ -759,6 +808,7 @@ void TocProtocol::tocParseConfig(const string& config)
     Revision 1.8  2001/12/08 21:45:27  mentat
     Added setAway and setAllAway to Protocol Manager along with modifying some protocol code.
 
+
     Revision 1.7  2001/12/06 04:46:40  mentat
     Added setAway() and setAllAway(...) to manager class and to toc protocol, also added changes to toc so that will log in with wx client.
 
@@ -770,6 +820,8 @@ void TocProtocol::tocParseConfig(const string& config)
 
     Revision 1.4  2001/10/04 16:26:37  abelsson
     Added missing protocol status callbacks.
+
+
 
     Revision 1.3  2001/10/02 22:51:57  estyrke
     Added some more boilerplates...
