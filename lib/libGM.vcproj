@@ -396,6 +396,11 @@
 			</File>
 			<File
 				RelativePath="include\buffer.hpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="include\contact.h">

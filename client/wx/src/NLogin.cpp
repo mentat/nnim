@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.cpp,v 1.3 2002/06/23 14:50:01 thementat Exp $
+    $Id: NLogin.cpp,v 1.4 2002/06/24 12:07:40 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -34,6 +34,7 @@
 #include "bitmaps/wiz_obsd_fish2.xpm"
 
 #include "authload.h"
+#include "buffer.hpp"
 
 
 using namespace std;
@@ -266,6 +267,9 @@ wxMenuBar *myLoginMenuBar()
 /*
     -----
     $Log: NLogin.cpp,v $
+    Revision 1.4  2002/06/24 12:07:40  thementat
+    Toc fixes.
+
     Revision 1.3  2002/06/23 14:50:01  thementat
     Work on TOC protocol and new buffer class.
 

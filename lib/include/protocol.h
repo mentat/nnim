@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: protocol.h,v 1.2 2002/06/23 18:35:51 thementat Exp $
+    $Id: protocol.h,v 1.3 2002/06/24 12:07:40 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -174,7 +174,9 @@ public:
     Parse this data.
    */
   virtual void handleData(Network *net, const string& data)=0;
-  virtual void handleData(Network *net, const vbuf& data) = 0;
+  virtual void handleData(Network *net, const vbuf& data)
+  {	handleData(net, string((const char *)data.data(), data.size())); }
+
 
   /**
     A socket or network error has occured, tell the protocol about it.

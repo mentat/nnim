@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NSocket.cpp,v 1.4 2002/06/23 18:35:51 thementat Exp $
+    $Id: NSocket.cpp,v 1.5 2002/06/24 12:07:40 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -42,12 +42,13 @@ wxString ConvertString(const byte * data, int len)
   stringstream temp;
   for (int i = 0; i < len; i++)
   {
-    if ((data[i] > 31) && (data[i] < 127))
-      temp << data[i];
+    if ((char(data[i]) > 31) && (char(data[i]) < 127))
+      temp << char(data[i]);
     else
     {
-      temp << '\\';
-      temp << (int)data[i];
+      temp << "0x";
+	  temp.width(2);
+	  temp << ios::hex << ((unsigned int)data[i]);
     }
   }
   return temp.str().c_str();
@@ -93,7 +94,7 @@ void wxNetwork::connectionError(int error)
       owner->connectionError(this,error);
 }
 
-void wxNetwork::sendData(const char *data,int len)
+void wxNetwork::sendData(const char *data,unsigned long len)
 {
   SetFlags(wxSOCKET_WAITALL);
  

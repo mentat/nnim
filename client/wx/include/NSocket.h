@@ -58,7 +58,7 @@ public:
   /**
      Send data
   */
-  virtual void sendData(const char *data,int len);
+  virtual void sendData(const char *data,unsigned long len);
   virtual void sendData(const vbuf& data);
  
   /**

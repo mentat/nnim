@@ -69,10 +69,10 @@ public:
   /**
      Send data
   */
-  virtual void sendData(const char *data,int len)=0;
-  virtual void sendData(const string &data) { sendData(data.c_str(),data.length());}
-  virtual void sendData(const XMLNode &data){string tmp=data; sendData(tmp.c_str(),tmp.length());};
-  virtual void sendData(const dstring &data) { sendData((const char*)data.data(), data.length());};
+  virtual void sendData(const char *data,unsigned long len)=0;
+  virtual void sendData(const string &data) { sendData(data.c_str(),(unsigned long)data.length());}
+  virtual void sendData(const XMLNode &data){string tmp=data; sendData(tmp.c_str(),tmp.length());}
+  virtual void sendData(const dstring &data) { sendData((const char*)data.data(), data.length());}
 
   virtual void sendData(const vbuf& data) = 0;
   /**
@@ -85,7 +85,7 @@ public:
   */
   virtual void socketData(char* &data,int &len)=0;
   virtual void socketData(string& data) = 0;
-  virtual void socketData(const vbuf& data) = 0;
+  virtual void socketData(vbuf& data) = 0;
 
   /**
      update socket and check for data

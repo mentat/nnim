@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.3 2002/06/23 18:35:51 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.4 2002/06/24 12:07:40 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -48,10 +48,10 @@ public:
   
 	flapHdr() 
 	{ 
-		m_ast='*';
-		m_type=2;
+		m_ast=(byte)'*';
+		m_type=(byte)2;
 		m_seq = byteReverse(real_seq++);
-		m_len=0;
+		m_len=(byte)0;
 	}
 
 	byte m_ast;
@@ -137,11 +137,11 @@ string TocProtocol::roast_password(const string& pass)
 }
 #endif
 
-unsigned char *TocProtocol::roast_password(const char *pass)
+const char * TocProtocol::roast_password(const char *pass)
 {
   /* Trivial "encryption" */
-  static char rp[256];
-  static char *roast =  "Tic/Toc";
+  char rp[256];
+  char roast[] =  "Tic/Toc";
   int pos = 2;
   int x;
 
@@ -149,7 +149,7 @@ unsigned char *TocProtocol::roast_password(const char *pass)
   for (x = 0; (x < 150) && pass[x]; x++)
     pos += sprintf(&rp[pos], "%02x", pass[x] ^ roast[x % strlen(roast)]);
   rp[pos] = '\0';
-  return (unsigned char *) rp;
+  return rp;
 }
 
 void TocProtocol::send_flap(int type, const vbuf& data)
@@ -176,12 +176,12 @@ vbuf TocProtocol::return_flap(int type, const vbuf& data)
 	flapHdr fh;
 
 	// set length to payload length
-	int len = data.size();
+	word16 len = data.size();
 
 	// set flap type
-	fh.m_type = type;
+	fh.m_type = (byte)type;
 	// put length in network byte order
-	fh.m_len = byteReverse((unsigned short)len);
+	fh.m_len = byteReverse(len);
 
 	// get the header and return it to the output buffer
 	buffer = fh.getHdr();
@@ -334,7 +334,7 @@ void TocProtocol::signup()
 	
 	flapOn += normalizedUsername;
 
-	m_net->sendData(flapOn);
+	send_flap(TYPE_SIGNON, flapOn);
 
   /*
    * toc_signon <authorizer host> <authorizer port> <User Name> <Password>
@@ -345,15 +345,15 @@ void TocProtocol::signup()
     tocSignon += string("toc_signon ");
     tocSignon += m_conf.child("loginserver").property("host");
     tocSignon += (byte)' ';
-    tocSignon += m_conf.child("loginserver").intProperty("port");
+    tocSignon += m_conf.child("loginserver").property("port");
     tocSignon += (byte)' ';
     tocSignon += normalizedUsername;
     tocSignon += (byte)' ';
-    tocSignon += roast_password(m_conf.child("user").property("password").c_str());
+    tocSignon += string(roast_password(m_conf.child("user").property("password").c_str()));
     tocSignon += string(" english \"NNIM\"");
     tocSignon += (byte)0;
 
-	send_flap(TYPE_SIGNON, tocSignon);
+	send_flap(TYPE_DATA, tocSignon);
 
 	m_state=S_online;
 }
@@ -439,7 +439,7 @@ void TocProtocol::handleData(Network *net, const vbuf &data)
 		m_buffer +=  data;
 	else
 	{
-		handleRealData(net, string(data.data()+6, payLoadLength));
+		handleRealData(net, string((const char *)(data.data()+6), payLoadLength));
 		
 		// recurse if there is more than one command in data stream
 		if (data.size() > (payLoadLength+6))
@@ -549,23 +549,27 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 	}
 	if (command == "CONFIG")
 	{
-		string tempConfigWhole(return_flap(TYPE_DATA, 
-			"toc_set_info \"Visit NNIM at "
+		vbuf setInfo(string("toc_set_info \"Visit NNIM at "
 			"<A HREF=\"http://nnim.sourceforge.net\">http://nnim.sourceforge.net</A>.\""));
-
-		string str("toc_add_buddy ");
-
-		str += screenName() + " ";
+		send_flap(TYPE_DATA, setInfo);
+		
+		vbuf addBuddy(string("toc_add_buddy "));
+		addBuddy += screenName();
+		addBuddy += (byte)' ';
 				
 		for (buddy_t::iterator i=m_buddies.begin(); i!=m_buddies.end(); i++)
-			str+=aim_normalize(i->second.serverId()) + " ";
+		{
+			addBuddy +=aim_normalize(i->second.serverId());
+			addBuddy += (byte)' ';
+		}
 
-		tempConfigWhole += return_flap(TYPE_DATA,str);
-		tempConfigWhole += return_flap(TYPE_DATA, "toc_init_done");
+		//tempConfigWhole += return_flap(TYPE_DATA,str);
+		send_flap(TYPE_DATA, addBuddy);
+		//tempConfigWhole += return_flap(TYPE_DATA, string("toc_init_done"));
 
 		eventStateChange(S_online);
 
-		m_net->sendData(tempConfigWhole);
+		//m_net->sendData(tempConfigWhole);
 
 		tocParseConfig(data.substr(7,data.length()));
 		return;
@@ -726,6 +730,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.4  2002/06/24 12:07:40  thementat
+    Toc fixes.
+
     Revision 1.3  2002/06/23 18:35:51  thementat
     Added vbuf class and changing all protocol to use.
 

@@ -1,5 +1,5 @@
 /*
-    $Id: sign.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
+    $Id: sign.cpp,v 1.3 2002/06/24 12:07:40 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Henrik Abelsson <henrik@abelsson.com>
@@ -230,7 +230,8 @@ bool Certificate::verify(const string &pubkey)
   }
   catch(Exception& ex)
     {
-      return false;
+		ex.what();
+		return false;
     }
 }
 

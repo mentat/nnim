@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: dstring.h,v 1.3 2002/06/23 18:35:51 thementat Exp $
+    $Id: dstring.h,v 1.4 2002/06/24 12:07:40 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2002  Henrik Abelsson <henrik@abelsson.com>
@@ -84,7 +84,7 @@ public:
     return *this;
   }
 
-  int length() const { return size();}
+  unsigned long length() const { return (unsigned long)size();}
 
   myvector substr(int pos,int n=-1) const
   {

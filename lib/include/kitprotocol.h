@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: kitprotocol.h,v 1.2 2002/06/23 18:35:51 thementat Exp $
+    $Id: kitprotocol.h,v 1.3 2002/06/24 12:07:40 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -71,6 +71,7 @@ class KitProtocol: public Protocol, private Expat
 
   virtual void handleData(Network *net);
   virtual void handleData(Network *net,const string& buf);
+
   virtual void connectionError(Network *net,int error);
   virtual void connectedToServer(Network *net);
 private:

@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: tocprotocol.h,v 1.3 2002/06/23 18:35:51 thementat Exp $
+    $Id: tocprotocol.h,v 1.4 2002/06/24 12:07:40 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -76,6 +76,10 @@ public:
 
 	virtual void handleData(Network *net);
 	virtual void handleData(Network *net, const vbuf& data);
+	virtual void handleData(Network *net, const string& data)
+	{
+		handleData(net, vbuf(data));
+	}
 	virtual void connectionError(Network *net,int error);
 	virtual void connectedToServer(Network *net);
 
@@ -90,7 +94,7 @@ private:
 	void signup();
 	string aim_encode(const string& s);
 	string aim_normalize(const string& s);
-	unsigned char * roast_password(const char *pass);
+	const char * roast_password(const char *pass);
 	void sendMessageAuto(const Contact &c, const string &message);
 	void tocParseConfig(const string& config);
 
@@ -113,7 +117,7 @@ private:
   
 protected:
 
-	void handleRealData(Network *net, const vbuf& data);
+	void handleRealData(Network *net, const string& data);
     Network *m_net;
 
 };

@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: buffer.hpp,v 1.2 2002/06/23 18:35:51 thementat Exp $
+    $Id: buffer.hpp,v 1.3 2002/06/24 12:07:40 thementat Exp $
 
     vbuf Class - Extention of STL vector
     Copyright (C) 1999-2002  Jesse Lovelace <jllovela@eos.ncsu.edu>
@@ -40,13 +40,12 @@ public:
 	vbuf():vector<byte>() {}
 
 	vbuf(const string& str):vector<byte>() {
-		resize(str.length());
-		insert(end(), str.begin(), str.end());
+		for ( unsigned int i = 0; i < str.length(); i++)
+			push_back((byte)str[i]);
 	}
 
 	vbuf(const char * str, unsigned long length):vector<byte>()
 	{
-		resize(length);
 		for ( unsigned int i = 0; i < length; i++)
 			push_back((byte)str[i]);
 		
@@ -54,27 +53,29 @@ public:
 
 	vbuf(const vbuf& buf):vector<byte>()
 	{
-		resize(buf.size());
 		insert(end(), buf.begin(), buf.end());
 	}
 
 	vbuf(byte * str, unsigned long length):vector<byte>()
     {
-		resize(length);
 		for ( unsigned int i = 0; i < length; i++)
 			push_back(str[i]);
 		
 	}
+
 	byte * data() const {
+		vector<byte>::const_iterator it = begin();
 		m_data.reset( new byte[size()] );
 		for (unsigned long i = 0; i < size(); i++)
-			m_data[i] = (*this)[i];
+		{
+			m_data[i] = *it;
+			it++;
+		}
 		return m_data.get(); }
 
 	vbuf operator +( const vbuf& buf)
 	{
 		vbuf tmp(*this);
-		tmp.resize(size() + buf.size());
 		tmp.insert(tmp.end(), buf.begin(), buf.end());
 		return tmp;
 	}
@@ -82,14 +83,12 @@ public:
 	vbuf& operator =( const vbuf& buf)
 	{
         clear();
-		resize(buf.size());
 		insert(end(), buf.begin(), buf.end());
         return *this;
 	}
 
     vbuf& operator += ( const vbuf& buf )
     {
-        resize(size() + buf.size());
         insert(end(), buf.begin(), buf.end());
         return *this;
     }
@@ -100,20 +99,20 @@ public:
         return *this;
     }
 
-    vbuf sub( unsigned long start, unsigned long length = 0)
+    vbuf sub( unsigned long start, unsigned long length = 0) const
     {
         vbuf temp;
         unsigned long i;
 
-        if ((start >= size()) || (length > size())
+        if ((start >= size()) || (length > size()))
             return temp;
 
-        vector<byte>::iterator itStart = begin();
+        vector<byte>::const_iterator itStart = begin();
         if (start != 0)
             for (i = 0; i < start; i++)
                 itStart++;
 
-        vector<byte>::iterator itEnd = begin();
+        vector<byte>::const_iterator itEnd = begin();
         if (length != 0)
             for (i = start; i < (start + length) ; i++)
                 itEnd++;

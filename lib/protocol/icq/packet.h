@@ -1,5 +1,5 @@
 /*
-    $Id: packet.h,v 1.1 2002/06/06 17:21:52 thementat Exp $
+    $Id: packet.h,v 1.2 2002/06/24 12:07:40 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Emil Styrke <emil@lysator.liu.se>
@@ -20,8 +20,11 @@
 
     -----
     $Log: packet.h,v $
-    Revision 1.1  2002/06/06 17:21:52  thementat
-    Initial revision
+    Revision 1.2  2002/06/24 12:07:40  thementat
+    Toc fixes.
+
+    Revision 1.1.1.1  2002/06/06 17:21:52  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.5  2001/10/28 20:21:31  estyrke
     Added code for nick discovery in icq
@@ -103,7 +106,7 @@ public:
   virtual ~TLV() {};
 
   virtual uint16 type() const {return _type;};
-  virtual uint16 length() const {return _value.length();};
+  virtual uint16 length() const {return (uint16)_value.length();};
   virtual const dstring &value() const {return _value;};
 
   virtual void setType(type_e t) {_type=t;};

@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: msnprotocol.h,v 1.2 2002/06/23 18:35:51 thementat Exp $
+    $Id: msnprotocol.h,v 1.3 2002/06/24 12:07:40 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -69,6 +69,7 @@ class MsnProtocol: public Protocol
 
   virtual void handleData(Network *net);
   virtual void handleData(Network *net,const string& data);
+
   virtual void connectionError(Network *net,int error);
   virtual void connectedToServer(Network *net);
 
