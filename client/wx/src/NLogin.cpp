@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLogin.cpp,v 1.6 2002/06/27 02:54:08 thementat Exp $
+    $Id: NLogin.cpp,v 1.7 2002/06/27 14:25:50 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -49,7 +49,7 @@ InitLoginView(wxWindow * parent)
 {
   guiLogin * pMyLogin = new guiLogin(wxT("NNIM Login"), 20, 20, parent);
   pMyLogin->Show(TRUE);
-  pMyLogin->Maximize(FALSE);
+  //pMyLogin->Maximize(FALSE);
   return pMyLogin;
 
 }
@@ -267,6 +267,9 @@ wxMenuBar *myLoginMenuBar()
 /*
     -----
     $Log: NLogin.cpp,v $
+    Revision 1.7  2002/06/27 14:25:50  thementat
+    Fixed GTK debug errors.
+
     Revision 1.6  2002/06/27 02:54:08  thementat
     Changes to the Event handling.
 

@@ -80,6 +80,7 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 INCLUDES = -I. -I../include -I../../
+CXXFLAGS = -g
 SUBDIRS = msn icq
 noinst_LTLIBRARIES = libprotocol.la
 libprotocol_la_SOURCES = kitprotocol.cpp nnimprotocol.cpp \
@@ -118,7 +119,6 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-CXXFLAGS = @CXXFLAGS@
 DIST_SOURCES = $(libprotocol_la_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \

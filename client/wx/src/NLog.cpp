@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLog.cpp,v 1.3 2002/06/26 04:27:08 thementat Exp $
+    $Id: NLog.cpp,v 1.4 2002/06/27 14:25:50 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -11,6 +11,7 @@
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
+
 
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,6 +29,10 @@
 #include "wx/image.h"
 #include "wx/imaglist.h"
 #include "wx/listctrl.h"
+
+#include "bitmaps/stormtroop.xpm"
+#include "bitmaps/yoda.xpm"
+#include "bitmaps/boba_ship.xpm"
 
 #include "NLog.h"
 
@@ -51,47 +56,31 @@ wxFrame *InitLogView(wxWindow * parent)
 guiLog::guiLog(const wxString& title, int x, int y, int w, int h, wxWindow * parent)
 : wxFrame(parent, -1, title, wxPoint(x, y), wxSize(w, h))
 {
-  wxPanel * panel = new wxPanel(this);
+    wxPanel * panel = new wxPanel(this);
 
-  LogView(panel, true, true);
+    LogView(panel, true, true);
 
-  m_listctrl = (wxListCtrl *)FindWindow(ID_LOG_LIST);
+    m_listctrl = (wxListCtrl *)FindWindow(ID_LOG_LIST);
 
-  m_listctrl->InsertColumn(0, wxT("Message"));
-  m_listctrl->InsertColumn(1, wxT("Type"));
+    m_listctrl->InsertColumn(0, wxT("Message"));
+    m_listctrl->InsertColumn(1, wxT("Type"));
 
     // prepare the imagelist
-  static const int ICON_SIZE = 16;
-  wxImageList *imageList = new wxImageList(ICON_SIZE, ICON_SIZE);
+    enum { ICON_SIZE = 16 };
+    wxImageList *imageList = new wxImageList(ICON_SIZE, ICON_SIZE, true);
 
     // order should be the same as in the switch below!
-  static const int icons[] =
-  {
-    wxICON_ERROR,
-    wxICON_EXCLAMATION,
-    wxICON_INFORMATION
-  };
 
-  bool loadedIcons = TRUE;
+    imageList->Add( wxImage(wxIcon( stormtroop_xpm )).Rescale(ICON_SIZE, ICON_SIZE).ConvertToBitmap() );
 
-  for ( size_t icon = 0; icon < WXSIZEOF(icons); icon++ )
-  {
-    wxBitmap bmp = wxTheApp->GetStdIcon(icons[icon]);
+    imageList->Add( wxImage(wxIcon( boba_ship_xpm )).Rescale(ICON_SIZE, ICON_SIZE).ConvertToBitmap() );
+    imageList->Add( wxImage(wxIcon( yoda_xpm )).Rescale(ICON_SIZE, ICON_SIZE).ConvertToBitmap() );
 
-    // This may very well fail if there are insufficient
-    // colours available. Degrade gracefully.
+    m_listctrl->SetImageList(imageList, wxIMAGE_LIST_SMALL);
 
-    if (!bmp.Ok())
-      loadedIcons = FALSE;
-    else
-      imageList->Add(wxImage(bmp).Rescale(ICON_SIZE, ICON_SIZE).ConvertToBitmap());
-  }
+    Show(TRUE);
 
-  m_listctrl->SetImageList(imageList, wxIMAGE_LIST_SMALL);
-
-  Show(TRUE);
-
-  delete wxLog::SetActiveTarget(this);
+    m_logOld = wxLog::SetActiveTarget(this);
 
 }
 
@@ -105,7 +94,7 @@ void guiLog::OnCloseWindow(wxCloseEvent& event)
 guiLog::~guiLog()
 {
 
-	wxLog::SetActiveTarget(new wxLogStderr);
+	wxLog::SetActiveTarget(m_logOld);
 	delete m_listctrl->GetImageList(wxIMAGE_LIST_SMALL);
 }
 
@@ -197,6 +186,9 @@ wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer )
 /*
     -----
     $Log: NLog.cpp,v $
+    Revision 1.4  2002/06/27 14:25:50  thementat
+    Fixed GTK debug errors.
+
     Revision 1.3  2002/06/26 04:27:08  thementat
     Event fixes.
 

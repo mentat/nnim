@@ -79,6 +79,7 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
+CXXFLAGS = -g
 INCLUDES = -I../../include -I../../../
 noinst_LTLIBRARIES = libmsn.la
 libmsn_la_SOURCES = msnprotocol.cpp command.h errors.h
@@ -107,7 +108,6 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-CXXFLAGS = @CXXFLAGS@
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)

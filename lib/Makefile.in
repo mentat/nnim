@@ -83,6 +83,7 @@ EXTRA_DIST = XMLSpec.xml libGM.sln libGM.vcproj include/peerprotocol.h \
     include/ssh.h include/nnimprotocol.h
 
 SUBDIRS = certificates common protocol
+CXXFLAGS = -g
 
 include_HEADERS = include/authload.h include/basenetwork.h include/contact.h \
  include/cryptography.h include/dstring.h include/expat.h include/globals.h \

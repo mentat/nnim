@@ -1,3 +1,4 @@
+CXXFLAGS = -g
 INCLUDES = -I. -I../../include -I../../../ -I../
 noinst_LTLIBRARIES = libicq.la
 libicq_la_SOURCES = fnacbospackets.cpp \

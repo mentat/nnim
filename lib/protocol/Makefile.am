@@ -1,4 +1,5 @@
 INCLUDES = -I. -I../include -I../../
+CXXFLAGS = -g
 SUBDIRS = msn icq
 noinst_LTLIBRARIES = libprotocol.la
 libprotocol_la_SOURCES =  kitprotocol.cpp nnimprotocol.cpp \
