@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NInclude.h,v 1.1 2002/06/06 17:21:42 thementat Exp $
+    $Id: NInclude.h,v 1.2 2002/06/08 18:34:21 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -62,6 +62,7 @@ Datatype prefixes are as follows:
 #include "crypto/misc.h"
 
 #include "wx/wxprec.h"
+
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
@@ -286,8 +287,11 @@ template<class T> inline void destroy(T*& p) { delete p; p = 0; }
 /*
     -----
     $Log: NInclude.h,v $
-    Revision 1.1  2002/06/06 17:21:42  thementat
-    Initial revision
+    Revision 1.2  2002/06/08 18:34:21  thementat
+    Added comments and fixed VC7 project dirs
+
+    Revision 1.1.1.1  2002/06/06 17:21:42  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2001/12/18 04:09:27  mentat
     Restructuring all files.

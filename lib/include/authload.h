@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.h,v 1.1 2002/06/06 17:21:53 thementat Exp $
+    $Id: authload.h,v 1.2 2002/06/08 18:34:21 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -45,23 +45,43 @@ public:
     AuthLoad(const string& directory = "");
     ~AuthLoad();
 
+	/// Creates new XML config file on disk for specified user
     bool CreateNew(const string & username, SecByteBlock & password);
+
+	/// Tries to log the specified user in, returns false if non-fatal error
     bool Login(const string & username, SecByteBlock &password);
+
+	/// Logs current user off of system
 	bool Logoff();
-  
+
+	/// Static XML searching algo, assigns a node by reference as return
     static bool Search(const string& dataToFind, const string& tagName, XMLNode& parentNode, XMLNode& returnNode);
+
+	/// Same as regular search but the parent of the search term is returned
     static bool BaseSearch(const string& dataToFind, const string& tagName, XMLNode& parentNode, XMLNode& realParent, int& num);
-    static int TagCount(const string& findType, XMLNode& parentNode);
+    
+	/// Counts all tags of certain type in a XML node, recursive underbelly
+	static int TagCount(const string& findType, XMLNode& parentNode);
+
+	/// Returns a vector of all tags
     static void GetAllTags(const string& findType, XMLNode& parentNode, vector<XMLNode> &result_vector);
+
+	/// Returns a string of the XML tree in text form
     static string PrintTree(const XMLNode& base);
 
-    bool CommitToFile();
+    /// Writes configuration to disk
+	bool CommitToFile();
 
+	/// Checks to see if a given user has a configuration
     bool Exists(const string& username);
 
+	/// Sets active password for loged-in user
     bool SetActivePassword(SecByteBlock& password);
 
+	/// Returns loged-in username
     string GetActiveLogin();
+
+	/// Returns statues of authload system
     aStatus GetStatus() const { return m_status; }
 
 protected:
@@ -72,19 +92,34 @@ protected:
 		XMLNode &GetConfig() { return m_contact(); }
 		enum Type { FOLDER, BASEFOLDER, CONTACT, CONTACTBASE, PROTOCOL };
 
+		/// Deletes all net tags in XML
 		bool DeleteAllNets(const string& contactname);
+
+		/// Deletes all info tags
 		bool DeleteAllInfo(const string& contactname);
 
+		/// Returns the number of contacts in the tree
 		unsigned long GetCount();
 
+		/// Returns the public key for the given contact
 		string GetPublicKey(const string& contactname);
 
+		/// Renames a contact if possible
 		bool Rename(const string& oldname, const string& newname);
+
+		/// Adds a contact if possible to given folder
 		bool Add(const string& contactname, const string& folder = "");
+
+		/// Deletes a contact from the tree
 		bool Delete(const string& contactname);
+
+		/// Moves a contact to a new base folder
 		bool Move(const string& name, const string& newbase);
 
+		/// Sets info of type infoname to the given user
 		bool SetInfo(const string& username, const string& infoname, const string& data, const string& childof = "");
+
+		/// Deletes a info tag named infoname for the given contact
 		bool DeleteInfo(const string& username, const string& infoname);
 		string GetInfo(const string& username, const string& infoname);
 
@@ -216,8 +251,11 @@ public:
 /*
     -----
     $Log: authload.h,v $
-    Revision 1.1  2002/06/06 17:21:53  thementat
-    Initial revision
+    Revision 1.2  2002/06/08 18:34:21  thementat
+    Added comments and fixed VC7 project dirs
+
+    Revision 1.1.1.1  2002/06/06 17:21:53  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.19  2001/12/17 18:33:42  mentat
     Importing changes for NNIM Beta 1 client.

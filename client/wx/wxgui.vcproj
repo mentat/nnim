@@ -41,7 +41,7 @@
 				OutputFile="Debug\nnim_debug.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../../crypto/release,../../lib/Debug,../../wxWindows/lib"
+				AdditionalLibraryDirectories="../../crypto/debug,../../lib/Debug,../../wxWindows/lib"
 				IgnoreDefaultLibraryNames="libcd.lib,libcid.lib,msvcrt.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="Debug\nnim.pdb"
