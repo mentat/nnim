@@ -1,0 +1,8 @@
+There are a lot of people that have directly or indirectly helped me with 
+developing KiT, here is an (incomplete) list of people that i'd especially
+like to thank.
+
+The Apache Group: I stole some code from their Apache server for DLL loading.
+DrDevil in #tpu on efnet: Thanks for helping me get started again. :)
+rnd in #tpu: For writing an early version of the config file loader.
+

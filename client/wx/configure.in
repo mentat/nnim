@@ -1,0 +1,65 @@
+AC_INIT(src/gui/wx_main.cpp)
+
+#AM_INIT_AUTOMAKE(NNIM,1.1.1)
+
+AM_CONFIG_HEADER(NConfig.h)
+
+AC_PROG_CXX
+
+AC_STDC_HEADERS
+
+AC_PROG_INSTALL
+
+CRYPTODIR="$PWD/../../../crypto"
+AC_ARG_WITH(crypto,
+ [  --with-crypto=[DIR]   Specify location of crypto++ (www.cryptopp.com)],[
+
+dnl naive check for absolute path
+ if test ` echo $withval | cut -b 1` = "/"; then
+    CRYPTODIR=$withval
+ else
+    CRYPTODIR="$PWD/$withval"
+ fi
+
+])
+
+GMDIR="$PWD/../../../lib"
+
+AC_ARG_WITH(gnumess,
+ [  --with-gnumess=[DIR]   Specify location of GNU Messenger],[
+
+dnl naive check for absolute path
+ if test ` echo $withval | cut -b 1` = "/"; then
+    GMDIR=$withval
+ else
+    GMDIR="$PWD/$withval"
+ fi
+
+])
+
+echo Searching for Crypto++ install.
+if test ! -f $CRYPTODIR/cryptlib.h 
+ then 
+   AC_MSG_WARN(No crypto++ installation found at $CRYPTODIR)
+ else
+   AC_DEFINE(HAVE_CRYPTO)
+fi
+
+echo Searching for GNU Messenger LIB install
+if test ! -f $GMDIR/include/authload.h 
+ then 
+   AC_MSG_ERROR(No GM installation found at $GMDIR)
+fi
+
+dnl Checks for header files.
+
+AC_SUBST(CRYPTODIR)
+AC_SUBST(GMDIR)
+
+echo Searching for wx-config
+AC_CHECK_PROG(WXCONFIG, wx-config, wx-config)
+
+echo Searching for gtk-config
+AC_CHECK_PROG(GTKCONFIG, gtk-config, gtk-config)
+
+AC_OUTPUT([Makefile src/Makefile src/gui/Makefile], [chmod +x nnim])

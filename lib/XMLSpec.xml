@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config password="" username="">
+	<user>
+		<away>
+			<item name="Playing Ball">I'm away playing ball, see ya.</item>
+		</away>
+		<key>
+			<public>....
+			</public>
+			<private></private>
+		</key>
+		<netconf>
+			<toc>
+				<user password="" username="" />
+				<server host="" port="" />
+				<loginserver host="" port="" />
+			</toc>
+		</netconf>
+	</user>
+	<contacts>
+		<folder name="root">
+			<contact name="mentat">
+				<key name="key1">sadfasdfas</key>
+				<info>
+					<item name="email">
+						<item name="work">joe@cisco.com </item>
+					</item>
+					<item name="phone">
+						<item name="mobile">999-999-9999</item>
+					</item>
+				</info>
+				<nets>
+					<item name="toc">m3ntat</item>
+				</nets>
+			</contact>
+		</folder>
+	</contacts>
+	<globals>
+		<item name="loginWindowSize" x="200" y="200" w="300" h="200" />
+	</globals>
+</config>

@@ -1,0 +1,113 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(common/xmlnode.cpp)
+
+GM_MAJOR_VERSION=0
+GM_MINOR_VERSION=1
+GM_MICRO_VERSION=5
+
+GM_VERSION=$GM_MAJOR_VERSION.$GM_MINOR_VERSION.$GM_MICRO_VERSION
+
+AM_INIT_AUTOMAKE(libgm, $GM_VERSION)
+
+AM_CONFIG_HEADER(gm_config.h)
+AM_PROG_LIBTOOL
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+
+CRYPTODIR="$PWD/../crypto"
+
+AC_ARG_WITH(crypto,
+ [  --with-crypto=[DIR]   Specify location of crypto++ (www.cryptopp.com)],[
+ LDFLAGS="$LDFLAGS -L$withval"
+ CPPFLAGS="$CPPFLAGS -I$withval"
+
+dnl naive check for absolute path
+ if test ` echo $withval | cut -b 1` = "/"; then 
+    CRYPTODIR=$withval 
+ else 
+    CRYPTODIR="$PWD/$withval"
+ fi
+
+])
+
+AC_ARG_WITH(mysql-lib,
+ [  --with-mysql-lib=[DIR]   Specify location of libmysqlclient],[
+ LDFLAGS="$LDFLAGS -L$withval"
+   
+])
+
+AC_ARG_WITH(mysql-header,
+ [  --with-mysql-header=[DIR]   Specify location of mysql.h],[
+
+ CPPFLAGS="$CPPFLAGS -I$withval"
+   
+])
+echo $CRYPTODIR
+if test ! -f $CRYPTODIR/cryptlib.h 
+ then 
+   AC_MSG_WARN(No crypto++ installation found at $CRYPTODIR)
+ else
+   AC_DEFINE(HAVE_CRYPTO)
+fi
+
+CPPFLAGS="$CPPFLAGS"
+dnl Checks for libraries.
+
+AC_CHECK_LIB(dl, dlopen,
+	     DLLIB=" -ldl",
+             AC_MSG_WARN(** Libdl was not found!! ** ))
+	     
+#AC_CHECK_LIB(mysqlclient, mysql_connect,
+#	     DBLIB="-L/usr/local/lib/mysql -lmysqlclient",
+#	     AC_MSG_ERROR(** The MySQL client libary was not found! **))
+
+AC_CHECK_LIB(pthread, pthread_create,
+	     THREADLIB=" -lpthread",
+	     AC_MSG_WARN(** posix threads not found **))
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(sys/ioctl.h sys/time.h unistd.h)
+AC_CHECK_HEADER(pthread.h,
+                AC_DEFINE(HAVE_PTHREAD_H),
+		AC_MSG_WARN(** posix threads not found **))
+AC_CHECK_HEADER(dlfcn.h,
+		AC_DEFINE(HAVE_DLFCN_H),)
+AC_CHECK_HEADER(dl.h,
+		AC_DEFINE(HAVE_DL_H),)
+
+AC_LANG_CPLUSPLUS
+dnl AC_CHECK_HEADER(cryptlib.h,
+dnl	AC_DEFINE(HAVE_CRYPTO),
+dnl	AC_MSG_WARN( $INCLUDES Crypto++ not found. Please specify with --with-crypto))
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+
+AC_CHECK_SIZEOF(int)
+AC_CHECK_SIZEOF(char)
+AC_CHECK_SIZEOF(short)
+AC_CHECK_SIZEOF(long)
+AC_CHECK_SIZEOF(long long)
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(select socket strdup strerror)
+
+AC_SUBST(GM_MAJOR_VERSION)
+AC_SUBST(GM_MINOR_VERSION)
+AC_SUBST(GM_MICRO_VERSION)
+AC_SUBST(GM_VERSION)
+AC_SUBST(CRYPTODIR)
+
+AC_SUBST(DLLIB)
+AC_SUBST(DBLIB)
+
+AC_OUTPUT(common/Makefile protocol/Makefile protocol/icq/Makefile protocol/msn/Makefile common/expat/Makefile Makefile certificates/Makefile)

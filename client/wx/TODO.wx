@@ -1,0 +1,14 @@
+TODO list for wx port:
+
+* removed color defines in gui_def.h, use color picker
+
+* remove below code in gui_def.h (or just tweak for MSW)
+if (SHRT_MAX > 65000)
+    m_intAimTocPort->SetRange(1,65000);
+  else 
+    m_intAimTocPort->SetRange(1,SHRT_MAX);
+  m_intAimTocPort->SetValue(23);
+
+* Secure deallocator for temp password storage.
+
+* More
