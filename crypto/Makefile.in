@@ -1,0 +1,727 @@
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
+
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
+# Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+@SET_MAKE@
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_HEADER = $(INSTALL_DATA)
+transform = @program_transform_name@
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AMTAR = @AMTAR@
+AS = @AS@
+AWK = @AWK@
+CC = @CC@
+CXX = @CXX@
+DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
+STRIP = @STRIP@
+VERSION = @VERSION@
+am__include = @am__include@
+am__quote = @am__quote@
+install_sh = @install_sh@
+
+EXTRA_DIST = test.cpp validate1.cpp validate2.cpp validate3.cpp \
+	LICENSE.txt README.txt
+
+CXXFLAGS = -g
+LDFLAGS = -Wl,--gc-sections
+INCLUDES = -I.
+
+lib_LIBRARIES = libcryptopp.a
+libcryptopp_a_SOURCES = \
+3way.cpp \
+3way.h \
+adler32.cpp \
+adler32.h \
+aes.h \
+algebra.cpp \
+algebra.h \
+arc4.cpp \
+arc4.h \
+asn.cpp \
+asn.h \
+base64.cpp \
+base64.h \
+bfinit.cpp \
+blowfish.cpp \
+blowfish.h \
+blumgold.cpp \
+blumgold.h \
+blumshub.cpp \
+blumshub.h \
+cast.cpp \
+cast.h \
+casts.cpp \
+cbc.cpp \
+cbc.h \
+cbcmac.h \
+channels.cpp \
+channels.h \
+config.h \
+crc.cpp \
+crc.h \
+cryptlib.cpp \
+cryptlib.h \
+default.cpp \
+default.h \
+des.cpp \
+des.h \
+dessp.cpp \
+dh2.cpp \
+dh2.h \
+dh.cpp \
+dh.h \
+diamond.cpp \
+diamond.h \
+diamondt.cpp \
+dmac.h \
+dsa.cpp \
+dsa.h \
+ec2n.cpp \
+ec2n.h \
+eccrypto.cpp \
+eccrypto.h \
+ecp.cpp \
+ecp.h \
+elgamal.cpp \
+elgamal.h \
+eprecomp.cpp \
+eprecomp.h \
+files.cpp \
+files.h \
+filters.cpp \
+filters.h \
+gf2_32.cpp \
+gf2_32.h \
+gf256.cpp \
+gf256.h \
+gf2n.cpp \
+gf2n.h \
+gost.cpp \
+gost.h \
+gzip.cpp \
+gzip.h \
+hex.cpp \
+hex.h \
+hmac.h \
+hrtimer.cpp \
+hrtimer.h \
+ida.cpp \
+ida.h \
+idea.cpp \
+idea.h \
+integer.cpp \
+integer.h \
+iterhash.cpp \
+iterhash.h \
+lubyrack.h \
+luc.cpp \
+luc.h \
+mars.cpp \
+mars.h \
+marss.cpp \
+md2.cpp \
+md2.h \
+md4.cpp \
+md4.h \
+md5.cpp \
+md5.h \
+md5mac.cpp \
+md5mac.h \
+mdc.h \
+misc.cpp \
+misc.h \
+modarith.h \
+modes.cpp \
+modes.h \
+modexppc.cpp \
+modexppc.h \
+mqueue.cpp \
+mqueue.h \
+mqv.cpp \
+mqv.h \
+nbtheory.cpp \
+nbtheory.h \
+network.cpp \
+network.h \
+nr.cpp \
+nr.h \
+oaep.cpp \
+oaep.h \
+oids.h \
+osrng.cpp \
+osrng.h \
+panama.cpp \
+panama.h \
+pch.cpp \
+pch.h \
+pkcspad.cpp \
+pkcspad.h \
+polynomi.cpp \
+polynomi.h \
+pssr.h \
+pubkey.cpp \
+pubkey.h \
+queue.cpp \
+queue.h \
+rabin.cpp \
+rabin.h \
+randpool.cpp \
+randpool.h \
+rc2.cpp \
+rc2.h \
+rc5.cpp \
+rc5.h \
+rc6.cpp \
+rc6.h \
+rdtables.cpp \
+rijndael.cpp \
+rijndael.h \
+ripemd.cpp \
+ripemd.h \
+rng.cpp \
+rng.h \
+rsa.cpp \
+rsa.h \
+rw.cpp \
+rw.h \
+safer.cpp \
+safer.h \
+sapphire.cpp \
+sapphire.h \
+seal.cpp \
+seal.h \
+secshare.cpp \
+secshare.h \
+serpent.cpp \
+serpent.h \
+sha.cpp \
+sha.h \
+sharkbox.cpp \
+shark.cpp \
+shark.h \
+skipjack.cpp \
+skipjack.h \
+smartptr.h \
+socketft.cpp \
+socketft.h \
+square.cpp \
+square.h \
+squaretb.cpp \
+tea.cpp \
+tea.h \
+tftables.cpp \
+tiger.cpp \
+tiger.h \
+tigertab.cpp \
+trunhash.h \
+twofish.cpp \
+twofish.h \
+wake.cpp \
+wake.h \
+winpipes.cpp \
+winpipes.h \
+words.h \
+xormac.h \
+xtr.cpp \
+xtrcrypt.cpp \
+xtrcrypt.h \
+xtr.h \
+zdeflate.cpp \
+zdeflate.h \
+zinflate.cpp \
+zinflate.h \
+zlib.cpp \
+zlib.h
+
+subdir = crypto
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_CLEAN_FILES =
+LIBRARIES = $(lib_LIBRARIES)
+
+libcryptopp_a_AR = $(AR) cru
+libcryptopp_a_LIBADD =
+am_libcryptopp_a_OBJECTS = 3way.$(OBJEXT) adler32.$(OBJEXT) \
+	algebra.$(OBJEXT) arc4.$(OBJEXT) asn.$(OBJEXT) base64.$(OBJEXT) \
+	bfinit.$(OBJEXT) blowfish.$(OBJEXT) blumgold.$(OBJEXT) \
+	blumshub.$(OBJEXT) cast.$(OBJEXT) casts.$(OBJEXT) cbc.$(OBJEXT) \
+	channels.$(OBJEXT) crc.$(OBJEXT) cryptlib.$(OBJEXT) \
+	default.$(OBJEXT) des.$(OBJEXT) dessp.$(OBJEXT) dh2.$(OBJEXT) \
+	dh.$(OBJEXT) diamond.$(OBJEXT) diamondt.$(OBJEXT) dsa.$(OBJEXT) \
+	ec2n.$(OBJEXT) eccrypto.$(OBJEXT) ecp.$(OBJEXT) \
+	elgamal.$(OBJEXT) eprecomp.$(OBJEXT) files.$(OBJEXT) \
+	filters.$(OBJEXT) gf2_32.$(OBJEXT) gf256.$(OBJEXT) \
+	gf2n.$(OBJEXT) gost.$(OBJEXT) gzip.$(OBJEXT) hex.$(OBJEXT) \
+	hrtimer.$(OBJEXT) ida.$(OBJEXT) idea.$(OBJEXT) \
+	integer.$(OBJEXT) iterhash.$(OBJEXT) luc.$(OBJEXT) \
+	mars.$(OBJEXT) marss.$(OBJEXT) md2.$(OBJEXT) md4.$(OBJEXT) \
+	md5.$(OBJEXT) md5mac.$(OBJEXT) misc.$(OBJEXT) modes.$(OBJEXT) \
+	modexppc.$(OBJEXT) mqueue.$(OBJEXT) mqv.$(OBJEXT) \
+	nbtheory.$(OBJEXT) network.$(OBJEXT) nr.$(OBJEXT) \
+	oaep.$(OBJEXT) osrng.$(OBJEXT) panama.$(OBJEXT) pch.$(OBJEXT) \
+	pkcspad.$(OBJEXT) polynomi.$(OBJEXT) pubkey.$(OBJEXT) \
+	queue.$(OBJEXT) rabin.$(OBJEXT) randpool.$(OBJEXT) \
+	rc2.$(OBJEXT) rc5.$(OBJEXT) rc6.$(OBJEXT) rdtables.$(OBJEXT) \
+	rijndael.$(OBJEXT) ripemd.$(OBJEXT) rng.$(OBJEXT) rsa.$(OBJEXT) \
+	rw.$(OBJEXT) safer.$(OBJEXT) sapphire.$(OBJEXT) seal.$(OBJEXT) \
+	secshare.$(OBJEXT) serpent.$(OBJEXT) sha.$(OBJEXT) \
+	sharkbox.$(OBJEXT) shark.$(OBJEXT) skipjack.$(OBJEXT) \
+	socketft.$(OBJEXT) square.$(OBJEXT) squaretb.$(OBJEXT) \
+	tea.$(OBJEXT) tftables.$(OBJEXT) tiger.$(OBJEXT) \
+	tigertab.$(OBJEXT) twofish.$(OBJEXT) wake.$(OBJEXT) \
+	winpipes.$(OBJEXT) xtr.$(OBJEXT) xtrcrypt.$(OBJEXT) \
+	zdeflate.$(OBJEXT) zinflate.$(OBJEXT) zlib.$(OBJEXT)
+libcryptopp_a_OBJECTS = $(am_libcryptopp_a_OBJECTS)
+
+DEFS = @DEFS@
+DEFAULT_INCLUDES =  -I. -I$(srcdir)
+CPPFLAGS = @CPPFLAGS@
+LIBS = @LIBS@
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/3way.Po $(DEPDIR)/adler32.Po \
+@AMDEP_TRUE@	$(DEPDIR)/algebra.Po $(DEPDIR)/arc4.Po \
+@AMDEP_TRUE@	$(DEPDIR)/asn.Po $(DEPDIR)/base64.Po \
+@AMDEP_TRUE@	$(DEPDIR)/bfinit.Po $(DEPDIR)/blowfish.Po \
+@AMDEP_TRUE@	$(DEPDIR)/blumgold.Po $(DEPDIR)/blumshub.Po \
+@AMDEP_TRUE@	$(DEPDIR)/cast.Po $(DEPDIR)/casts.Po \
+@AMDEP_TRUE@	$(DEPDIR)/cbc.Po $(DEPDIR)/channels.Po \
+@AMDEP_TRUE@	$(DEPDIR)/crc.Po $(DEPDIR)/cryptlib.Po \
+@AMDEP_TRUE@	$(DEPDIR)/default.Po $(DEPDIR)/des.Po \
+@AMDEP_TRUE@	$(DEPDIR)/dessp.Po $(DEPDIR)/dh.Po $(DEPDIR)/dh2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/diamond.Po $(DEPDIR)/diamondt.Po \
+@AMDEP_TRUE@	$(DEPDIR)/dsa.Po $(DEPDIR)/ec2n.Po \
+@AMDEP_TRUE@	$(DEPDIR)/eccrypto.Po $(DEPDIR)/ecp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/elgamal.Po $(DEPDIR)/eprecomp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/files.Po $(DEPDIR)/filters.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gf256.Po $(DEPDIR)/gf2_32.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gf2n.Po $(DEPDIR)/gost.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gzip.Po $(DEPDIR)/hex.Po \
+@AMDEP_TRUE@	$(DEPDIR)/hrtimer.Po $(DEPDIR)/ida.Po \
+@AMDEP_TRUE@	$(DEPDIR)/idea.Po $(DEPDIR)/integer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/iterhash.Po $(DEPDIR)/luc.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mars.Po $(DEPDIR)/marss.Po \
+@AMDEP_TRUE@	$(DEPDIR)/md2.Po $(DEPDIR)/md4.Po $(DEPDIR)/md5.Po \
+@AMDEP_TRUE@	$(DEPDIR)/md5mac.Po $(DEPDIR)/misc.Po \
+@AMDEP_TRUE@	$(DEPDIR)/modes.Po $(DEPDIR)/modexppc.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mqueue.Po $(DEPDIR)/mqv.Po \
+@AMDEP_TRUE@	$(DEPDIR)/nbtheory.Po $(DEPDIR)/network.Po \
+@AMDEP_TRUE@	$(DEPDIR)/nr.Po $(DEPDIR)/oaep.Po \
+@AMDEP_TRUE@	$(DEPDIR)/osrng.Po $(DEPDIR)/panama.Po \
+@AMDEP_TRUE@	$(DEPDIR)/pch.Po $(DEPDIR)/pkcspad.Po \
+@AMDEP_TRUE@	$(DEPDIR)/polynomi.Po $(DEPDIR)/pubkey.Po \
+@AMDEP_TRUE@	$(DEPDIR)/queue.Po $(DEPDIR)/rabin.Po \
+@AMDEP_TRUE@	$(DEPDIR)/randpool.Po $(DEPDIR)/rc2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/rc5.Po $(DEPDIR)/rc6.Po \
+@AMDEP_TRUE@	$(DEPDIR)/rdtables.Po $(DEPDIR)/rijndael.Po \
+@AMDEP_TRUE@	$(DEPDIR)/ripemd.Po $(DEPDIR)/rng.Po \
+@AMDEP_TRUE@	$(DEPDIR)/rsa.Po $(DEPDIR)/rw.Po $(DEPDIR)/safer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/sapphire.Po $(DEPDIR)/seal.Po \
+@AMDEP_TRUE@	$(DEPDIR)/secshare.Po $(DEPDIR)/serpent.Po \
+@AMDEP_TRUE@	$(DEPDIR)/sha.Po $(DEPDIR)/shark.Po \
+@AMDEP_TRUE@	$(DEPDIR)/sharkbox.Po $(DEPDIR)/skipjack.Po \
+@AMDEP_TRUE@	$(DEPDIR)/socketft.Po $(DEPDIR)/square.Po \
+@AMDEP_TRUE@	$(DEPDIR)/squaretb.Po $(DEPDIR)/tea.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tftables.Po $(DEPDIR)/tiger.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tigertab.Po $(DEPDIR)/twofish.Po \
+@AMDEP_TRUE@	$(DEPDIR)/wake.Po $(DEPDIR)/winpipes.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xtr.Po $(DEPDIR)/xtrcrypt.Po \
+@AMDEP_TRUE@	$(DEPDIR)/zdeflate.Po $(DEPDIR)/zinflate.Po \
+@AMDEP_TRUE@	$(DEPDIR)/zlib.Po
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
+	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES = $(libcryptopp_a_SOURCES)
+DIST_COMMON = Makefile.am Makefile.in
+SOURCES = $(libcryptopp_a_SOURCES)
+
+all: all-am
+
+.SUFFIXES:
+.SUFFIXES: .cpp .lo .o .obj
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  crypto/Makefile
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+
+AR = ar
+install-libLIBRARIES: $(lib_LIBRARIES)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	@list='$(lib_LIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+	@$(POST_INSTALL)
+	@list='$(lib_LIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(RANLIB) $(DESTDIR)$(libdir)/$$p"; \
+	    $(RANLIB) $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+
+uninstall-libLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LIBRARIES)'; for p in $$list; do \
+	  echo " rm -f $(DESTDIR)$(libdir)/$$p"; \
+	  rm -f $(DESTDIR)$(libdir)/$$p; \
+	done
+
+clean-libLIBRARIES:
+	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+libcryptopp.a: $(libcryptopp_a_OBJECTS) $(libcryptopp_a_DEPENDENCIES) 
+	-rm -f libcryptopp.a
+	$(libcryptopp_a_AR) libcryptopp.a $(libcryptopp_a_OBJECTS) $(libcryptopp_a_LIBADD)
+	$(RANLIB) libcryptopp.a
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT) core *.core
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/3way.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/adler32.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/algebra.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/arc4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asn.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/base64.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/bfinit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/blowfish.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/blumgold.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/blumshub.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cast.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/casts.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cbc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/channels.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/crc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cryptlib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/default.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/des.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dessp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dh.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dh2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/diamond.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/diamondt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dsa.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ec2n.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/eccrypto.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ecp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/elgamal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/eprecomp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/files.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/filters.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gf256.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gf2_32.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gf2n.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gost.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gzip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hrtimer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ida.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/idea.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/integer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/iterhash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/luc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mars.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/marss.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/md2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/md4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/md5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/md5mac.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/misc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/modes.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/modexppc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mqueue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mqv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nbtheory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/network.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/oaep.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/osrng.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/panama.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/pch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/pkcspad.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/polynomi.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/pubkey.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/queue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rabin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/randpool.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rc2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rc5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rc6.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rdtables.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rijndael.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ripemd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rng.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rsa.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/safer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sapphire.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/seal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/secshare.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/serpent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sha.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/shark.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sharkbox.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/skipjack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/socketft.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/square.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/squaretb.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tea.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tftables.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tiger.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tigertab.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/twofish.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/wake.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/winpipes.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xtr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xtrcrypt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/zdeflate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/zinflate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/zlib.Po@am__quote@
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+.cpp.o:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.cpp.obj:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+
+.cpp.lo:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+CXXDEPMODE = @CXXDEPMODE@
+uninstall-info-am:
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+
+GTAGS:
+	here=`CDPATH=: && cd $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) $$here
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
+
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+top_distdir = ..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+check-am: all-am
+check: check-am
+all-am: Makefile $(LIBRARIES)
+
+installdirs:
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+
+install: install-am
+install-exec: install-exec-am
+install-data: install-data-am
+uninstall: uninstall-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+
+installcheck: installcheck-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
+clean: clean-am
+
+clean-am: clean-generic clean-libLIBRARIES clean-libtool mostlyclean-am
+
+distclean: distclean-am
+
+distclean-am: clean-am distclean-compile distclean-depend \
+	distclean-generic distclean-libtool distclean-tags
+
+dvi: dvi-am
+
+dvi-am:
+
+info: info-am
+
+info-am:
+
+install-data-am:
+
+install-exec-am: install-libLIBRARIES
+
+install-info: install-info-am
+
+install-man:
+
+installcheck-am:
+
+maintainer-clean: maintainer-clean-am
+
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
+
+uninstall-am: uninstall-info-am uninstall-libLIBRARIES
+
+.PHONY: GTAGS all all-am check check-am clean clean-generic \
+	clean-libLIBRARIES clean-libtool distclean distclean-compile \
+	distclean-depend distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am info info-am install \
+	install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am \
+	install-libLIBRARIES install-man install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool tags uninstall \
+	uninstall-am uninstall-info-am uninstall-libLIBRARIES
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
