@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 7.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGM", "libGM.vcproj", "{D919D84A-608F-4055-B324-B05424C363DB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGM", "libGM.vcproj", "{3E903444-E7D6-445F-B654-8E8D8C9E76B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
@@ -9,10 +9,10 @@ Global
 	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{D919D84A-608F-4055-B324-B05424C363DB}.Debug.ActiveCfg = Debug|Win32
-		{D919D84A-608F-4055-B324-B05424C363DB}.Debug.Build.0 = Debug|Win32
-		{D919D84A-608F-4055-B324-B05424C363DB}.Release.ActiveCfg = Release|Win32
-		{D919D84A-608F-4055-B324-B05424C363DB}.Release.Build.0 = Release|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Debug.ActiveCfg = Debug|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Debug.Build.0 = Debug|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Release.ActiveCfg = Release|Win32
+		{3E903444-E7D6-445F-B654-8E8D8C9E76B3}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
