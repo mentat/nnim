@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NAbout.cpp,v 1.2 2002/06/16 05:14:22 thementat Exp $
+    $Id: NAbout.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -108,6 +108,9 @@ wxSizer *About( wxWindow *parent, bool call_fit, bool set_sizer )
 
     -----
     $Log: NAbout.cpp,v $
+    Revision 1.1  2002/06/19 16:27:18  thementat
+    Restructured directories.
+
     Revision 1.2  2002/06/16 05:14:22  thementat
     Updated about screen.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NLog.cpp,v 1.2 2002/06/09 19:45:03 thementat Exp $
+    $Id: NLog.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -187,6 +187,9 @@ wxSizer *LogView( wxWindow *parent, bool call_fit, bool set_sizer )
 /*
     -----
     $Log: NLog.cpp,v $
+    Revision 1.1  2002/06/19 16:27:18  thementat
+    Restructured directories.
+
     Revision 1.2  2002/06/09 19:45:03  thementat
     Liberal use of auto_ptr.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactWiz.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
+    $Id: NContactWiz.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace

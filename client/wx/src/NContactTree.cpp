@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTree.cpp,v 1.1 2002/06/06 17:21:30 thementat Exp $
+    $Id: NContactTree.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -21,8 +21,11 @@
 
     -----
     $Log: NContactTree.cpp,v $
-    Revision 1.1  2002/06/06 17:21:30  thementat
-    Initial revision
+    Revision 1.1  2002/06/19 16:27:18  thementat
+    Restructured directories.
+
+    Revision 1.1.1.1  2002/06/06 17:21:30  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.11  2002/01/17 20:00:50  mentat
     Moved dirs back to normal.

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NTaskbar.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NTaskbar.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NChat.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -568,6 +568,9 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
 /*
     -----
     $Log: NChat.cpp,v $
+    Revision 1.1  2002/06/19 16:27:18  thementat
+    Restructured directories.
+
     Revision 1.2  2002/06/14 22:02:24  thementat
     Large work on revamping IDs in gui, more SSH2 additions.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTreeXML.cpp,v 1.4 2002/06/16 04:54:37 thementat Exp $
+    $Id: NContactTreeXML.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace

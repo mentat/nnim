@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
+    $Id: NContact.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -531,6 +531,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.1  2002/06/19 16:27:18  thementat
+    Restructured directories.
+
     Revision 1.3  2002/06/16 04:08:28  thementat
     Hopefully fixed Authload and related classes.
 
