@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTreeXML.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
+    $Id: NContactTreeXML.cpp,v 1.4 2002/06/16 04:54:37 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -128,13 +128,13 @@ NContactTreeXML::~NContactTreeXML()
 
 void NContactTreeXML::LoadFromXML()
 {
-/*
+
 	wxLogDebug(wxT("In LoadFromXML"));
     if (m_type == ContactTree)
         PlaceContactsInTree(GetRootItem(), m_xml);
     else
         PlaceItemsInTree(GetRootItem(), m_xml);
-   */ 
+   
 }
 
 /*void NContactTreeXML::OnMenuDeleted(wxCommandEvent& event)
@@ -512,10 +512,10 @@ void NContactTreeXML::SetStatus(wxTreeItemId &id, int status)
   }
   break;
   }
-  wxFont Cirth;
+  /*wxFont Cirth;
   Cirth.SetFaceName("Dwarf Runes");
 
-  SetItemFont(id, Cirth);
+  SetItemFont(id, Cirth);*/
 
 }
 wxString NContactTreeXML::NewFolder(const wxString& base)

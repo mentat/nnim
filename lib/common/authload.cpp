@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.6 2002/06/16 04:08:28 thementat Exp $
+    $Id: authload.cpp,v 1.7 2002/06/16 04:54:37 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -122,15 +122,16 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
     m_diskPass.CleanNew(gmCrypto::GetDigestSize(gmCrypto::SHA_384));
     m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
-#if 0
+
     // plain text read in of config for testing
 	ifstream in;
     string tmp, inbound;
     in.open("test.xml");
     while (getline(in, tmp))
         inbound += tmp;
-#endif
 
+    *m_config << inbound;
+#if 0
     *m_config << gmCrypto::DecryptFile(m_directory + m_filename, m_diskPass);
 
 	ofstream out;
@@ -145,7 +146,7 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
     } 
 	else
         LogText("Username matches.");
-
+#endif
     m_status = ONLINE;
 
     return true;
@@ -394,6 +395,9 @@ AuthLoad::GetActiveLogin()
 /*
     -----
     $Log: authload.cpp,v $
+    Revision 1.7  2002/06/16 04:54:37  thementat
+    Disabled file encryption for testing, temp saves to test.xml
+
     Revision 1.6  2002/06/16 04:08:28  thementat
     Hopefully fixed Authload and related classes.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: auth_contact.cpp,v 1.5 2002/06/16 04:08:28 thementat Exp $
+    $Id: auth_contact.cpp,v 1.6 2002/06/16 04:54:37 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -37,7 +37,7 @@ using namespace CryptoPP;
 XMLNode
 AuthLoad::Contacts::GetConfig()
 {
-    return m_owner->m_config->child("contacts");
+    return m_owner->m_config->child("contacts").child("folder");
 }
 
 bool 
