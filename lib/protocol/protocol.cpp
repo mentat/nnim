@@ -1,5 +1,5 @@
 /*
-    $Id: protocol.cpp,v 1.1 2002/06/06 17:21:48 thementat Exp $
+    $Id: protocol.cpp,v 1.2 2002/06/25 16:48:14 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Emil Styrke <emil@lysator.liu.se>
@@ -20,8 +20,11 @@
 
     -----
     $Log: protocol.cpp,v $
-    Revision 1.1  2002/06/06 17:21:48  thementat
-    Initial revision
+    Revision 1.2  2002/06/25 16:48:14  thementat
+    Got TOC done! (mostly)
+
+    Revision 1.1.1.1  2002/06/06 17:21:48  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.5  2001/10/05 14:11:00  abelsson
     Added debug() macro for debug output.
@@ -62,6 +65,15 @@ void Protocol::eventLoggedOut()
 {
   if (m_manager)
     m_manager->c_loggedOut(protocol());
+
+}
+
+void Protocol::eventRecvdMessageNotBuddy(const Contact &c, const string &message)
+{
+    debug() << "m_manage:" << (int)m_manager << endl;
+    debug() << message << endl;
+    if (m_manager)
+        m_manager->c_recvdMessageAnony(protocol(),c,message);
 
 }
 void Protocol::eventRecvdMessage(const Contact &c, const string &message)

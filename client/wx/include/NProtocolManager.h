@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.h,v 1.1 2002/06/06 17:21:42 thementat Exp $
+    $Id: NProtocolManager.h,v 1.2 2002/06/25 16:48:09 thementat Exp $
  
     GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    Copyright (C) 2001-2002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,8 +21,11 @@
 
     -----
     $Log: NProtocolManager.h,v $
-    Revision 1.1  2002/06/06 17:21:42  thementat
-    Initial revision
+    Revision 1.2  2002/06/25 16:48:09  thementat
+    Got TOC done! (mostly)
+
+    Revision 1.1.1.1  2002/06/06 17:21:42  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2001/12/18 04:09:27  mentat
     Restructuring all files.
@@ -70,6 +73,7 @@ public:
   void c_statusChange(const string &proto,const Contact &c);
 
   void c_recvdMessage(const string &proto,const Contact &c, const string &message);
+  void c_recvdMessageAnony(const string& proto, const Contact &c, const string& message);
 
   void c_error(const string &proto,int err_no,const string &error);
   

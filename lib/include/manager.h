@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: manager.h,v 1.2 2002/06/23 18:35:51 thementat Exp $
+    $Id: manager.h,v 1.3 2002/06/25 16:48:14 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -24,6 +24,7 @@
 #define KIM_PROTOCOL_MANAGER_H
 
 #include <string>
+
 #include <vector>
 #include <protocol.h>
 
@@ -125,7 +126,7 @@ public:
      A message has come! Someone is interested in talking to our user
    */
   virtual void c_recvdMessage(const string &proto,const Contact &c, const string &message);
-
+  virtual void c_recvdMessageAnony(const string& protocol, const Contact& c, const string& message) {}
   /**
     The status for a contact has changed (May have gone offline, or gone away)
     @see Contact

@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.6 2002/06/25 04:46:21 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.7 2002/06/25 16:48:14 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -144,6 +144,8 @@ const char * TocProtocol::roast_password(const char *pass)
 
   char rp[256];
 
+
+
   char roast[] =  "Tic/Toc";
   int pos = 2;
   int x;
@@ -268,6 +270,7 @@ void TocProtocol::sendMessageAuto(const Contact &c, const string &message)
 }
 
 void TocProtocol::addBuddy(const Contact &c)
+
 {
 	if (m_state==S_online)
 		send_flap(TYPE_DATA,"toc_add_buddy "+aim_normalize(c.serverId()));
@@ -514,7 +517,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 			c.setServerId(words[1]);
 			c.setNick(words[1]);
 
-			//eventRecvdMessageNotBuddy(c, msg);
+			eventRecvdMessageNotBuddy(c, msg);
 			return;
 		}
 
@@ -586,14 +589,16 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 	if (command == "CONFIG")
 	{
 		vbuf setInfo("toc_set_info ");
-        setInfo += aim_encode("\"Visit NNIM at <A HREF=\"http://nnim.sourceforge.net\">http://nnim.sourceforge.net</A>.\"");
+        setInfo += aim_encode("\"NNIM\""/*"\"Visit NNIM at <A HREF=\"http://nnim.sourceforge.net\">http://nnim.sourceforge.net</A>.\""*/);
 		setInfo += (byte)0;
         send_flap(TYPE_DATA, setInfo);
 		
+        vbuf addBuddy("toc_add_buddy");
+
 		if (m_buddies.empty())
         {
-            vbuf addBuddy("toc_add_buddy");
-		    //addBuddy += aim_normalize(screenName());
+            addBuddy += (byte)' ';
+		    addBuddy += aim_normalize(screenName());
 		
 				
 		    for (buddy_t::iterator i=m_buddies.begin(); i!=m_buddies.end(); i++)
@@ -602,12 +607,12 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 			    addBuddy +=aim_normalize(i->second.serverId());
 		    }
 
-		    //tempConfigWhole += return_flap(TYPE_DATA,str);
-		    send_flap(TYPE_DATA, addBuddy);
-		    //tempConfigWhole += return_flap(TYPE_DATA, string("toc_init_done"));
         }
 
-        vbuf initDone(string("toc_init_done"));
+        addBuddy += (byte)0;
+        send_flap(TYPE_DATA, addBuddy);
+
+        vbuf initDone("toc_init_done");
         initDone += (byte)0;
 
         send_flap(TYPE_DATA, initDone);
@@ -772,6 +777,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.7  2002/06/25 16:48:14  thementat
+    Got TOC done! (mostly)
+
     Revision 1.6  2002/06/25 04:46:21  thementat
     More toc work.
 
