@@ -5,7 +5,7 @@
 // Author:      Jesse Lovelace
 // Modified by:
 // Created:
-// RCS-ID:      $Id: cryptography.cpp,v 1.6 2002/06/27 22:33:27 thementat Exp $
+// RCS-ID:      $Id: cryptography.cpp,v 1.7 2002/06/28 16:12:14 thementat Exp $
 // Copyright:   (c) Jesse Lovelace
 // Licence:     LGPL licence
 /////////////////////////////////////////////////////////////////////////////
@@ -14,6 +14,7 @@
 #ifdef WIN32
 #pragma warning(disable:4786)
 #endif
+
 
 
 
@@ -167,14 +168,24 @@ string gmCrypto::DecryptFile(const string& filename, const SecByteBlock &key)
     decoder64.Put(dataFromFile, dataFromFile.Size());
     decoder64.MessageEnd();
 
-	SecByteBlock decodedData(decoder64.MaxRetrievable());
-    decoder64.Get(decodedData, decodedData.Size());
+
+    SecByteBlock iv(IV_LENGTH);
+    SecByteBlock payload(decoder64.MaxRetrievable() -
+        IV_LENGTH - HMAC<SHA>::DIGESTSIZE);
+    SecByteBlock hmac(HMAC<SHA>::DIGESTSIZE);
+
+	//SecByteBlock decodedData(decoder64.MaxRetrievable());
+    decoder64.Get(iv, IV_LENGTH);
+    decoder64.Get(payload, payload.Size());
+    decoder64.Get(hmac, HMAC<SHA>::DIGESTSIZE);
+
+
 
     //seperate data
-    SecByteBlock iv(decodedData, IV_LENGTH);
+   /* SecByteBlock iv(decodedData, IV_LENGTH);
     SecByteBlock payload(decodedData + IV_LENGTH, decodedData.Size() - IV_LENGTH - HMAC<SHA>::DIGESTSIZE);
     SecByteBlock hmac(decodedData + IV_LENGTH + (decodedData.Size() - IV_LENGTH - HMAC<SHA>::DIGESTSIZE),
-        HMAC<SHA>::DIGESTSIZE);
+        HMAC<SHA>::DIGESTSIZE);   */
 
     // decrypt, dat becomes new compressed cipher text.
     MARSDecryption marsDec(key, SHA384::DIGESTSIZE);

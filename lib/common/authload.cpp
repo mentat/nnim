@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.8 2002/06/21 19:03:15 thementat Exp $
+    $Id: authload.cpp,v 1.9 2002/06/28 16:12:14 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -122,7 +122,7 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
     m_diskPass.CleanNew(gmCrypto::GetDigestSize(gmCrypto::SHA_384));
     m_diskPass = gmCrypto::Hash(password, gmCrypto::SHA_384);
 
-
+#if 0
     // plain text read in of config for testing
 	ifstream in;
     string tmp, inbound;
@@ -131,22 +131,22 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
         inbound += tmp;
 
     *m_config << inbound;
-#if 0
+#endif
     *m_config << gmCrypto::DecryptFile(m_directory + m_filename, m_diskPass);
 
-	ofstream out;
+	/*ofstream out;
 
-	out.open("hi.txt");
-
+	out.open("hi.txt");*/
+#if 0
 	out << *m_config;
-
+#endif
     if (!(m_config->property("username") == username))
     {
 		throw(gmException("Critical error, username does not match but file was decrypted!", gmException::gUSER));
     } 
 	else
         LogText("Username matches.");
-#endif
+
     m_status = ONLINE;
 
     return true;
@@ -194,6 +194,7 @@ AuthLoad::BaseSearch(const string& toFind, const string& findType, XMLNode& pare
     for (unsigned int iter = 0; iter < parentNode.children().size(); iter++)
     {
         if (BaseSearch(toFind, findType, parentNode.children()[iter], returnNode, num))
+
             return true;
     }
 
@@ -398,6 +399,9 @@ AuthLoad::GetActiveLogin()
 /*
     -----
     $Log: authload.cpp,v $
+    Revision 1.9  2002/06/28 16:12:14  thementat
+    Fixed cryptography.
+
     Revision 1.8  2002/06/21 19:03:15  thementat
     NNIM compiles and links in gcc 2.96 20000731
 
