@@ -83,10 +83,11 @@ INCLUDES = -I. -I../include -I../../
 SUBDIRS = msn icq
 noinst_LTLIBRARIES = libprotocol.la
 libprotocol_la_SOURCES = kitprotocol.cpp nnimprotocol.cpp \
-	protocol.cpp tocprotocol.cpp yahooprotocol.cpp
+	manager.cpp protocol.cpp tocprotocol.cpp yahooprotocol.cpp \
+	peerprotocol.cpp
 
 
-EXTRA_DIST = peer_protocol.cpp emptyprotocol.h old_tocprotocol.cpp emptyprotocol.cpp
+EXTRA_DIST = emptyprotocol.h old_tocprotocol.cpp emptyprotocol.cpp
 subdir = lib/protocol
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
@@ -94,8 +95,8 @@ LTLIBRARIES = $(noinst_LTLIBRARIES)
 
 libprotocol_la_LDFLAGS =
 libprotocol_la_LIBADD =
-am_libprotocol_la_OBJECTS = kitprotocol.lo nnimprotocol.lo protocol.lo \
-	tocprotocol.lo yahooprotocol.lo
+am_libprotocol_la_OBJECTS = kitprotocol.lo nnimprotocol.lo manager.lo \
+	protocol.lo tocprotocol.lo yahooprotocol.lo peerprotocol.lo
 libprotocol_la_OBJECTS = $(am_libprotocol_la_OBJECTS)
 
 DEFS = @DEFS@
@@ -104,8 +105,9 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/kitprotocol.Plo \
-@AMDEP_TRUE@	$(DEPDIR)/nnimprotocol.Plo $(DEPDIR)/protocol.Plo \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/kitprotocol.Plo $(DEPDIR)/manager.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/nnimprotocol.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/peerprotocol.Plo $(DEPDIR)/protocol.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/tocprotocol.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/yahooprotocol.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -160,7 +162,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/kitprotocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/manager.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nnimprotocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/peerprotocol.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/protocol.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tocprotocol.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yahooprotocol.Plo@am__quote@

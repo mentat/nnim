@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NUserWiz.cpp,v 1.2 2002/06/20 01:25:00 thementat Exp $
+    $Id: NUserWiz.cpp,v 1.3 2002/06/21 19:03:15 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -56,7 +56,7 @@ bool UserWizardP1::TransferDataFromWindow()
     return FALSE;
   }
 
-  if (myLoader.Exists((name->GetValue()).c_str()))
+  if (myLoader.Exists(name->GetValue().c_str()))
   {
     wxMessageBox(wxT("Sorry, this user name already exists, please choose another."), wxT("User Exists"), wxOK, this);
     return FALSE;
@@ -201,6 +201,7 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 	wxString pword = ((UserWizardP1 *)GetPrev())->p1->GetValue();
 
 	SecByteBlock pass((const unsigned char *)pword.c_str(), 
+
 		pword.length());
     
 	AuthLoad &myLoader = wxGetApp().AccessLoader();
@@ -289,6 +290,9 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 /*
     -----
     $Log: NUserWiz.cpp,v $
+    Revision 1.3  2002/06/21 19:03:15  thementat
+    NNIM compiles and links in gcc 2.96 20000731
+
     Revision 1.2  2002/06/20 01:25:00  thementat
     Removed unicode for the time being to fix linux build.
 

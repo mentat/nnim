@@ -25,6 +25,7 @@ libicq_la_SOURCES = fnacbospackets.cpp \
 	parsefnacgen.cpp \
 	parsefnacicq.cpp \
 	parsefnacmsg.cpp \
+    parsefnacloc.cpp \
 	parsepacket.cpp \
 	stdpackets.cpp \
 	stdpackets.h \

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.1 2002/06/19 16:27:18 thementat Exp $
+    $Id: NContact.cpp,v 1.2 2002/06/21 19:03:15 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -26,6 +26,8 @@
 
 #include "wx/notebook.h"
 #include "wx/treebase.h"
+
+
 #include "wx/generic/treectlg.h"
 #include "wx/wizard.h"
 
@@ -51,29 +53,6 @@ wxMenuBar *myContactsMenuBar();
 wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , XMLNode node);
 
 DECLARE_APP(wxNNIM)
-/*
-bool RemoveChat(wxWindow * window)
-{
-  for(map<string, guiChat *>::iterator it=gChatWindows.begin(); it != gChatWindows.end(); it++)
-    if ((wxWindow *)it->second == window)
-    {
-      gChatWindows.erase(it->first);
-      return true;
-    }
-
-  return false;
-}
-
-bool AddChat(const string& name, guiChat * window)
-{
-  for(map<string, guiChat *>::iterator it=gChatWindows.begin(); it != gChatWindows.end(); it++)
-    if (it->first == name)
-      return false;
-
-  gChatWindows[name] = window;
-  return true;
-
-}*/
 
 wxWindow *
 InitContactView(wxWindow * pParent, bool newUser)
@@ -116,6 +95,7 @@ guiContact::guiContact(bool newUser, wxWindow* parent, wxWindowID id, const wxSt
 
   wxIcon appIcon;
   appIcon.CopyFromBitmap(wxBitmap(nnim_i_xpm));
+
   SetIcon(appIcon);  
 
   SetMenuBar(myContactsMenuBar());
@@ -123,6 +103,26 @@ guiContact::guiContact(bool newUser, wxWindow* parent, wxWindowID id, const wxSt
   wxPanel * pTopPanel = new wxPanel(this);
 
   Contacts(pTopPanel, true, true, wxGetApp().AccessLoader().C().GetConfig());
+
+}
+
+
+bool guiContact::RemoveChat(const string& name)
+{
+
+    m_chatWindows.erase(name);
+
+    return false;
+}
+
+bool guiContact::AddChat(const string& name, guiChat * window)
+{
+  for(map<string, shared_ptr<guiChat> >::iterator it=m_chatWindows.begin(); it != m_chatWindows.end(); it++)
+    if (it->first == name)
+      return false;
+
+  m_chatWindows[name].reset(window);
+  return true;
 
 }
 
@@ -162,6 +162,7 @@ void guiContact::OnGetMessage(gmEvent& event)
   guiChat * myChat = LaunchChat(event.getServerId().c_str(), event.getProtocol().c_str());
 
   if (myChat)
+
     myChat->DisplayText(event.getMessage().c_str());
   else
     wxLogDebug(wxT("Oh shit, myChat is NULL in OnGetMessage"));
@@ -259,6 +260,7 @@ void guiContact::OnSetAway(wxCommandEvent& event)
   ProtocolManager* pMyManager = AccessManager();
   if (!pMyManager)
   {
+
     wxLogError("guiContact::OnSetAway: pMyManager is NULL!");
     return;
   }
@@ -531,6 +533,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.2  2002/06/21 19:03:15  thementat
+    NNIM compiles and links in gcc 2.96 20000731
+
     Revision 1.1  2002/06/19 16:27:18  thementat
     Restructured directories.
 
@@ -545,6 +550,7 @@ wxMenuBar *myContactsMenuBar()
 
     Revision 1.11  2002/01/17 20:00:50  mentat
     Moved dirs back to normal.
+
 
     Revision 1.1  2001/12/18 04:10:39  mentat
     Restructuring all sources. Beta 1.

@@ -115,7 +115,7 @@ NUserWiz.cpp      \
 NWizards_wdr.cpp
 
 
-nnim_LDADD = ../../../lib/libGM.la ../../../crpyto/libcryptopp.a
+nnim_LDADD = ../../../lib/libGM.la 
 subdir = client/wx/src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
@@ -132,7 +132,7 @@ am_nnim_OBJECTS = NAbout.$(OBJEXT) NAutoTxt.$(OBJEXT) NChat.$(OBJEXT) \
 	NTreeCtrlXML.$(OBJEXT) NUserWiz.$(OBJEXT) \
 	NWizards_wdr.$(OBJEXT)
 nnim_OBJECTS = $(am_nnim_OBJECTS)
-nnim_DEPENDENCIES = ../../../lib/libGM.la ../../../crpyto/libcryptopp.a
+nnim_DEPENDENCIES = ../../../lib/libGM.la
 nnim_LDFLAGS =
 
 DEFS = @DEFS@

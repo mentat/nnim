@@ -32,5 +32,4 @@ NTreeCtrlXML.cpp  \
 NUserWiz.cpp      \
 NWizards_wdr.cpp
 
-nnim_LDADD = ../../../lib/libGM.la ../../../crpyto/libcryptopp.a
-
+nnim_LDADD = ../../../lib/libGM.la 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.7 2002/06/16 04:54:37 thementat Exp $
+    $Id: authload.cpp,v 1.8 2002/06/21 19:03:15 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -348,6 +348,7 @@ string AuthLoad::Decode(const string & inbound)
 bool 
 AuthLoad::Exists(const string& username)
 {
+
     ifstream in;
 
     string filename = gmCrypto::Encode(username);
@@ -355,10 +356,12 @@ AuthLoad::Exists(const string& username)
     string toOpen = m_directory + filename + string(".kim");
     in.open(toOpen.c_str());
 
-    if (in.fail() == true)
+    if (in.fail() || in.bad())
     {
         return false;
     }
+
+
     return true;
 }
 
@@ -395,6 +398,9 @@ AuthLoad::GetActiveLogin()
 /*
     -----
     $Log: authload.cpp,v $
+    Revision 1.8  2002/06/21 19:03:15  thementat
+    NNIM compiles and links in gcc 2.96 20000731
+
     Revision 1.7  2002/06/16 04:54:37  thementat
     Disabled file encryption for testing, temp saves to test.xml
 

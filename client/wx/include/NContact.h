@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.h,v 1.1 2002/06/06 17:21:37 thementat Exp $
+    $Id: NContact.h,v 1.2 2002/06/21 19:03:14 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -25,8 +25,14 @@
 
 #include "NEvent.h"
 #include "wx/treebase.h"
+#include "boost/smart_ptr.hpp"
+#include <map>
+
+using namespace std;
+using namespace boost;
 
 class NContactTreeXML;
+class guiChat;
 
 /**
  * Contact Window
@@ -67,7 +73,12 @@ public:
 
 protected:
 
+    bool RemoveChat(const string& name);
+    bool AddChat(const string& name, guiChat * window);
+
+
 private:
+    map<string, shared_ptr<guiChat> > m_chatWindows;
 
 	NContactTreeXML *m_tree;
     wxBitmapButton *m_start; 
@@ -82,8 +93,11 @@ InitContactView(wxWindow * pParent = NULL, bool newUser = false);
 /*
     -----
     $Log: NContact.h,v $
-    Revision 1.1  2002/06/06 17:21:37  thementat
-    Initial revision
+    Revision 1.2  2002/06/21 19:03:14  thementat
+    NNIM compiles and links in gcc 2.96 20000731
+
+    Revision 1.1.1.1  2002/06/06 17:21:37  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.1  2001/12/18 04:09:27  mentat
     Restructuring all files.
