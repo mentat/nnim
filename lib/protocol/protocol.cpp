@@ -1,5 +1,5 @@
 /*
-    $Id: protocol.cpp,v 1.2 2002/06/25 16:48:14 thementat Exp $
+    $Id: protocol.cpp,v 1.3 2002/06/25 19:09:11 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Emil Styrke <emil@lysator.liu.se>
@@ -20,6 +20,9 @@
 
     -----
     $Log: protocol.cpp,v $
+    Revision 1.3  2002/06/25 19:09:11  thementat
+    Added anonymous incoming message handling.
+
     Revision 1.2  2002/06/25 16:48:14  thementat
     Got TOC done! (mostly)
 
@@ -71,7 +74,7 @@ void Protocol::eventLoggedOut()
 void Protocol::eventRecvdMessageNotBuddy(const Contact &c, const string &message)
 {
     debug() << "m_manage:" << (int)m_manager << endl;
-    debug() << message << endl;
+    debug() << "Not buddy msg: " << message << endl;
     if (m_manager)
         m_manager->c_recvdMessageAnony(protocol(),c,message);
 

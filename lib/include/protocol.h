@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: protocol.h,v 1.4 2002/06/25 16:48:14 thementat Exp $
+    $Id: protocol.h,v 1.5 2002/06/25 19:09:11 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -203,7 +203,7 @@ protected:
 	void eventLoggedIn();
 	void eventLoggedOut();
 	void eventRecvdMessage(const Contact &c, const string &message);
-    void eventRecvdMessageNotBuddy(const Contacts &c, const string& message);
+    void eventRecvdMessageNotBuddy(const Contact &c, const string& message);
 	void eventStatusChange(const Contact &c);
 	void eventError(int err_no,const string &error);
 	void eventStateChange(int state);

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.5 2002/06/23 14:50:01 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.6 2002/06/25 19:09:11 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -140,6 +140,22 @@ void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, con
 		wxString(wxT(":")) + wMessage );
 }
 
+void wxProtocolManager::c_recvdMessageAnony(const string& proto, const Contact &c, const string& message)
+{
+    wxString wProto(proto.c_str(), wxConvUTF8);
+	wxString wMessage(message.c_str(), wxConvUTF8);
+	
+	gmEvent myEvent(gmEVT_MESSAGE_ANONY,wxNNIM::ID_CONTACTS_INCOMMING_MESSAGE_ANONY);
+	myEvent.setProtocol(wProto);
+	myEvent.setServerId(wxString(c.nick().c_str(), wxConvUTF8));
+	myEvent.setMessage(wMessage);
+
+	wxGetApp().SendEvent(myEvent);
+
+	wxLogMessage(wxString(wxT("Anonymous Message from ")) + wxString(c.nick().c_str(), wxConvUTF8) +
+		wxString(wxT(":")) + wMessage );
+}
+
 void wxProtocolManager::c_error(const string &proto,int err_no,const string &error)
 {
   wxLogMessage(wxString("An error occured: (") + wxString(") ") + wxString(error.c_str(), wxConvUTF8));
@@ -157,6 +173,9 @@ void wxProtocolManager::c_stateChange(const string &proto,int state)
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.6  2002/06/25 19:09:11  thementat
+    Added anonymous incoming message handling.
+
     Revision 1.5  2002/06/23 14:50:01  thementat
     Work on TOC protocol and new buffer class.
 

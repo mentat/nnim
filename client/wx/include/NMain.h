@@ -1,9 +1,9 @@
 // --*-c++-*--
 /*
-    $Id: NMain.h,v 1.4 2002/06/19 19:14:43 thementat Exp $
+    $Id: NMain.h,v 1.5 2002/06/25 19:09:10 thementat Exp $
  
     GNU Messenger - The secure instant messenger
-    Copyright (C) 2001  Jesse Lovelace
+    Copyright (C) 2001-2002  Jesse Lovelace
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@
 
 #include "authload.h"
 #include "contact.h"
-
 
 class ProtocolManager;
 class wxSocketEvent;
@@ -113,6 +112,7 @@ public:
         ID_CONTACTS_TASKBAR_EXIT,
         ID_CONTACTS_TASKBAR_HIDE,
         ID_CONTACTS_INCOMMING_MESSAGE,
+        ID_CONTACTS_INCOMMING_MESSAGE_ANONY,
         ID_CONTACTS_STATUS_CHANGE,
 
         ID_LOGIN_LOGO,
@@ -209,6 +209,9 @@ public:
 /*
     -----
     $Log: NMain.h,v $
+    Revision 1.5  2002/06/25 19:09:10  thementat
+    Added anonymous incoming message handling.
+
     Revision 1.4  2002/06/19 19:14:43  thementat
     Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.
 

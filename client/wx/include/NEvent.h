@@ -14,6 +14,7 @@ BEGIN_DECLARE_EVENT_TYPES()
 	DECLARE_EVENT_TYPE(gmEVT_REFRESH_NETWORK, 55)
 	DECLARE_EVENT_TYPE(gmEVT_SETTING_CHANGED, 56)
 	DECLARE_EVENT_TYPE(gmEVT_LIST_ADD, 57)
+    DECLARE_EVENT_TYPE(gmEVT_MESSAGE_ANONY, 58)
 END_DECLARE_EVENT_TYPES()
 
 class gmEvent : public wxEvent
@@ -55,6 +56,7 @@ public:
 
 
   int GetType() { return m_type; }
+
   void SetType(int type) { m_type = type; }
 
   wxTreeItemId & GetItem() { return m_contact; }
