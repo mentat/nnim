@@ -5,7 +5,7 @@
 // Author:      Jesse Lovelace
 // Modified by:
 // Created:
-// RCS-ID:      $Id: cryptography.cpp,v 1.5 2002/06/20 16:21:57 thementat Exp $
+// RCS-ID:      $Id: cryptography.cpp,v 1.6 2002/06/27 22:33:27 thementat Exp $
 // Copyright:   (c) Jesse Lovelace
 // Licence:     LGPL licence
 /////////////////////////////////////////////////////////////////////////////
@@ -14,6 +14,7 @@
 #ifdef WIN32
 #pragma warning(disable:4786)
 #endif
+
 
 
 
@@ -172,7 +173,8 @@ string gmCrypto::DecryptFile(const string& filename, const SecByteBlock &key)
     //seperate data
     SecByteBlock iv(decodedData, IV_LENGTH);
     SecByteBlock payload(decodedData + IV_LENGTH, decodedData.Size() - IV_LENGTH - HMAC<SHA>::DIGESTSIZE);
-    SecByteBlock hmac(decodedData + IV_LENGTH + payload.Size(), HMAC<SHA>::DIGESTSIZE);
+    SecByteBlock hmac(decodedData + IV_LENGTH + (decodedData.Size() - IV_LENGTH - HMAC<SHA>::DIGESTSIZE),
+        HMAC<SHA>::DIGESTSIZE);
 
     // decrypt, dat becomes new compressed cipher text.
     MARSDecryption marsDec(key, SHA384::DIGESTSIZE);
@@ -428,6 +430,7 @@ int gmCrypto::GetDigestSize(int hash_function)
     case(SHA_384): return SHA384::DIGESTSIZE; break;
     case(SHA_512): SHA512::DIGESTSIZE; break;
     case(MD_2): MD2::DIGESTSIZE; break;
+
     case(MD_5): MD5::DIGESTSIZE; break;
     case(_HAVAL): HAVAL::DIGESTSIZE; break;
     case(HAVAL_3): HAVAL3::DIGESTSIZE; break;

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.cpp,v 1.4 2002/06/27 15:26:58 thementat Exp $
+    $Id: NChat.cpp,v 1.5 2002/06/27 22:33:26 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -226,7 +226,7 @@ void guiChat::OnSend(wxCommandEvent& WXUNUSED(event))
 
 
 
-  //MyMan.sendMessage(m_Contact.protocol(), m_Contact, sxToSend);
+  MyMan.sendMessage(m_Contact.protocol(), m_Contact, sxToSend.c_str());
   
   // todo: add local formated colors
   temp.Replace(wxT("\n"), wxT("<BR>"));
@@ -615,11 +615,15 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
 /*
     -----
     $Log: NChat.cpp,v $
+    Revision 1.5  2002/06/27 22:33:26  thementat
+    Fixed TOC error and applied patch for gcc 2.95 in AuthLoad
+
     Revision 1.4  2002/06/27 15:26:58  thementat
     Contact fixes and debug fixes, works better!
 
     Revision 1.3  2002/06/27 11:52:51  thementat
     More event handling fixes.
+
 
     Revision 1.2  2002/06/19 19:14:43  thementat
     Working towards GCC 3.0.4 compile, many modifications and new automake-1.5 files.

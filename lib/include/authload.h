@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.h,v 1.5 2002/06/16 04:08:28 thementat Exp $
+    $Id: authload.h,v 1.6 2002/06/27 22:33:27 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -211,6 +211,10 @@ private:
 
 	aStatus m_status;
 
+    friend class Contacts;
+    friend class Users;
+    friend class Globals;
+
 public:
 
     Contacts& C() { return m_contacts; }
@@ -226,6 +230,9 @@ public:
 /*
     -----
     $Log: authload.h,v $
+    Revision 1.6  2002/06/27 22:33:27  thementat
+    Fixed TOC error and applied patch for gcc 2.95 in AuthLoad
+
     Revision 1.5  2002/06/16 04:08:28  thementat
     Hopefully fixed Authload and related classes.
 

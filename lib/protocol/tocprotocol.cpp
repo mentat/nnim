@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.10 2002/06/27 11:52:51 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.11 2002/06/27 22:33:27 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -43,6 +43,90 @@
 using namespace std;
 using namespace CryptoPP;
 
+string GetError(int i, const string& name)
+{
+     switch (i)
+     {
+         case(901): return name + string(" not currently available"); break;
+         case(902): return string("Warning of ") + name + (" not currently available"); break;
+         case(903): return "A message has been dropped, you are exceeding the server speed limit"; break;
+
+         case(911): return "Error validating input"; break;
+         case(912): return "Invalid account"; break;
+         case(913): return "Error encountered while processing request"; break;
+         case(914): return "Service unavailable"; break;
+         case(950): return string("Chat in ") + name + string("is unavailable"); break;
+         case(960): return string("You are sending message too fast to ") + name; break;
+         case(961): return string("You missed an im from ") + name + (" because it was too big."); break;
+         case(962): return string("You missed an im from ") + name + (" because it sent to fast."); break;
+         case(970): return "Failure"; break;
+         case(971): return "Too many matches"; break;
+         case(972): return "Need more qualifiers"; break;
+         case(973): return "Dir service temporarily unavailable"; break;
+         case(974): return "Email lookup restricted"; break;
+         case(975): return "Keyword Ignored"; break;
+         case(976): return "No Keywords"; break;
+         case(977): return "Language not supported"; break;
+         case(978): return "Country not supported"; break;
+         case(979): return string("Failure unknown ") + name; break;
+         case(980): return "Incorrect nickname or password."; break;
+         case(981): return "The service is temporarily unavailable."; break;
+         case(982): return "Your warning level is currently too high to sign on."; break;
+         case(983): return string("You have been connecting and disconnecting too frequently.  "
+         "Wait 10 minutes and try again.  "
+	     "If you continue to try, you will need to wait even longer."); break;
+         case(989): return string("An unknown signon error has occurred ") + name; break;
+
+         //default: return "An unknown error has occured." break;
+    }
+}
+
+
+  /*
+ * General Errors *
+   901   - $1 not currently available
+   902   - Warning of $1 not currently available
+   903   - A message has been dropped, you are exceeding
+	   the server speed limit
+
+   * Admin Errors  *
+   911   - Error validating input
+   912   - Invalid account
+   913   - Error encountered while processing request
+   914   - Service unavailable
+
+   * Chat Errors  *
+   950   - Chat in $1 is unavailable.
+
+   * IM & Info Errors *
+   960   - You are sending message too fast to $1
+   961   - You missed an im from $1 because it was too big.
+   962   - You missed an im from $1 because it was sent too fast.
+
+   * Dir Errors *
+   970   - Failure
+   971   - Too many matches
+   972   - Need more qualifiers
+   973   - Dir service temporarily unavailable
+   974   - Email lookup restricted
+   975   - Keyword Ignored
+   976   - No Keywords
+   977   - Language not supported
+   978   - Country not supported
+   979   - Failure unknown $1
+
+   * Auth errors *
+   980   - Incorrect nickname or password.
+   981   - The service is temporarily unavailable.
+   982   - Your warning level is currently too high to sign on.
+   983   - You have been connecting and
+	   disconnecting too frequently.  Wait 10 minutes and try again.
+	   If you continue to try, you will need to wait even longer.
+   989   - An unknown signon error has occurred $1
+*/
+
+
+
 class flapHdr {
 public:
   
@@ -53,6 +137,7 @@ public:
 		m_seq = NBO(real_seq++);
 		m_len=(byte)0;
 	}
+
 
  private:
 	byte m_ast;
@@ -136,29 +221,7 @@ string TocProtocol::roastPassword(const string& pass)
 
 	return pword.str();
 }
-#if 0
-const char * TocProtocol::roast_password(const char *pass)
-{
-  /* Trivial "encryption" */
 
-
-  char rp[256];
-
-
-
-
-
-  char roast[] =  "Tic/Toc";
-  int pos = 2;
-  int x;
-
-  strcpy(rp, "0x");
-  for (x = 0; (x < 150) && pass[x]; x++)
-    pos += sprintf(&rp[pos], "%02x", pass[x] ^ roast[x % strlen(roast)]);
-  rp[pos] = '\0';
-  return rp;
-}
-#endif
 void TocProtocol::send_flap(int type, const vbuf& data)
 {
 	m_net->sendData(return_flap(type, data));
@@ -172,6 +235,7 @@ vbuf TocProtocol::return_flap(int type, const vbuf& data)
 	/*
 	* FLAP Header (6 bytes)
 	* -----------
+
 
 	* Offset   Size  Type
 	* 0        1     ASTERISK (literal ASCII '*')
@@ -253,22 +317,32 @@ void TocProtocol::logout()
 
 void TocProtocol::sendMessage(const Contact &c, const string &message)
 {
-    string msg="toc_send_im ";
-    msg+=aim_normalize(c.serverId())+" \"";
-    msg+=aim_encode(message)+"\"";
+    debug() << "sendMessage";
+    vbuf msg;
+    msg += string("toc_send_im ");
+    msg += aim_normalize(c.serverId());
+    msg += string(" \"");
+    msg += aim_encode(message);
+    msg += string("\"");
+    msg += (byte)0;
 
-    send_flap(TYPE_DATA,vbuf(msg));
+    send_flap(TYPE_DATA,msg);
 }
 
 
 void TocProtocol::sendMessageAuto(const Contact &c, const string &message)
 {
-  
-	string msg="toc_send_im ";
-	msg+=aim_normalize(c.serverId())+" \"";
-	msg+=aim_encode(message)+"\" \"auto\"";
+    debug() << "sendMessageAuto\n";
+    vbuf msg;
+    msg += string("toc_send_im ");
+    msg += aim_normalize(c.serverId());
+    msg += (byte)' ';
+    msg += (byte)'\"';
+    msg += aim_encode(message);
+    msg += string("\" \"auto\"");
+    msg += (byte)0;
 
-	send_flap(TYPE_DATA,vbuf(msg));
+    send_flap(TYPE_DATA,msg);
 }
 
 void TocProtocol::addBuddy(const Contact &c)
@@ -704,6 +778,7 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 
 	}
 
+
 	if (command == "RVOUS_PROPOSE")
 	{
 		return;
@@ -780,6 +855,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.11  2002/06/27 22:33:27  thementat
+    Fixed TOC error and applied patch for gcc 2.95 in AuthLoad
+
     Revision 1.10  2002/06/27 11:52:51  thementat
     More event handling fixes.
 
@@ -827,6 +905,7 @@ void TocProtocol::tocParseConfig(const string& config)
 
     Revision 1.8  2001/12/08 21:45:27  mentat
     Added setAway and setAllAway to Protocol Manager along with modifying some protocol code.
+
 
 
     Revision 1.7  2001/12/06 04:46:40  mentat
