@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /*
-    $Id: tocprotocol.h,v 1.5 2002/06/25 04:46:21 thementat Exp $
+    $Id: tocprotocol.h,v 1.6 2002/06/26 17:40:12 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -69,8 +69,6 @@ public:
 	virtual void sendMessage(const Contact &recipient, const string &message);
 	virtual void addBuddy(const Contact &c);
 
-
-
 	virtual void delBuddy(const Contact &c);
 	virtual void newUser();
 	virtual void getPubkey();
@@ -106,6 +104,7 @@ private:
 	bool m_paused;
 
 	vbuf m_buffer;
+
 
 	string m_screenName;
 	string m_awayMessage;

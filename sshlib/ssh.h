@@ -1,0 +1,1667 @@
+// sshlib, a Crypto++-based implementation of the SSH2 protocol
+// Copyright (C) 2000-2002 by Bitvise Ltd.
+// Portions Copyright (C) 1995-2002 by Wei Dai.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+// 3. Redistributions in any form must be accompanied by information on
+//    how to obtain complete source code for sshlib and any accompanying
+//    software that uses sshlib. The source code must either be included
+//    in the distribution or be available for no more than the cost of
+//    distribution plus a nominal fee, and must be freely redistributable
+//    under reasonable conditions. For an executable file, complete source
+//    code means the source code for all modules it contains. It does not
+//    include source code for modules or files that typically accompany
+//    the major components of the operating system on which the executable
+//    file runs.
+// 
+// THIS SOFTWARE IS PROVIDED BY BITVISE ``AS IS'' AND ANY EXPRESS
+// OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+// OR NON-INFRINGEMENT, ARE DISCLAIMED. IN NO EVENT SHALL BITVISE BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+// OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+// New as of 2002-06-06 (v1.27):
+// - ProcessChannel is now able to report the exit code of the child process to remote.
+// - SSH_Trace now accepts entire, properly formatted messages instead of cryptic fragments.
+
+// New as of 2002-05-22 (v1.26):
+// - ProcessChannel::ProcessReceivedData() now catches broken pipe exceptions and
+//   handles them by calling StopReceive(). Previously, if the child process closed
+//   its stdin while the other side was still sending data, the broken pipe exception
+//   would be propagated all the way into the SSH2 main loop, causing the session to
+//   terminate.
+
+// New as of 2002-04-25 (v1.25):
+// - Fixed a very minor glitch in sshwin.cpp - ProcessLingeringData() now makes sure
+//   that m_socketSink is a valid socket before calling ShutDown(). Without this check,
+//   the code sometimes caused a socketft.cpp assertion to fail in debug mode. But the
+//   code is in a catch-all block anyway, so there is no impact on release builds.
+
+// New as of 2002-04-13 (v1.24):
+// - Fixed a bug with open failure in ContinueHandleOpen() causing garbage channel number 
+//   to be sent.
+
+// New as of 2002-03-22 (v1.23):
+// - sshlib now accepts channel requests and responses after EOF has been received
+
+// New as of 2002-03-19 (v1.22):
+// - Removed SMX support
+// - Introduced sshlib version numbers, current version: 1.22
+// - Constructors for class Version have been diversified - one is available for use by
+//	 consumer code, while others are for sshlib internal use only
+
+// New as of 2002-03-11:
+// - Extended HandleRequestResponse() with a parameter that enables the implementation
+//   to decode any response-specific data that might be included with the message.
+
+// New as of 2002-03-08:
+// - Removed abstract class ServerHostKeyVerifier and its method VerifyHostPublicKey().
+//   Host key verification is better handled right after key exchange, before any
+//   authentication requests are submitted, from the main loop or Manager::OnOutStateChange().
+
+// New as of 2002-03-05:
+// - Added missing exception handler around ContinueHandleOpen().
+//   Without the exception handler, the whole session would come down
+//   if ContinueHandleOpen() was to throw ChannelOpenFailure.
+// - Increased maximum tolerated input packet size in PacketDecoder,
+//   increased in window size and maximum in packet size in TcpipChannel and ProcessChannel.
+
+// New as of 2002-01-13:
+// - Fixed compatibility issue with guessed exchange packets.
+//   This fix enables WinSSHD to work properly with ssh.com's 3.1 client.
+
+// New as of 2002-01-04:
+// - Added Manager::SendUserAuthBanner() utility method.
+
+// New as of 2001-12-05:
+// - Implemented GenerateOpenSshKeypair() to generate user authentication keypairs
+//   compatible with those generated by OpenSSH.
+// - Implemented overloads for Manager::SendPublicKeyAuthRequest() and
+//   Manager::SendFullPublicKeyAuthRequest() to use keys in OpenSSH format.
+// - Implemented IsOpenSshPrivKeyEncrypted() to help the consumer determine whether
+//   the user should be asked for a password.
+
+// New as of 2001-11-14:
+// - Implemented handling of SSH_MSG_USERAUTH_PASSWD_CHANGEREQ messages. Added fields
+//   m_lastMethod, m_pwPrompt and m_pwLanguage into Authenticator to facilitate this.
+// - Removed methods Manager::StartXxxxAuthentication() to make exchange of authentication
+//   requests more flexible. To initiate client authentication, perform the following:
+//   (a) call SendServiceRequest()
+//   (b) call one of the SendXxxxAuthRequest() methods
+
+// New as of 2001-11-13:
+// - Removed method Authenticator::HandlePublicKeyResponse() - its role is now performed
+//   by HandleUserAuthResponse().
+
+// New as of 2001-11-12:
+// - Added the following functions and methods to help validate algorithm lists:
+//   global:     IsValidAlgList()
+//   Cipher:     SupportedAlgs(), IsValidAlgList()
+//   Mac:        SupportedAlgs(), IsValidAlgList()
+//   Compressor: SupportedAlgs(), IsValidAlgList()
+
+// New as of 2001-11-06:
+// - Discovered and fixed the reason for incompatibility of TcpipChannel (in sshwin.h/.cpp)
+//   with Windows 98. Unlike Windows NT/2000, where select() always returns the current
+//   state of a socket (ready to read/write), the implementation of Winsock2 on Windows 98
+//   is such that a call to WSAEnumNetworkEvents() 'cancels' subsequent calls to select().
+//   If data arrives on a socket and triggers an event, and then a call to
+//   WSAEnumNetworkEvents() is made, a subsequent call to select() will fail to report
+//   that the socket is ready to be read from. Resolution: changed sshwin.cpp so that
+//   WSAEnumNetworkEvents() is not called after the connection is established.
+
+// New as of 2001-09-25:
+// - Implemented handling of guessed SSH_MSG_KEXDH_INIT packets. Side effect: sshlib as
+//   SSH2 server now works fine with ssh.com's 3.0.0 client.
+
+// New as of 2001-09-18:
+// - Interface augmented to provide SMX support: TransportState, Version and KexInitPacket
+//   now take protocol ID (SSH2 or SMX) as construction parameter.
+
+// New as of 2001-07-13:
+// - sshlib now handles the ssh-dss and hmac-sha1 bugs in older versions of F-SECURE SSH.
+
+// New as of 2001-07-08:
+// - The SSH_MSG_USERAUTH_BANNER message wasn't being handled properly; the problem
+//   would cause a client to disconnect after receiving an SSH_MSG_USERAUTH_BANNER
+//   message. Fixed.
+
+// New as of 2001-07-06:
+// - Fixed a further key re-exchange problem - channel activity didn't get halted while
+//   doing key re-exchange. Fixed.
+
+// New as of 2001-07-03:
+// - Fixed a synchronization glitch in the port forwarding classes. The problem was that,
+//   due to the complex and not entirely expected behavior of TimedPump(0), data wasn't
+//   always being pumped from the SSH2 channel into the socket, even though the socket
+//   could have handled more data. This meant that data could be delayed until another
+//   event occurred that caused the main loop to reiterate. Fixed.
+
+// New as of 2001-06-28:
+// - Fixed key re-exchange problem. The cause of the problem was that, in TransportState,
+//   the method GetSessionID() returned m_h instead of m_sessionId. This worked after the
+//   first key exchange, because at that time the session ID equals h. However, with the
+//   second key exchange, h changes, and session ID does not.
+
+// New as of 2001-06-27:
+// - Added the Channel::ProcessLingeringData() method. This makes it possible for
+//   channel implementations to postpone processing of received data after the remote
+//   has already sent 'eof' or 'close' for that channel. Also, channel I/O has been
+//   updated not to destroy a channel object until all lingering data has been processed,
+//   one way or another. Previously, the channel object was destroyed as soon as the
+//   SSH2 channel was completely closed, and all lingering data had to be processed
+//   within the call to OnEofReceived() or OnCloseReceived().
+
+// New as of 2001-06-21:
+// - Broken up GetWaitObjects() into GetWaitObjects() and the new ProcessWaitObjects()
+//   method. You should now call Manager::ProcessWaitObjects() from your main SSH2
+//   session loop right after your WaitForMultipleObjects() call, or right before your
+//   SocketSource::TimedPump(0) call.
+// - Introduced ContinueHandleOpen(), changed return type of HandleOpen() to boolean.
+//   HandleOpen() can now return 'false' if it cannot handle the open request immediately,
+//   and ContinueHandleOpen() will be called by sshlib until a result is known.
+// - Unified TCP/IP forwarding channel classes: former classes DirectTcpipServer and
+//   TcpipForwarder have been improved and renamed to TunnelingResponder and
+//   TunnelingInitiator. Each of the classes can now be used by the client as well as
+//   the server - formerly, DirectTcpipServer could only be used on the server side,
+//   and there was no class to handle "forwarded-tcpip" channels on the client side.
+//   Now, TunnelingResponder can be used to handle these channels on the client side.
+
+// New as of 2001-06-11:
+// - Significantly changed (improved) channel I/O. See comments at Channel.
+// - Changed channel closing behavior. See comments at Manager::ProcessChannels().
+
+
+// Structure of the sshlib main loop (to be written by the consumer):
+// - initialize a WaitObjectContainer, add your own events
+// - call Manager::GetWaitObjects() to add connection and channel wait objects
+// - call WaitForMultipleObjects() to wait for a triggering event
+// - call Manager::ProcessWaitObjects() to process/reset triggered events
+// - call SocketSource::TimedPump(0) to feed input data into the sshlib machinery
+// - call Manager::ProcessChannels() to let channels perform their I/O
+//
+// The main loop should also catch CauseToDisconnect exceptions and call
+// Manager::Disconnect when one is caught.
+
+
+#ifndef SSH_H
+#define SSH_H
+
+#include "filters.h"
+#include "queue.h"
+#include "integer.h"
+#include "dsa.h"
+#include "dh.h"
+#include "channels.h"
+#include <map>
+#include <sstream>
+
+
+// You might want to implement this in the debug version of your application.
+void SSH_Trace(char const* message);
+
+
+NAMESPACE_BEGIN(SSH)
+
+using namespace CryptoPP;
+
+
+extern char const* const c_zSshlibVersion;
+
+
+
+//
+// Enumerations
+///////////////////////////////
+
+enum Direction {CLIENT_TO_SERVER, SERVER_TO_CLIENT, BOTH_DIRECTIONS};
+enum InTransportState {WAITING_FOR_VERSION, WAITING_FOR_KEXINIT, DOING_IN_KEX, WAITING_FOR_NEWKEYS, WAITING_FOR_SERVICE_REQUEST, WAITING_FOR_SERVICE_ACCEPT, IN_SERVICE_STARTED, IN_DISCONNECTED};
+enum OutTransportState {READY_TO_SEND_VERSION, READY_TO_SEND_KEXINIT, DOING_OUT_KEX, READY_TO_SEND_NEWKEYS, READY_TO_SEND_SERVICE_REQUEST, OUT_SERVICE_STARTED, OUT_DISCONNECTED};
+
+enum DisconnectReason {
+	SSH_DISCONNECT_HOST_NOT_ALLOWED_TO_CONNECT     = 1,
+	SSH_DISCONNECT_PROTOCOL_ERROR                  = 2,
+	SSH_DISCONNECT_KEY_EXCHANGE_FAILED             = 3,
+	SSH_DISCONNECT_RESERVED                        = 4,
+	SSH_DISCONNECT_MAC_ERROR                       = 5,
+	SSH_DISCONNECT_COMPRESSION_ERROR               = 6,
+	SSH_DISCONNECT_SERVICE_NOT_AVAILABLE           = 7,
+	SSH_DISCONNECT_PROTOCOL_VERSION_NOT_SUPPORTED  = 8,
+	SSH_DISCONNECT_HOST_KEY_NOT_VERIFIABLE         = 9,
+	SSH_DISCONNECT_CONNECTION_LOST                 =10,
+	SSH_DISCONNECT_BY_APPLICATION                  =11,
+	SSH_DISCONNECT_TOO_MANY_CONNECTIONS            =12,
+	SSH_DISCONNECT_AUTH_CANCELLED_BY_USER          =13,
+	SSH_DISCONNECT_NO_MORE_AUTH_METHODS_AVAILABLE  =14,
+	SSH_DISCONNECT_ILLEGAL_USER_NAME               =15};
+
+enum ChannelOpenFailureReason
+{
+	SSH_OPEN_ADMINISTRATIVELY_PROHIBITED    =1,
+	SSH_OPEN_CONNECT_FAILED                 =2,
+	SSH_OPEN_UNKNOWN_CHANNEL_TYPE           =3,
+	SSH_OPEN_RESOURCE_SHORTAGE              =4};
+
+#define SSH_MSG_DISCONNECT             1
+#define SSH_MSG_IGNORE                 2
+#define SSH_MSG_UNIMPLEMENTED          3
+#define SSH_MSG_DEBUG                  4
+#define SSH_MSG_SERVICE_REQUEST        5
+#define SSH_MSG_SERVICE_ACCEPT         6
+#define SSH_MSG_KEXINIT                20
+#define SSH_MSG_NEWKEYS                21
+#define SSH_MSG_KEXDH_INIT             30
+#define SSH_MSG_KEXDH_REPLY            31
+
+#define SSH_MSG_USERAUTH_REQUEST            50
+#define SSH_MSG_USERAUTH_FAILURE            51
+#define SSH_MSG_USERAUTH_SUCCESS            52
+#define SSH_MSG_USERAUTH_BANNER             53
+
+#define SSH_MSG_USERAUTH_METHODSPECIFIC_1	60
+#define SSH_MSG_USERAUTH_PK_OK				60
+#define SSH_MSG_USERAUTH_PASSWD_CHANGEREQ	60
+
+#define SSH_MSG_GLOBAL_REQUEST                  80
+#define SSH_MSG_REQUEST_SUCCESS                 81
+#define SSH_MSG_REQUEST_FAILURE                 82
+#define SSH_MSG_CHANNEL_OPEN                    90
+#define SSH_MSG_CHANNEL_OPEN_CONFIRMATION       91
+#define SSH_MSG_CHANNEL_OPEN_FAILURE            92
+#define SSH_MSG_CHANNEL_WINDOW_ADJUST           93
+#define SSH_MSG_CHANNEL_DATA                    94
+#define SSH_MSG_CHANNEL_EXTENDED_DATA           95
+#define SSH_MSG_CHANNEL_EOF                     96
+#define SSH_MSG_CHANNEL_CLOSE                   97
+#define SSH_MSG_CHANNEL_REQUEST                 98
+#define SSH_MSG_CHANNEL_SUCCESS                 99
+#define SSH_MSG_CHANNEL_FAILURE                 100
+
+#define SSH_EXTENDED_DATA_STDERR				1
+
+std::string DescribeDisconnectReason(DisconnectReason reason);
+std::string DescribeChannelOpenFailureReason(ChannelOpenFailureReason reason);
+std::string DescribeMessageType(byte n);
+
+
+enum
+{
+	SSH_MIN_PADDINGLEN = 4,
+	SSHLIB_MAX_IN_PACKETLEN = 128*1024,
+	SSHLIB_MAX_IN_DECOMPRESSED_PAYLOADLEN = 256*1024,
+};
+
+
+
+//
+// Exceptions
+///////////////////////////////
+
+class Err : public BufferedTransformation::Err 
+{
+public:
+	Err(BufferedTransformation::ErrorType errorType, std::string const& s) 
+		: BufferedTransformation::Err(errorType, "SSH: " + s) {}
+};
+
+class CauseToDisconnect : public Err
+{
+public:
+	CauseToDisconnect(DisconnectReason reason, std::string const& description="", std::string const& language="en")
+		: Err(BufferedTransformation::OTHER_ERROR, "cause to disconnect: " + description)
+		, m_reason(reason), m_description(description), m_language(language) {}
+
+	DisconnectReason GetReason() const {return m_reason;}
+	std::string const& GetDescription() const {return m_description;}
+	std::string const& GetLanguage() const {return m_language;}
+
+private:
+	DisconnectReason m_reason;
+	std::string m_description, m_language;
+};
+
+class ChannelOpenFailure : public Err
+{
+public:
+	ChannelOpenFailure(ChannelOpenFailureReason reason, std::string const& description="", std::string const& language="en")
+		: Err(BufferedTransformation::OTHER_ERROR, "channel open failure: " + description)
+		, m_reason(reason), m_description(description), m_language(language) {}
+
+	ChannelOpenFailureReason GetReason() const {return m_reason;}
+	std::string const& GetDescription() const {return m_description;}
+	std::string const& GetLanguage() const {return m_language;}
+
+private:
+	ChannelOpenFailureReason m_reason;
+	std::string m_description, m_language;
+};
+
+
+
+//
+// SSH2 encoding/decoding of basic types
+/////////////////////////////////////////////////
+
+inline void PutString(CryptoPP::BufferedTransformation& out, std::string const& s)
+	{ out.Put((byte const*) s.data(), s.size()); }
+
+inline void PutString(CryptoPP::BufferedTransformation& out, std::string const& s, unsigned int max)
+	{ out.Put((byte const*) s.data(), s.size() > max ? max : s.size()); }
+
+inline void PutString(CryptoPP::BufferedTransformation& out, char const* z)
+	{ out.Put((byte const*) z, strlen(z)); }
+
+inline void PutString(CryptoPP::BufferedTransformation& out, char const* z, unsigned int max)
+	{ unsigned int len = strlen(z); out.Put((byte const*) z, len > max ? max : len); }
+
+inline void PutChar(CryptoPP::BufferedTransformation& out, char c)
+	{ out.Put((byte) c); }
+
+void EncodeBoolean(BufferedTransformation& out, bool b);
+void EncodeByte(BufferedTransformation& out, byte b);
+void EncodeWord32(BufferedTransformation& out, word32 w);
+void EncodeBytes(BufferedTransformation& out, byte const* s, unsigned int len);
+//void EncodeBytes(BufferedTransformation& out, std::string const& str);
+//void EncodeBytes(BufferedTransformation& out, SecByteBlock const& str);
+void EncodeString(BufferedTransformation& out, byte const* s, unsigned int len);
+void EncodeString(BufferedTransformation& out, std::string const& str);
+void EncodeString(BufferedTransformation& out, SecByteBlock const& str);
+unsigned long EncodeString(BufferedTransformation& out, BufferedTransformation const& str);
+unsigned long EncodeString(BufferedTransformation& out, BufferedTransformation const& str, unsigned int maxLen);
+void EncodeInteger(BufferedTransformation& out, Integer const& i);
+
+void DecodeBoolean(BufferedTransformation& in, bool& b);
+void DecodeByte(BufferedTransformation& in, byte& b);
+void DecodeWord32(BufferedTransformation& in, word32& w);
+void DecodeBytes(BufferedTransformation& in, byte* s, unsigned int len);
+//void DecodeBytes(BufferedTransformation& in, std::string& str, unsigned int len);
+void DecodeString(BufferedTransformation& in, SecByteBlock& str);
+void DecodeString(BufferedTransformation& in, std::string& str);
+void DecodeString(BufferedTransformation& in, BufferedTransformation& str);
+void DecodeInteger(BufferedTransformation& in, Integer& i);
+
+std::string Word32ToString(word32 channel);
+word32 StringToWord32(std::string const& channel);
+
+bool MatchCommaDelimitedList(std::string const& slist, std::string const& str);
+bool IsValidAlgList(std::string const& slist, std::string const& supported);
+
+
+
+//
+// Cipher, Mac, Compressor
+/////////////////////////////////////////////////
+
+class Cipher : public ProxyFilter
+{
+public:
+	Cipher(BufferedTransformation* outQueue = NULL);
+	void SetCipher(std::string const& alg, Integer const& k, SecByteBlock const& h, SecByteBlock const& sessionId, Direction direction, CipherDir cipherDir);
+	unsigned int BlockSize() const {return STDMAX(8U, RealBlockSize());}
+	unsigned int RealBlockSize() const;
+
+	static char const* SupportedAlgs()
+		{ return "aes256-cbc,twofish-cbc,blowfish-cbc,3des-cbc,arcfour,cast128-cbc,none"; }
+
+	static bool IsValidAlgList(std::string const& slist)
+		{ return SSH::IsValidAlgList(slist, SupportedAlgs()); }
+
+private:
+	void FirstPut(byte const*) {}
+	void LastPut(byte const* inString, unsigned int length) {}
+
+	member_ptr<BlockTransformation> m_cipher;
+	member_ptr<StreamCipher> m_streamCipher;
+};
+
+class Version;
+
+class Mac : public ProxyFilter
+{
+public:
+	Mac(BufferedTransformation* outQueue = NULL);
+	void SetMac(std::string const& alg, Integer const& k, SecByteBlock const& h, SecByteBlock const& sessionId, Direction direction, bool generate, Version const& inVersion);
+	unsigned int MacSize() const;
+	bool GetLastResult() const;
+
+	static char const* SupportedAlgs()
+		{ return "hmac-sha1,hmac-sha1-96,hmac-md5,hmac-md5-96,none"; }
+
+	static bool IsValidAlgList(std::string const& slist)
+		{ return SSH::IsValidAlgList(slist, SupportedAlgs()); }
+
+private:
+	void FirstPut(byte const*) {}
+	void LastPut(byte const* inString, unsigned int length);
+
+	member_ptr<HashModule> m_mac;
+};
+
+class Compressor : public ProxyFilter
+{
+public:
+	// It is recommended that you leave compression at its default level, unless
+	// you have good reasons to choose a different one. In most use cases, a slightly lower
+	// compression level (default) will be better than a high one. A too high compression
+	// level will actually decrease throughput because of the increased processing burden.
+
+	// Note that the compressionLevel parameter is irrelevant in decompression mode.
+	// In SSH2, there is also no standardized way for a client to set the compression level
+	// that the server will use.
+
+	Compressor(BufferedTransformation* outQueue = NULL, int compressionLevel = -1);
+	void SetCompressor(std::string const& alg, bool compress);
+
+	int GetCompressionLevel() const { return m_compressionLevel; }
+
+	static char const* SupportedAlgs()
+		{ return "zlib,none"; }
+
+	static bool IsValidAlgList(std::string const& slist)
+		{ return SSH::IsValidAlgList(slist, SupportedAlgs()); }
+
+private:
+	void FirstPut(byte const*) {}
+	void LastPut(byte const* inString, unsigned int length) {}
+
+	int m_compressionLevel;
+};
+
+
+
+//
+// Server authentication
+/////////////////////////////////////////////////
+
+class Signer
+{
+public:
+	Signer(RandomNumberGenerator& rng, std::string const& algorithm, unsigned int keybits);
+	Signer(BufferedTransformation& key);
+	Signer(GDSASigner<SHA> const& key) : m_key(key) {}
+
+	void EncodePrivateKey(BufferedTransformation& key) const;
+	std::string GetPublicKey() const;
+	std::string SignMessage(RandomNumberGenerator& rng, byte const* message, unsigned int messageLen) const;
+
+private:
+	value_ptr<GDSASigner<SHA> > m_key;
+};
+
+bool VerifySignature(byte const* key, unsigned int keyLen, 
+	byte const* message, unsigned int messageLen,
+	byte const* signature, unsigned int signatureLen);
+
+
+
+//
+// SSH2 version string
+/////////////////////////////////////////////////
+
+class Version
+{
+public:
+	Version(std::string appNameAndVersion);
+
+	std::string const& GetProtocolVersion() const { return m_protocolVersion; }
+	std::string const& GetSoftwareVersion() const { return m_softwareVersion; }
+	std::string const& GetComments() const { return m_comments; }
+	std::string const& GetVersionString() const { return m_versionString; }
+
+protected:
+	std::string m_protocolVersion;
+	std::string m_softwareVersion;
+	std::string m_comments;
+	std::string m_versionString;
+
+private:
+	Version() {}
+
+	Version(std::string const& protoversion, std::string const& softwareversion,
+			std::string const& comments, std::string const& versionString);
+
+	friend class TransportState;
+	friend class PacketDecoder;
+};
+
+
+
+//
+// KexInitPacket
+/////////////////////////////////////////////////
+
+struct KexInitPacket
+{
+	KexInitPacket() : first_kex_packet_follows(false) {}
+
+	void Encode(BufferedTransformation& out) const;
+	void Decode(BufferedTransformation& in);
+
+	void SetKexAlgorithms(std::string const& algs);
+	void SetServerHostKeyAlgorithms(std::string const& algs);
+	void SetEncryptionAlgorithms(std::string const& algs, Direction dir=BOTH_DIRECTIONS);
+	void SetMacAlgorithms(std::string const& algs, Direction dir=BOTH_DIRECTIONS);
+	void SetCompressionAlgorithms(std::string const& algs, Direction dir=BOTH_DIRECTIONS);
+
+	byte cookie[16];
+	std::string kex_algorithms;
+	std::string server_host_key_algorithms;
+	std::string encryption_algorithms_client_to_server;
+	std::string encryption_algorithms_server_to_client;
+	std::string mac_algorithms_client_to_server;
+	std::string mac_algorithms_server_to_client;
+	std::string compression_algorithms_client_to_server;
+	std::string compression_algorithms_server_to_client;
+	std::string languages_client_to_server;
+	std::string languages_server_to_client;
+	bool first_kex_packet_follows;
+};
+
+
+
+//
+// TransportState
+/////////////////////////////////////////////////
+
+class TransportState
+{
+public:
+	// For compression level, see recommendations at Compressor::Compressor().
+	TransportState(RandomNumberGenerator& rng, Signer* signer, int compressionLevel = -1);
+
+	bool IsClient() const {return m_signer == NULL;}
+	bool IsServer() const {return m_signer != NULL;}
+
+	void AssertIsClient() const;
+	void AssertIsServer() const;
+
+	Direction InDirection() const {return IsClient() ? SERVER_TO_CLIENT : CLIENT_TO_SERVER;}
+	Direction OutDirection() const {return IsServer() ? SERVER_TO_CLIENT : CLIENT_TO_SERVER;}
+
+	InTransportState GetInState() const {return m_inState;}
+	OutTransportState GetOutState() const {return m_outState;}
+
+	void AssertInState(InTransportState state) const;
+	void AssertOutState(OutTransportState state) const;
+
+	void SetInState(InTransportState state) {m_inState = state;}
+	void SetOutState(OutTransportState state) {m_outState = state;}
+
+	word32 GetInSequenceNumber() const {return m_inSequenceNumber;}
+	word32 GetOutSequenceNumber() const {return m_outSequenceNumber;}
+
+	void IncrementInSequenceNumber() {m_inSequenceNumber++;}
+	void IncrementOutSequenceNumber() {m_outSequenceNumber++;}
+
+	Cipher& AccessInCipher() {return *m_inCipher;}
+	Cipher& AccessOutCipher() {return *m_outCipher;}
+	Mac& AccessInMac() {return *m_inMac;}
+	Mac& AccessOutMac() {return *m_outMac;}
+	Compressor& AccessInCompressor() {return *m_inCompressor;}
+	Compressor& AccessOutCompressor() {return *m_outCompressor;}
+
+	void SetInCipher(Cipher* cipher) {m_inCipher.reset(cipher);}
+	void SetOutCipher(Cipher* cipher) {m_outCipher.reset(cipher);}
+	void SetInMac(Mac* mac) {m_inMac.reset(mac);}
+	void SetOutMac(Mac* mac) {m_outMac.reset(mac);}
+
+	bool VersionSent() const {return GetOutState() != READY_TO_SEND_VERSION;}
+	bool VersionReceived() const {return GetInState() != WAITING_FOR_VERSION;}
+
+	Version const& GetClientVersion() const
+		{return IsClient() ? m_outVersion : m_inVersion;}
+	Version const& GetServerVersion() const
+		{return IsClient() ? m_inVersion : m_outVersion;}
+
+	Version const& GetInVersion() const
+		{return m_inVersion;}
+	Version const& GetOutVersion() const
+		{return m_outVersion;}
+
+	void SetInVersion(Version const& v) {m_inVersion = v;}
+	void SetOutVersion(Version const& v) {m_outVersion = v;}
+
+	bool KexInitPacketSent() const {return m_kexInitPacketSent;}
+	bool KexInitPacketReceived() const {return m_kexInitPacketReceived;}
+
+	void ResetKexInitPacketStatus() {m_kexInitPacketSent = m_kexInitPacketReceived = false;}
+
+	const KexInitPacket& GetInKexInitPacket() const
+		{return m_inKexInitPacket;}
+	const KexInitPacket& GetOutKexInitPacket() const
+		{return m_outKexInitPacket;}
+
+	const KexInitPacket& GetClientKexInitPacket() const
+		{return IsClient() ? m_outKexInitPacket : m_inKexInitPacket;}
+	const KexInitPacket& GetServerKexInitPacket() const
+		{return IsClient() ? m_inKexInitPacket : m_outKexInitPacket;}
+
+	void SetInKexInitPacket(KexInitPacket const& p) {m_inKexInitPacket = p; m_kexInitPacketReceived = true;}
+	void SetOutKexInitPacket(KexInitPacket const& p) {m_outKexInitPacket = p; m_kexInitPacketSent = true;}
+
+	// these should be called after KexInitPacketSent() and KexInitPacketReceived() are true
+	std::string GetKexAlgorithm() const;
+	std::string GetServerHostKeyAlgorithm() const;
+	std::string GetEncryptionAlgorithm(Direction dir) const;
+	std::string GetMacAlgorithm(Direction dir) const;
+	std::string GetCompressionAlgorithm(Direction dir) const;
+
+	Integer const& GetK() const {return m_k;}
+	void SetK(Integer const& k) {m_k = k;}
+
+	SecByteBlock const& GetH() const {return m_h;}
+	unsigned int GetHLen() const {return m_h.size;}
+	SecByteBlock const& GetSessionID() const {return m_sessionId;}
+	unsigned int GetSessionIDLen() const {return m_sessionId.size;}
+
+	void SetH(byte const* h, unsigned int len) {m_h.Assign(h, len);}
+	void SetSessionID(byte const* id, unsigned int len) {m_sessionId.Assign(id, len);}
+
+	std::string const& GetServerHostKey() const {return m_serverHostKey;}
+	void SetServerHostKey(std::string const& key) {m_serverHostKey = key;}
+
+	bool GetServiceStarted() const {return m_serviceStarted;}
+	void SetServiceStarted(bool serviceStarted) {m_serviceStarted = serviceStarted;}
+
+	RandomNumberGenerator* m_rng;
+	Signer* m_signer;
+
+private:
+	InTransportState m_inState;
+	OutTransportState m_outState;
+
+	Version m_inVersion, m_outVersion;
+	word32 m_inSequenceNumber, m_outSequenceNumber;
+	bool m_kexInitPacketReceived, m_kexInitPacketSent;
+	KexInitPacket m_inKexInitPacket, m_outKexInitPacket;
+	std::string m_serverHostKey;
+	Integer m_k;
+	SecByteBlock m_h, m_sessionId;
+	bool m_serviceStarted;
+
+	member_ptr<Cipher> m_inCipher, m_outCipher;
+	member_ptr<Mac> m_inMac, m_outMac;
+	member_ptr<Compressor> m_inCompressor, m_outCompressor;
+};
+
+
+
+//
+// Authenticator
+/////////////////////////////////////////////////
+
+class Manager;
+
+class Authenticator
+{
+public:
+	enum State {
+		START, WAITING_FOR_RESPONSE, PK_OK, PASSWD_CHANGEREQ,
+		FAILURE, PARTIAL_SUCCESS, SUCCESS };
+
+	Authenticator() : m_state(START), m_anyRequestsReceived(false) {}
+	virtual ~Authenticator() {}
+
+	void AssertState(State state)
+	{
+		if (m_state != state)
+			throw CauseToDisconnect(SSH_DISCONNECT_PROTOCOL_ERROR, "received packet inappropriate for current authentication state");
+	}
+
+	State m_state;
+	bool m_anyRequestsReceived;
+	std::string m_userName;
+	std::string m_methodsRemaining;
+
+	// - In client mode, m_lastMethod needs to be set so that if the server responds with a
+	//   method-specific response (such as PK_OK or PASSWD_CHANGEREQ), the Manager knows how
+	//   to handle that response (e.g., whether to set the authenticator's state to PK_OK
+	//   or to PASSWD_CHANGEREQ). The StartXxxxAuthentication() methods in the Manager class
+	//   automatically set the m_lastMethod field.
+	// - In server mode, m_lastMethod is set by Manager to the method that was used by the
+	//   client in the most recent SSH_MSG_USERAUTH_REQUEST message. The field is set before
+	//   calling HandleUserAuthRequest() for that USERAUTH_REQUEST message.
+	std::string m_lastMethod;
+
+	// - In client mode, m_pwPrompt and m_pwLanguage are set by Manager before calling
+	//   HandleUserAuthResponse() if the server sent an SSH_MSG_USERAUTH_PASSWD_CHANGEREQ
+	//   message.
+	// - In server mode, these fields are used by Manager to send a response if the state
+	//   after calling HandleUserAuthRequest() equals Authenticator::PASSWD_CHANGEREQ.
+	std::string m_pwPrompt, m_pwLanguage;
+
+	// - In client mode, m_pkAlgorithm and m_pkPublicKey are set by Manager before calling
+	//   HandleUserAuthResponse() if the server sent an SSH_MSG_USERAUTH_PK_OK message.
+	// - In server mode, these fields are used by Manager to send a response if the state
+	//   after calling HandleUserAuthRequest() equals Authenticator::PK_OK.
+	std::string m_pkAlgorithm, m_pkPublicKey;
+
+	// For client
+	virtual void HandleUserAuthResponse(Manager& manager) {}
+
+	// For server
+	virtual void HandleUserAuthRequest(Manager& manager, std::string const& method, BufferedTransformation& data) {}
+	virtual void HandleUserAuthUserNameChange(std::string const& newUserName) { m_state = START; }
+	virtual void HandleUserAuthMethodMismatch(std::string const& requestedMethod) { m_state = FAILURE; }
+	virtual void HandleSuperfluousUserAuthRequest(BufferedTransformation& data) {}
+};
+
+
+
+//
+// Wait objects
+/////////////////////////////////////////////////
+
+// The implementation of an SSH2 session will usually have a main loop. Inside this loop,
+// there will be a system call that will make the application wait for something to happen.
+// Once something happens, the implementation will call SocketSource::TimedPump() to process
+// any incoming data and send any appropriate responses, and then Manager::ProcessChannels()
+// to process any changes in the state of channels.
+//
+// The MaxWaitObjects() and GetWaitObjects() methods in Channel and Manager are a way to provide
+// extra triggers for that main loop. The wait objects are not used by sshlib itself; rather,
+// these methods are provided so that your own subclasses of Channel and Manager can provide
+// extra triggers that will cause your main loop to call Manager::ProcessChannels() immediately.
+//
+// If your wait objects have manual reset type (e.g., on Windows, you need to call ResetEvent()
+// in order to set the wait objects' state to non-signaled), then you should NOT reset your
+// wait objects in your GetWaitObjects() method. Instead, the ProcessWaitObjects() method is
+// provided for this purpose. Manager::ProcessWaitObjects() should be called by the sshlib
+// main loop right after an event triggers the loop's execution, and any manual resetting of
+// wait objects should be done in this method. This is to prevent events from being 'lost'
+// like they can be if you reset wait objects in the GetWaitObjects() method.
+//
+// The MaxWaitObjects() method is necessary because operating systems have hardcoded limits
+// to the number of wait objects that can be waited on in a single system call - e.g., the
+// limit for WaitForMultipleObjects() API on Windows is given by MAXIMUM_WAIT_OBJECTS.
+// The MaxWaitObjects() method in Channel should return the maximum number of wait objects
+// that might exist during the lifetime of the Channel. On the other hand, the MaxWaitObjects()
+// method in Manager should return the maximum number of wait objects that are allowed to be
+// held by the SSH session. When creating new channels, the Manager class will make sure that
+// the number of wait objects potentially held by Manager and all of its Channels will not
+// exceed this limit. For example, if you are programming for Windows and your SSH2 main loop
+// already has two wait objects, one for application shutdown and one for socket events,
+// then Manager::MaxWaitObjects() should return (MAXIMUM_WAIT_OBJECTS-2), because that is
+// the maximum number of wait objects that can be held by the SSH2 session.
+
+class WaitObjectContainer;
+	// To be defined by the implementation, i.e. vector<HANDLE> on Windows.
+	// When defining, you will need to use subclassing instead of a typedef;
+	// e.g. "class WaitObjectContainer : public vector<HANDLE> {};"
+
+
+
+//
+// Channel
+/////////////////////////////////////////////////
+
+// The channel input/output interface has been modified significantly:
+// - OutputClosed() has been removed.
+// - DoOutput() has been renamed to ProcessReceivedData() and now also performs
+//   the functionality of OutputClosed(): it should call the new StopReceive() method
+//   if it detects the situation which previously caused OutputClosed() to return true.
+// - InputClosed() has been removed.
+//   DoInput() has been renamed to ProcessDataToBeSent() and now also performs
+//   the functionality of InputClosed(): it should call the new ScheduleEof() method
+//   if it detects the situation which previously caused InputClosed() to return true.
+// - Two new handlers, OnEofReceived() and OnCloseReceived(), have been introduced.
+// - GracefulShutdown() has been removed. Any actions implemented by GracefulShutdown()
+//   need to be moved to OnEofReceived(), OnCloseReceived(), and/or the destructor.
+
+// TODO: now implement all this in ssh.cpp; then update sshd, sshc, sshfwdc;
+// then test the whole thing, make SURE it works with all types of channels (session,
+// direct-tcpip, forwarded-tcpip).
+
+class Channel
+{
+public:
+	// inMaxPacketSize must be some number of bytes less than SSHLIB_MAX_IN_PACKETLEN,
+	// otherwise we're tricking the remote into sending packets larger than we actually accept
+	enum { CHANNEL_MAX_IN_PACKET_SIZE = SSHLIB_MAX_IN_PACKETLEN - 1024 };
+
+	enum State {START, OPEN_REQUEST_RECEIVED, WAITING_FOR_OPEN_RESPONSE, OPEN_FAILED, OPEN};
+
+	Channel(word32 inInitialWindowSize, word32 inMaxPacketSize)
+		:	m_inWindowSize(inInitialWindowSize), m_inMaxPacketSize(inMaxPacketSize),
+			m_state(START), m_receiveStopped(false), m_eofScheduled(false),
+			m_eofSent(false), m_eofReceived(false), m_closeSent(false),
+			m_closeReceived(false), m_queuedExtendedData(false) {}
+
+	// A derived class's destructor should not assume that the channel has been closed
+	// before the destructor is called, and should perform any actions needed to gracefully
+	// shutdown the channel.
+	virtual ~Channel() {}
+
+
+	std::string MyChannelString() const { return Word32ToString(m_myNumber); }
+
+	// Returns the maximum amount of data that can be sent to remote at this time.
+	word32 OutWindowSpaceRemaining() const { return m_outWindowSize - m_inQueue.MaxRetrieveable(); }
+
+	// Causes the CLOSE packet to be sent the next time Manager::ProcessChannels() is called.
+	// The word 'Force' in the method's name implies that the CLOSE packet will be sent
+	// before the remote has sent its EOF message. The implementation should not expect
+	// any input/output handlers to be called after this flag has been set.
+	void ForceClose() { StopReceive(); ScheduleEof(); }
+
+	// Causes the channel to stop receiving data. The implementation should not expect the
+	// ProcessReceivedData() handler to be called after this flag has been set.
+	// No EOF or CLOSE will be sent as a direct result of setting this flag alone.
+	// However, the result of calling StopReceive() and ScheduleEof() is equivalent to
+	// the result of calling ForceClose().
+	void StopReceive() { m_receiveStopped = true; }
+
+	// Causes EOF to be sent the next time Manager::ProcessChannels() is called.
+	// A CLOSE packet will not be sent as a direct result of setting this flag alone.
+	// However, the result of calling StopReceive() and ScheduleEof() is equivalent to
+	// the result of calling ForceClose().
+	void ScheduleEof() { m_eofScheduled = true; }
+
+
+	State m_state;
+	bool m_receiveStopped, m_eofScheduled;
+	bool m_eofSent, m_eofReceived, m_closeSent, m_closeReceived;
+	std::string m_type;
+	word32 m_myNumber, m_yourNumber;
+	word32 m_inWindowSize, m_outWindowSize;
+	word32 m_inMaxPacketSize, m_outMaxPacketSize;
+	ByteQueue m_inQueue;
+	bool m_queuedExtendedData;
+	word32 m_queuedDataType;
+
+
+public:
+	
+	// This is called before HandleOpen() or HandleOpenConfirmation/Failure().
+	// It would generally be a bad idea to allow the remote to specify a max packet size of 0.
+	// However, you might want to additionally increase this minimum for performance reasons.
+	virtual bool CheckRemoteMaxPacketSize(word32 nMaxPacketSize) { return nMaxPacketSize != 0; }
+
+
+	// - Should do anything that needs to be done when a channel open request is received.
+	// - HandleOpen() is called on the side that handles the channel open request.
+	// - The default implementation will throw, so this method does need to be overridden if
+	// you wish to allow the remote to initiate the creation of channels of this type.
+	// - If channel-specific open data is being used, you can read this additional data
+	// using the 'data' BT. You can make sshlib send channel-specific open data in its
+	// CHANNEL_OPEN response by writing to the 'response' BT.
+	// - Throw a ChannelOpenFailure exception to reject the open request. The exception will
+	// be caught by sshlib and CHANNEL_OPEN_FAILURE will be sent to remote.
+	// - If your channel open handler is non-blocking, return true to have sshlib send the
+	// CHANNEL_OPEN response immediately. However, if your decision on whether to accept or
+	// reject the open request needs to wait until an external event occurs, return false.
+	// E.g., you would return false if the channel being opened is a port forwarding channel
+	// and you need to complete the forwarded connection attempt before you can decide
+	// whether to open the channel or not.
+	// - If your HandleOpen() implementation returns false, any data you write to the 'response'
+	// BT will be ignored, and ContinueHandleOpen() will be called in the next iterations of the
+	// main loop, until it returns true or throws ChannelOpenFailure.
+	virtual bool HandleOpen(Manager& manager, BufferedTransformation& data, BufferedTransformation& response)
+		{ throw ChannelOpenFailure(SSH_OPEN_UNKNOWN_CHANNEL_TYPE); }
+
+
+	// Called if HandleOpen() returned false. ContinueHandleOpen() continues to be called
+	// until it returns true or throws a ChannelOpenFailure exception. No data I/O methods
+	// are called on the channel object until ContinueHandleOpen() returns true. However,
+	// wait object methods _are_ called: therefore, if your channel open routine depends
+	// on an external event to occur, you can use a wait object to trigger the sshlib
+	// main loop when that external event occurs.
+	virtual bool ContinueHandleOpen(Manager& manager, BufferedTransformation& response)
+		{ throw ChannelOpenFailure(SSH_OPEN_UNKNOWN_CHANNEL_TYPE); }
+
+
+	// This is where you should handle incoming channel-specific requests. In regular use,
+	// examples include 'pty-req', 'shell', 'exec', 'subsystem' (all handled by server).
+	// Return false to reject the request, thus causing an SSH_MSG_CHANNEL_FAILURE message
+	// to be sent. The default implementation always returns false.
+	virtual bool HandleRequest(Manager& manager, std::string const& type, bool wantReply, BufferedTransformation& data, BufferedTransformation& response)
+		{ return false; }
+
+	// - HandleOpenConfirmation() and HandleOpenFailure() should be overridden by the
+	// side that opens the channel. The default implementation does nothing.
+	// For a client in a terminal session, HandleOpenConfirmation() would cause the
+	// 'pty-req' and 'shell' channel-requests to be sent to the server.
+	// On the other hand, HandleOpenFailure() might cause a dialog box to pop up,
+	// telling the user that something went wrong.
+	// - Note that HandleOpenFailure() is not called for channels the creation of which
+	// fails locally before the open request is sent, e.g. due to wait object shortage.
+	// In such cases, an exception is thrown which must be caught and handled.
+	virtual void HandleOpenConfirmation(Manager& manager, BufferedTransformation& data, BufferedTransformation& response)
+		{}
+
+	virtual void HandleOpenFailure(Manager& manager, word32 reason, std::string const& description, std::string const& language)
+		{}
+
+	// This should be overridden by the side that sends channel-specific requests.
+	// The default implementation does nothing. A terminal client might want to
+	// implement this to display a diagnostic message in the event of failure.
+	// The default implementation delegates to the old version (without the data parameter).
+	virtual void HandleRequestResponse(Manager& manager, bool success, BufferedTransformation& data)
+		{ HandleRequestResponse(manager, success); }
+
+	// This version is deprecated and is provided for backward compatibility only.
+	// New applications should override the version above.
+	virtual void HandleRequestResponse(Manager& manager, bool success) {}
+
+
+	// Move data from output queue to actual destination. This is data that originates
+	// from the remote and is to be handled by the local application. Note that not all
+	// data, or any at all, HAS to be processed; the method can wait until enough data
+	// buffers up, and then process it all at once. Called during Manager::ProcessChannels().
+	// Data from remote is not accepted and ProcessReceivedData() is not called after either
+	// OnEofReceived() or OnCloseReceived() are called. However, ProcessReceivedData() _may_
+	// be called at any time before that - including after we have already sent EOF, and
+	// even after we have already sent CLOSE.
+	//
+	// Q: Where do I get received data from?
+	// A: You need to override the DataSink() and, optionally, ExtendedDataSink() methods
+	//    to return a destination queue into which data will be output. If you don't want
+	//    to use extended data, you can override HandleUnrecognizedExtendedData() instead
+	//    of ExtendedDataSink(). You also need to override MaxRecvBufferSize() and
+	//    CurrentRecvBufferSize() to indicate how much data your application is willing
+	//    to accept 'at a time', and how much has already buffered up. The remote will not
+	//    be allowed to send more data than there is window space available in your buffer,
+	//    i.e., MaxRecvBufferSize() - CurrentRecvBufferSize(). You need to read the SSH2
+	//    specification about this.
+	//
+	virtual void ProcessReceivedData() = 0;
+
+	// Move data, if any, from input source to manager by calling Manager::ChannelData().
+	// This is data that originates from your application and is to be sent to the remote.
+	// Called during Manager::ProcessChannels(). Note that you must never send more data
+	// than the value of OutWindowSpaceRemaining(). Also note that this method is called
+	// even when OutWindowSpaceRemaining() is zero - you might want to send a packet that
+	// doesn't consume window space, for instance.
+	//
+	// Q: How do I send output data?
+	// A: You need to pass it to Manager through Manager::ChannelData() and related methods,
+	//    whether directly or indirectly. It's more elegant, more fool proof and easier
+	//    to do it indirectly. Either way, you need to perform initialization actions in one
+	//    of the method calls that preceed ProcessDataToBeSent(), e.g. in the constructor
+	//    of the channel class, in the HandleOpen() method, or the HandleOpenConfirmation()
+	//    method. The best initialization action to take is to link the source where your
+	//    data-to-be-sent is coming from to a properly initialized ChannelSwitch, which will
+	//    feed your data to Manager using the proper Manager::ChannelXxxx() methods. This is
+	//    the indirect way. The direct way would be to remember a pointer or reference to the
+	//    Manager object and call the ChannelXxxx() methods yourself.
+	//
+	//    Take a look at sshwin.cpp and search for ChannelSwitch to see how this can be done
+	//    implicitly, without requiring any subsequent calls to Put(). Alternatively, you
+	//    can perform I/O explicitly, by calling ChannelSwitch::Put() yourself. In this case,
+	//    you need to make ChannelSwitch a member of your channel class, e.g. like this:
+	//
+	//		protected:
+	//			ChannelSwitch m_mySendingInterface;
+	//
+	//    Then, you need to initialize the ChannelSwitch any time before
+	//    ProcessDataToBeSent() is first called, e.g. in your constructor, or in your
+	//    HandleOpen() or HandleOpenConfirmation() methods:
+	//
+	//			m_mySendingInterface.AddDefaultRoute(manager, MyChannelString());
+	//
+	//    Then, you can use m_mySendingInterface.Put() to send data.
+	//
+	virtual void ProcessDataToBeSent() = 0;
+
+
+	// Called when CHANNEL_EOF is received from remote. The implementation should not expect
+	// ProcessReceivedData() to be called after OnEofReceived() is called. The implementation
+	// should not expect OnEofReceived() to be called before OnCloseReceived() or the
+	// destructor is called.
+	virtual void OnEofReceived() = 0;
+
+	// Called when CHANNEL_CLOSE is received from remote. The implementation should not
+	// expect ProcessReceivedData() to be called after OnCloseReceived() is called.
+	// The implementation should not expect OnCloseReceived() to be called before
+	// the destructor is called.
+	virtual void OnCloseReceived() = 0;
+
+
+	// - Even though the SSH2 channel may have already been closed, the channel object cannot
+	// be destructed until it processes all received data, one way or another. This method
+	// is called if CurrentRecvBufferSize() still returns non-zero even after sshlib _knows_
+	// that there will be no more data received from remote, either because remote has sent
+	// EOF or because the channel has been closed. However, this method will not be called
+	// if m_receiveStopped is true.
+	// - A separate method is provided to handle lingering data rather than reusing the 
+	// existing ProcessReceivedData() method so as to emphasize that this is part of a
+	// clean-up procedure. If you want to use the same method for handling received data
+	// regardless of the case, you can still define the ProcessLingeringData() method to
+	// simply call ProcessReceivedData().
+	virtual void ProcessLingeringData() = 0;
+
+
+	// SSH2 channels have flow control, see the SSH2 specification. These two methods
+	// are used by sshlib to signal the remote how much data it may send to this channel;
+	// if the remote sends too much data, that is considered gross misconduct and will
+	// cause the session to terminate.
+
+	// The maximum size of the buffer your application has for data received from remote.
+	// If your application processes data immediately, return the maximum size of data
+	// that you are willing to process at once. The remote will not be able to send
+	// more data than this before resynchronizing. Note that there is a maximum size for
+	// an SSH2 packet, so you will never receive more than that amount of data anyway.
+	// Called during Manager::ProcessChannels().
+	virtual word32 MaxRecvBufferSize() = 0;
+
+	// The amount of data currently held in the buffer your application has for data received
+	// from remote. If your application processes data immediately, always return 0.
+	// Called during Manager::ProcessChannels().
+	virtual word32 CurrentRecvBufferSize() = 0;
+
+
+	// See the declaration of WaitObjectContainer for an overview.
+	// The maximum number of wait objects that might be held by this Channel.
+	// The default implementation returns 0.
+	virtual unsigned int MaxWaitObjects() const { return 0; }
+
+	// Should add wait objects currently held by this Channel to the container.
+	// This is NOT a suitable place to manually reset wait objects.
+	// The default implementation does nothing.
+	virtual void GetWaitObjects(WaitObjectContainer& container) {}
+
+	// Should do any wait object processing that might be required.
+	// This is a suitable place to manually reset wait objects.
+	// The default implementation does nothing.
+	virtual void ProcessWaitObjects() {}
+
+
+public:
+	// The following methods are not to be overridden by the implementation.
+
+	// Override ChannelSpecificOpenData() instead of Open().
+	virtual void Open(Manager& manager, BufferedTransformation& t);
+
+	// Override DataSink() instead of HandleData().
+	virtual void HandleData(Manager& manager, BufferedTransformation& data, BufferedTransformation& response);
+
+	// Override ExtendedDataSink() instead of HandleExtendedData().
+	virtual void HandleExtendedData(Manager& manager, word32 dataType, BufferedTransformation& data, BufferedTransformation& response);
+
+
+protected:
+	// This method should be implemented by the side initiating a channel open request
+	// that contains channel-specific data. The implementation should output channel-specific
+	// data into BufferedTransformation t.
+	virtual void ChannelSpecificOpenData(Manager& manager, BufferedTransformation& t) {}
+
+
+	// Note that, while the object returned by DataSink() only needs to implement the
+	// regular BufferedTransformation interface, the object returned by ExtendedDataSink()
+	// needs to accept input via the channel interface (ChannelPut() and other methods).
+
+	// The name of the channel that is used when sshlib writes data to ExtendedDataSink()
+	// will equal the stringified number of the SSH2 extended data type. Currently, there
+	// is only one such data type: SSH_EXTENDED_DATA_STDERR.
+
+	// Extended data channels are easiest to implement by making the ExtendedDataSink()
+	// object a ChannelSwitch, and initializing it by adding a route for each type of
+	// extended data to be processed. For example:
+	//
+	//    ChannelSwitch m_extendedDataSink;
+	//    ...
+	//    m_extendedDataSink.AddRoute(Word32ToString(SSH_EXTENDED_DATA_STDERR), m_stderrSink, Filter::NULL_CHANNEL);
+	//
+	// This code will route all data that is received by m_extendedDataSink, on a channel
+	// whose name equals the stringified value of SSH_EXTENDED_DATA_STDERR, into the buffered
+	// transformation object m_stderrSink, using a NULL output channel. This means that any
+	// data that comes to m_extendedDataSink on channel with the name "1" will be redirected
+	// into m_stderrSink, where it will be received as if through the regular Put() interface.
+	// Extended data of any other type will be discarded by m_extendedDataSink.
+	//
+	// It is highly recommended that you examine the implementation of ChannelSwitch in
+	// the Crypto++ files channels.h and channels.cpp, as well as the default implementation
+	// of BufferedTransformation (with regard to channels) in cryptlib.cpp.
+
+
+	// The next three methods need to be implemented for both client and server.
+	virtual BufferedTransformation* DataSink() = 0;
+	virtual BufferedTransformation* ExtendedDataSink() { return NULL; }
+	virtual void HandleUnrecognizedExtendedData(BufferedTransformation& data, word32 len) { data.Skip(len); }
+};
+
+
+
+//
+// ChannelTable
+/////////////////////////////////////////////////
+
+class ChannelTable
+{
+public:
+	~ChannelTable();
+	Channel& NewChannel(Channel* channel);
+	Channel* GetChannel(word32 myNumber);
+	Channel const* GetChannel(word32 myNumber) const {return const_cast<ChannelTable*>(this)->GetChannel(myNumber);}
+	void RemoveChannel(word32 myNumber);
+	word32 ChannelNumberBound() const {return m_channels.size();}
+
+private:
+	std::vector<Channel*> m_channels;
+	typedef std::vector<Channel*>::iterator Iterator;
+};
+
+
+
+//
+// PacketEncoder, PacketDecoder
+/////////////////////////////////////////////////
+
+// More or less the only thing a consumer needs to know about PacketEncoder and PacketDecoder
+// is that, in a chain of Filter classes:
+// - PacketDecoder comes right after SocketSource and right before Manager;
+// - PacketEncoder comes right after Manager and right before SocketSink.
+//
+// Therefore, you have the following chain:
+// SocketSource -> PacketDecoder -> Manager -> PacketEncoder -> SocketSink
+
+class PacketEncoder : public FilterWithInputQueue
+{
+public:
+	PacketEncoder(TransportState& transportState, BufferedTransformation* outQueue=NULL);
+
+	void MessageEnd(int propagation=-1);
+	void PutMessageEnd(byte const* inString, unsigned int length, int propagation=-1);
+
+private:
+	TransportState* m_transportState;
+};
+
+class PacketDecoder : public Filter, public BufferedTransformationWithAutoSignal
+{
+public:
+	PacketDecoder(TransportState& transportState, BufferedTransformation* outQueue=NULL);
+
+	void Put(byte inByte) {PacketDecoder::Put(&inByte, 1);}
+	void Put(byte const* inString, unsigned int length);
+
+	void MessageEnd(int propagation);
+
+private:
+	TransportState* m_transportState;
+
+	enum State {WAITING_FOR_FIRST_BLOCK, WAITING_FOR_PACKET_END};
+	State m_state;
+	word32 m_packetLen;
+	ByteQueue m_inQueue, m_outQueue;
+};
+
+
+
+//
+// Key exchange
+/////////////////////////////////////////////////
+
+// KEX_DH is used internally by Manager to perform Diffie Hellman key exchange.
+class KEX_DH : public FilterWithInputQueue
+{
+public:
+	KEX_DH(TransportState& transportState, BufferedTransformation* outQueue=NULL);
+
+	void PutInitPacket();
+	void MessageEnd(int=-1);
+
+private:
+	void ComputeH();
+
+	TransportState* m_transportState;
+	DH m_dh;
+	SecByteBlock m_priv;
+	Integer m_e, m_f;
+};
+
+
+
+//
+// GLOBAL REQUESTS: server-to-client TCP/IP forwarding mini-how-to
+///////////////////////////////////////////////////////////////////////
+
+//
+// The SSH2 specification provides two global requests to take care of:
+// 'tcpip-forward' and 'cancel-tcpip-forward'.
+//
+// If the user chooses server-to-client port forwarding, the client needs to send the
+// 'tcpip-forward' global request to the server at any point after authentication is
+// complete. To stop port forwarding, the client will use the 'cancel-tcpip-forward'
+// request. These requests can be sent by writing to Manager's attached transformation;
+// see the SSH2 specification for the layout of these global requests. The code to send
+// them will be similar to the code you might already have implemented for, e.g., the
+// 'pty-req' channel request, with the difference being that the 'pty-req' request is a
+// channel request, and 'tcpip-forward' and 'cancel-tcpip-forward' are global ones.
+//
+// The eventual success or failure of these global requests can be handled in the
+// Manager::HandleRequestResponse() method. This way, it is possible to know whether
+// the server has accepted or rejected the request. Until the server responds with either
+// success or failure, the status of the request should be considered unknown. Also,
+// you will probably want to ensure that no additional requests are sent while waiting
+// for the server to respond with success or failure, because the server's response
+// does not indicate the request that it refers to.
+//
+// When server-to-client forwarding is enabled, the server will start listening for
+// connections on the port that was specified in the request. When a connection is received,
+// the server will relay it to the client by attempting to open a new channel of type
+// 'forwarded-tcpip'. This channel type needs to be handled in Manager::NewResponderChannel().
+// First, it should be checked whether the channel is of correct type and whether server-based
+// port forwarding has been enabled in the first place; if these conditions are untrue,
+// the server's channel open request should be rejected. Otherwise, the new channel should be
+// created. Locally, the client should initiate a new connection to the address and port that
+// has been specified by the user as the target of the server-to-client TCP/IP forwarding,
+// and connect the channel's I/O to the socket's I/O. Of course, when the channel terminates,
+// the socket should be closed, too; and when the socket is closed, the channel should also
+// be closed.
+//
+// When implementing TCP/IP forwarding, the TcpipChannel and derived classes in sshwin.cpp
+// may be of help.
+
+
+
+//
+// Client authentication key management
+/////////////////////////////////////////////////
+
+void GenerateOpenSshKeypair(
+	std::string const& algorithm,		// Must be "ssh-rsa" or "ssh-dss"
+	RandomNumberGenerator& rng,
+	unsigned int keyBits,				// max 1024 for "ssh-dss"
+	std::string const& comment,			// comment to be stored in public key output, UTF-8
+	BufferedTransformation& btPubSsh2,	// receives public key in SSH2 format
+	BufferedTransformation& btPubOpen,	// receives public key in OpenSSH format
+	byte const* pwd,					// pwd to encrypt priv key with; "" for no encryption
+	unsigned int pwdlen,
+	BufferedTransformation& btPriv);	// receives the (possibly encrypted) private key
+
+
+bool IsOpenSshPrivKeyEncrypted(			// Returns whether the specified privkey is encrypted
+	BufferedTransformation const& btPriv);
+
+
+bool IsValidOpenSshPrivKeyPassword(		// Returns whether pwd decrypts the specified privkey;
+	BufferedTransformation const& btPriv,		// throws if there is a decoding problem
+	byte const* pwd, unsigned int pwdlen);
+
+
+class Ssh2PublicKeyBlob
+{
+public:
+	// Input to the constructor may be an ssh-rsa or ssh-dss key in raw binary format,
+	// in SSH2 public key file format, or in OpenSSH public key file format.
+
+	// The constructor may throw all kinds of exceptions; be sure to enclose
+	// object initialization in a try-catch block.
+
+	Ssh2PublicKeyBlob(BufferedTransformation& bt);
+
+	std::string GetAlgorithm() const { return m_sAlgorithm; }
+
+	unsigned int GetBitCount() const { return m_nBitCount; }
+
+	std::string GetMD5Fingerprint() const { return m_sMD5Fingerprint; }
+	std::string GetBubbleBabble() const { return m_sBubbleBabble; }
+
+	BufferedTransformation& GetBlob() { return m_bq; }
+	BufferedTransformation const& GetBlob() const { return m_bq; }
+
+protected:
+	ByteQueue m_bq;
+	std::string m_sAlgorithm;
+	unsigned int m_nBitCount;
+	std::string m_sMD5Fingerprint;
+	std::string m_sBubbleBabble;
+};
+
+
+
+//
+// Manager
+/////////////////////////////////////////////////
+
+// Utility function for public key authentication - constructs the blob that
+// needs to be signed to generate a response.
+void ConstructPublicKeyAuthBlob(
+	SecByteBlock& tosign,				// Output; overwritten if not empty.
+	SecByteBlock const& sessionId,		// Input.
+	std::string const& userName,		// Input.
+	std::string const& algorithm,		// Input.
+	std::string const& publicKey);		// Input.
+
+enum DisconnectExchangeState
+{
+	DISCONNECT_NOT_EXCHANGED,
+	DISCONNECT_SENT,
+	DISCONNECT_RECEIVED,
+};
+
+class Manager : public Filter
+{
+public:
+	Manager(TransportState& transportState, Authenticator& authenticator, BufferedTransformation* outQueue);
+	
+	void PutProtocolVersion(Version const& version);
+	void StartKex(KexInitPacket packet);
+	void Disconnect(CauseToDisconnect const& cause);
+
+	// GetUserName is a macro in MS Platform SDK
+	std::string UserName() const { return m_authenticator->m_userName; }
+
+	RandomNumberGenerator& AccessRNG() {return *m_transportState->m_rng;}
+	TransportState& AccessTransportState() {return *m_transportState;}
+	Authenticator& AccessAuthenticator() {return *m_authenticator;}
+
+
+	// To be called by the client implementation to start authentication.
+	// Call SendServiceRequest() before calling any of SendXxxxAuthRequest().
+	// If the server requires multiple authentications, call the SendXxxxAuthRequest()
+	// methods as many times as required.
+	void SendServiceRequest();
+
+
+	// To be called by the server implementation at any time after successful processing
+	// of a service request, but before completion of the authentication process.
+	void SendUserAuthBanner(
+		std::string const& message,
+		std::string const& languageTag = "");
+
+
+	void SendNoneAuthRequest(
+		std::string const& userName);
+
+
+	void SendPasswordAuthRequest(
+		std::string const& userName,
+		byte const* pwd, unsigned int pwdlen);
+
+		void SendPasswordAuthRequest(
+			std::string const& u,
+			SecByteBlock const& p)
+			{ SendPasswordAuthRequest(u, p.Begin(), p.Size()); }
+
+		void SendPasswordAuthRequest(
+			std::string const& u,
+			std::string const& p)
+			{ SendPasswordAuthRequest(u, (byte const*) p.data(), p.size()); }
+
+
+	void SendPasswordChangeAuthRequest(
+		std::string const& userName,
+		byte const* oldpwd, unsigned int oldpwdlen,
+		byte const* newpwd, unsigned int newpwdlen);
+
+		void SendPasswordChangeAuthRequest(
+			std::string const& u,
+			SecByteBlock const& op,
+			SecByteBlock const& np)
+			{ SendPasswordChangeAuthRequest(u, op.Begin(), op.Size(), np.Begin(), np.Size()); }
+
+		void SendPasswordChangeAuthRequest(std::string const& u, std::string const& op, std::string const& np)
+			{ SendPasswordChangeAuthRequest(u, (byte const*) op.data(), op.size(), (byte const*) np.data(), np.size()); }
+
+
+	void SendPublicKeyAuthRequest(
+		std::string const& userName,
+		std::string const& algorithm,
+		std::string const& publicKey);
+
+	void SendPublicKeyAuthRequest(	
+		std::string const& userName,
+		BufferedTransformation& btOpenSshPrivateKey,
+		byte const* pwd, unsigned int pwdlen,	// password to the private key file
+		RandomNumberGenerator* rng = 0);
+
+		// If rng is specified, a full public key auth request with signature is sent.
+		// Private key can be ssh-rsa or ssh-dss key encoded in OpenSSH format.
+		// Throws CryptoPP::Exception if cannot properly decode private key.
+
+
+	void SendFullPublicKeyAuthRequest(
+		std::string const& userName,
+		std::string const& algorithm,
+		std::string const& publicKey,
+		std::string const& signature);
+
+		void SendFullPublicKeyAuthRequest(
+			RandomNumberGenerator& rng,
+			std::string const& userName,
+			BufferedTransformation& btOpenSshPrivateKey,
+			byte const* pwd, unsigned int pwdlen)
+			{ SendPublicKeyAuthRequest(userName, btOpenSshPrivateKey, pwd, pwdlen, &rng); }
+
+			// With DSA keys, make sure that you have a solid random number generator
+			// with a crypto-quality seed, otherwise the generated signatures will leak
+			// information about the private key.
+
+			// With RSA keys, rng is not used; you can specify NullRNG().
+
+
+	bool VerifyPublicKeyAuthAlgorithm(
+		std::string const& algorithm,
+		std::string const& publicKey);
+
+
+	bool VerifyPublicKeyAuthSignature(
+		std::string const& userName,
+		std::string const& algorithm,
+		std::string const& publicKey,
+		std::string const& signature);
+
+
+	// These two exception types may be thrown by CreateChannel.
+	class UnknownChannelType : public Err {public: UnknownChannelType() : Err(BufferedTransformation::OTHER_ERROR, "unknown channel type") {}};
+	class TooManyWaitObjects : public Err {public: TooManyWaitObjects() : Err(BufferedTransformation::OTHER_ERROR, "too many wait objects") {}};
+
+	Channel& CreateChannel(std::string const& type);
+
+	void OpenChannel(Channel& channel);
+
+
+	// To be called by the implementation from the main loop.
+	bool AnyChannelsOpen() const;
+
+	// To be called by the implementation from the main loop.
+	// AVALANCHE WARNING: the behavior of ProcessChannels() with respect to closing channels
+	// has been modified significantly. Previously, EOF was considered equivalent to CLOSE:
+	// a channel was closed as soon as EOF was sent or received. Now, a channel for which
+	// an EOF is only received or only sent remains alive until the other direction is
+	// closed as well. If your implementation relied on the former behavior, you must update
+	// your application. In order to force a channel to be closed, you should call the
+	// channel's ForceClose() method.
+	void ProcessChannels();
+
+
+	// ChannelData() must not be called with more data than there is output
+	// window space remaining in the specified channel.
+	void ChannelData(word32 channel, byte const* inString, unsigned int length, bool extendedData=false, word32 dataType=0);
+	void ChannelDataFlush(word32 channel, bool completeFlush=true);
+	void ChannelClose(word32 channel, bool graceful);
+	void ChannelSendEof(word32 channel);
+	void ChannelSendClose(word32 channel);
+	void ChannelAdjustWindowSize(word32 channel, word32 incrementSize);
+
+
+	// Note that the Put() and MessageEnd() methods will not cause data to be sent to
+	// the remote; rather, this is where received data from PacketDecoder comes in.
+	void Put(byte inByte) {Manager::Put(&inByte, 1);}
+	void Put(byte const* inString, unsigned int length);
+	void MessageEnd(int=-1);
+
+
+	// ChannelPut() must not be called with more data than there is output
+	// window space remaining in the specified channel.
+	void ChannelPut(std::string const& channel, byte inByte) {Manager::ChannelPut(channel, &inByte, 1);}
+	void ChannelPut(std::string const& channel, byte const* inString, unsigned int length);
+	void ChannelFlush(std::string const& channel, bool completeFlush, int propagation=-1);
+	void ChannelMessageEnd(std::string const& channel, int=-1);
+	void ChannelMessageSeriesEnd(std::string const& channel, int=-1);
+
+	// use these two functions to enumerate channels
+	word32 ChannelNumberBound() const {return m_channelTable.ChannelNumberBound();}
+	Channel* GetChannel(word32 channel) {return m_channelTable.GetChannel(channel);}
+	Channel const* GetChannel(word32 channel) const {return m_channelTable.GetChannel(channel);}
+
+	// Returns an upper bound to the number of objects held by the session.
+	// Equals the number of objects held by Manager plus the number of objects potentially
+	// held by each of the Channels.
+	unsigned int TotalWaitObjects() const;
+
+	// Will use the Manager's GetConnectionWaitObjects() and the channels' GetWaitObjects()
+	// methods to fill the container. Note that these methods are undefined virtual methods
+	// and have to be defined by the particular implementation.
+	void GetWaitObjects(WaitObjectContainer& container);
+
+	// Will call ProcessConnectionWaitObjects(), as well as Channel::ProcessWaitObjects()
+	// for every channel. SHOULD be called from the sshlib main loop immediately after
+	// the loop is triggered by an event.
+	void ProcessWaitObjects();
+
+	// Information contained in the remote's disconnect packet, or our own disconnect packet
+	// if we triggered a disconnect.
+	DisconnectExchangeState GetDisconnectExchangeState() const { return m_disconnectExchangeState; }
+	DisconnectReason GetDisconnectReason() const { return m_disconnectReason; }
+	std::string GetDisconnectDescription() const { return m_disconnectDescription; }
+	std::string GetDisconnectLanguage() const { return m_disconnectLanguage; }
+
+protected:
+
+	// Wait objects: see the declaration of WaitObjectContainer for a general overview.
+	// Should return the maximum number of wait objects that can be held by the session.
+	virtual unsigned int MaxWaitObjects() const = 0;
+
+	// Should return the current count of wait objects held by the Manager class.
+	// The default implementation returns 0.
+	virtual unsigned int CountConnectionWaitObjects() const { return 0; }
+
+	// Should add the wait objects currently held by the Manager class to the container.
+	// This is NOT a suitable place to manually reset wait objects due to synchronization
+	// problems that this may cause. The default implementation does nothing.
+	virtual void GetConnectionWaitObjects(WaitObjectContainer& container) {}
+
+	// Should do any processing of connection wait objects that may be required.
+	// This is a suitable place to manually reset wait objects.
+	// The default implementation does nothing.
+	virtual void ProcessConnectionWaitObjects() {}
+
+
+	// Create a new channel where our side is the initiator.
+	// Return NULL to prevent the channel open attempt.
+	// The default implementation always returns NULL.
+	virtual Channel* NewInitiatorChannel(std::string const& type) { return NULL; }
+
+	// Create a new channel where the remote is the initiator.
+	// Return NULL to reject the channel open request.
+	// The default implementation always returns NULL.
+	virtual Channel* NewResponderChannel(std::string const& type) { return NULL; }
+
+	// Initiate, if necessary, creation of new channels due to external triggers,
+	// e.g. create a connection tunneling channel due to an incoming connection.
+	virtual void OpenNewChannels() {}
+
+
+	// This is where you should handle global (non-channel-specific) requests.
+	// In regular use cases, such requests include 'tcpip-forward', 'cancel-tcpip-forward'.
+	// Return false to reject the request. In classic SSH2 sessions, the client does
+	// not handle any requests, and should always return false. This is what the
+	// default implementation does, too.
+	virtual bool HandleRequest(std::string const& type, bool wantReply, BufferedTransformation& data, BufferedTransformation& response) { return false; }
+
+	// This is where you should handle the other side's response to an initiated request.
+	// A terminal client might implement this to display a diagnostic in case of failure.
+	// The default implementation delegates to the old version (without the data parameter).
+	virtual void HandleRequestResponse(bool success, BufferedTransformation& data)
+		{ HandleRequestResponse(success); }
+
+	// This version is deprecated and is provided for backward compatibility only.
+	// New applications should override the version above.
+	virtual void HandleRequestResponse(bool success) {}
+
+
+	// These are called when the input/output transport state changes,
+	// but only _after_ host authentication. A state change during host authentication
+	// (e.g., a transition from DOING_OUT_KEX to READY_TO_SEND_NEWKEYS) is not indicated
+	// by a call to either of these methods.
+	virtual void OnInStateChange(InTransportState state) {}
+	virtual void OnOutStateChange(OutTransportState state) {}
+
+
+	// Handle IGNORE, UNIMPLEMENTED and DEBUG packets. Default implementation does nothing.
+	virtual void HandleIgnore(unsigned long nContentsLength) {}
+	virtual void HandleUnimplemented(word32 packetSequenceNumber) {}
+	virtual void HandleDebug(bool alwaysDisplay, std::string const& message, std::string const& languageTag) {}
+
+	// Called in the event that an otherwise legal packet is received from remote that
+	// contains additional data after the end of recognized data. The default implementation
+	// is to skip such data and proceed with the next packet as if nothing happened.
+	virtual void HandlePacketNotCompletelyProcessed(BufferedTransformation& data);
+
+	// For client only. Clients should implement this method - see the SSH2 specification.
+	virtual void HandleUserAuthBanner(std::string const& message, std::string const& languageTag) {}
+
+
+private:
+	void SetInState(InTransportState state);
+	void SetOutState(OutTransportState state);
+
+	void StartKexDh();
+	void StartService();
+
+	TransportState* m_transportState;
+	Authenticator* m_authenticator;
+
+	ByteQueue m_inQueue;
+
+	bool m_messageNumberReceived;
+	byte m_messageNumber;
+	unsigned int m_messageBytesReceived;
+	member_ptr<KEX_DH> m_kexdh;
+	bool m_ignoreFirstKexPacket;
+
+	ChannelTable m_channelTable;
+
+	DisconnectExchangeState m_disconnectExchangeState;
+	DisconnectReason m_disconnectReason;
+	std::string m_disconnectDescription;
+	std::string m_disconnectLanguage;
+};
+
+
+
+//
+// StringToHex()
+/////////////////////////////////////////////////
+
+// example strings for szHexDigits:
+// "0123456789abcdef:" to use lowercase letters and to insert separator ':' after each byte,
+// "0123456789ABCDEF " to use uppercase letters and to insert separator ' ' after each byte,
+// "0123456789abcdef" to use lowercase letters and to insert no separator.
+template <class InputStringType, class OutputStringType, class HexDigitType>
+inline void StringToHex(InputStringType const& strInput, OutputStringType& strHex, HexDigitType const* szHexDigits)
+{
+	strHex = OutputStringType();
+
+	for (int i=0; i!=strInput.size(); ++i)
+	{
+		strHex += szHexDigits[(strInput[i] >> 4) & 0x0f];
+		strHex += szHexDigits[strInput[i] & 0x0f];
+		if ((szHexDigits[16] != 0) && (i != strInput.size() - 1))
+			strHex += szHexDigits[16];
+	}
+}
+
+
+
+NAMESPACE_END
+
+#endif

@@ -1,5 +1,5 @@
 /*
-    $Id: manager.cpp,v 1.1 2002/06/06 17:21:48 thementat Exp $
+    $Id: manager.cpp,v 1.2 2002/06/26 17:40:12 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Henrik Abelsson <henrik@abelsson.com>
@@ -20,8 +20,11 @@
 
     -----
     $Log: manager.cpp,v $
-    Revision 1.1  2002/06/06 17:21:48  thementat
-    Initial revision
+    Revision 1.2  2002/06/26 17:40:12  thementat
+    Added the Open-Source ssh2 lib from Bitvise.
+
+    Revision 1.1.1.1  2002/06/06 17:21:48  thementat
+    Checkin of new sources BETA 2
 
     Revision 1.9  2001/12/16 19:46:50  mentat
     Updates to TOC protocol and authload class.
@@ -248,10 +251,10 @@ void ProtocolManager::c_loggedOut(const string &proto)
 
 }
 
-void ProtocolManager::c_recvdMessage(const string &proto,const Contact &c, const string &message)
-{
+//void ProtocolManager::c_recvdMessage(const string &proto,const Contact &c, const string &message)
+//{
 
-}
+//}
 
 void ProtocolManager::c_statusChange(const string &proto,const Contact &c)
 {

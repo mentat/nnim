@@ -1,5 +1,5 @@
 /*
-    $Id: tocprotocol.cpp,v 1.8 2002/06/26 04:27:08 thementat Exp $
+    $Id: tocprotocol.cpp,v 1.9 2002/06/26 17:40:12 thementat Exp $
 
     GNU Messenger - The secure instant messenger
 
@@ -147,6 +147,7 @@ const char * TocProtocol::roast_password(const char *pass)
 
 
 
+
   char roast[] =  "Tic/Toc";
   int pos = 2;
   int x;
@@ -213,13 +214,13 @@ TocProtocol::TocProtocol(const XMLNode &n, ProtocolManager *manager):
   m_realLength = 0;
   m_state=S_offline;
   m_net = addNet();
-  debug() <<  "New TocProtocol instance" ;
+  debug() <<  "New TocProtocol instance" << endl ;
 }
 
 TocProtocol::~TocProtocol()
 {
   //removeNet(m_net);
-  debug() << "Deleting TocProtocol instance" ;
+  debug() << "Deleting TocProtocol instance" << endl ;
 }
 
 
@@ -290,7 +291,7 @@ void TocProtocol::addBuddy(const Contact &c)
 void TocProtocol::delBuddy(const Contact &c)
 {
 	(void)c;
-	debug() << "delBuddy(): Not implemented yet";
+	debug() << "delBuddy(): Not implemented yet" << endl;
 }
 
 
@@ -301,7 +302,7 @@ void TocProtocol::connectionError(Network *net,int e)
 
   m_state = S_offline;
 
-  debug() << "Connection closed!";
+  debug() << "Connection closed!" << endl;
 
   m_net->disconnect();
 
@@ -505,13 +506,14 @@ void TocProtocol::handleRealData(Network *net, const string& data)
 
 	if (command == "IM_IN")
 	{
+        debug() << "In IM IN (say that 5 times fast)" << endl;
 		vector <string> words = splitStr(data);
 
 		string msg = words[3];
 
 		if (m_buddies.find(words[1])==m_buddies.end())
-
 		{	
+            debug() << "Anonymous user msg." << endl;
 			// if we can't find the user, we prompt for acceptance
 			Contact c;
 			c.setProtocol(protocol());
@@ -778,6 +780,9 @@ void TocProtocol::tocParseConfig(const string& config)
 /*
     -----
     $Log: tocprotocol.cpp,v $
+    Revision 1.9  2002/06/26 17:40:12  thementat
+    Added the Open-Source ssh2 lib from Bitvise.
+
     Revision 1.8  2002/06/26 04:27:08  thementat
     Event fixes.
 

@@ -1,5 +1,5 @@
 /*
-    $Id: protocol.cpp,v 1.4 2002/06/26 04:27:08 thementat Exp $
+    $Id: protocol.cpp,v 1.5 2002/06/26 17:40:12 thementat Exp $
 
     GNU Messenger - The secure instant messenger
     Copyright (C) 1999-2001  Emil Styrke <emil@lysator.liu.se>
@@ -20,6 +20,9 @@
 
     -----
     $Log: protocol.cpp,v $
+    Revision 1.5  2002/06/26 17:40:12  thementat
+    Added the Open-Source ssh2 lib from Bitvise.
+
     Revision 1.4  2002/06/26 04:27:08  thementat
     Event fixes.
 
@@ -78,27 +81,31 @@ void Protocol::eventRecvdMessageNotBuddy(const Contact &c, const string &message
 {
     debug() << "m_manage:" << (int)m_manager << endl;
     debug() << "Not buddy msg: " << message << endl;
-    if (m_manager)
+    if (m_manager != NULL)
         m_manager->c_recvdMessageAnony(protocol(),c,message);
+    else
+        debug() << "Protocol::eventRecvdMessageNotBuddy error no manager." << endl;
 
 }
 void Protocol::eventRecvdMessage(const Contact &c, const string &message)
 {
-  debug() << "m_manage:" << (int)m_manager << endl;
-  debug() << message << endl;
-  if (m_manager)
-    m_manager->c_recvdMessage(protocol(),c,message);
+    debug() << "m_manage:" << (int)m_manager << endl;
+    debug() << message << endl;
+    if (m_manager != NULL)
+        m_manager->c_recvdMessage(protocol(),c,message);
+    else
+        debug() << "Protocol::eventRecvdMessage error no manager." << endl;
 
 }
 void Protocol::eventStatusChange(const Contact &c)
 {
-  if (m_manager)
-    m_manager->c_statusChange(protocol(),c);
+    if (m_manager)
+        m_manager->c_statusChange(protocol(),c);
 }
 void Protocol::eventError(int err_no,const string &error)
 {
-  if (m_manager)
-    m_manager->c_error(protocol(),err_no,error);
+    if (m_manager)
+        m_manager->c_error(protocol(),err_no,error);
 }
 void Protocol::eventStateChange(int state)
 {

@@ -1,0 +1,32 @@
+Release date: 2002-06-26
+
+This is an open source release of the Bitvise SSH2 library, sshlib.
+The sshlib home page can be found at http://www.bitvise.com/sshlib.html.
+
+The open source license for sshlib permits you to use the software at no
+charge under the condition that if you use sshlib in an application you
+redistribute, the complete source code for your application must be available
+and freely redistributable under reasonable conditions. If you do not want
+to release the source code for your application, you may purchase a license
+from Bitvise. For pricing information, or if you have further questions on
+licensing, please contact us at info@bitvise.com. 
+
+This archive includes the following libraries:
+
+/CryptoPP
+  The free Crypto++ library by Wei Dai, based on the latest CVS snapshot
+  at the time of writing, technically still v4.2. Includes minor
+  modifications and bugfixes relevant to sshlib users.
+
+/mulib
+  Miscellaneous Utilities Library, written and placed in the public domain
+  by denis bider; see also 'mulib/mulib.txt'.
+
+/BubbleBabble
+  An implementation of the BubbleBabble encoding scheme, written and placed
+  in the public domain by denis bider.
+
+/sshlib
+  The Bitvise SSH2 library, sshlib, v1.27. See 'sshlib/ssh.h' for copyright
+  and license terms.
+

@@ -1,0 +1,210 @@
+==============================================================================
+                            sshlib: Design Notes
+============================== by denis bider ================================
+
+When I first looked at the ssh.h header file when it arrived on my desk some
+time ago, I was perplexed.
+
+How does this work?!
+
+The more I looked at the source code, the less sense it made to me. OK, here
+is some Manager. Here is a Channel. Here is an Authenticator. But how does
+all of this come together?
+
+Then, after peering at each of the files and finally arriving at the sshlib
+sample client, I found a few lines of code that made everything fall into
+place:
+
+    SocketSource ss(s.GetSocket(), false,
+        new PacketDecoder(tsClient,
+            clientManager = new WindowsClientManager(tsClient, authenticator,
+                new PacketEncoder(tsClient,
+                    new SocketSink(s.GetSocket())))));
+
+It was at this point that sshlib became comprehensible to me. Soon, albeit not
+as quickly as I would have liked, I was able to understand more and more parts
+of sshlib. And eventually, as I started working on my own programs that use
+the library, I realized that sshlib actually has a very sensible, flexible,
+elegant design. Everything in the library began to make sense. I am now here
+to help you get a glimpse of that design.
+
+
+
+I. The Crypto++ Filter Paradigm
+==============================================================================
+
+The reason the above 5 lines of code explained the entire library to me,
+whereas you, the reader, are quite possibly still perplexed, is that I have
+an advantage. The advantage is my knowledge of the Crypto++ Filter paradigm.
+As any experienced user of the Crypto++ library can attest, the Crypto++
+Filter paradigm is a gem for anyone who knows how to use it.
+
+It's actually very simple. Suppose you have a number of classes, and each of
+them does some processing on your data. These classes might be classes that
+extract data from disk; or store it in memory; or encrypt it; or compress it;
+or simply pass it through and count the bytes; whatever. The breakthrough of
+the Crypto++ Filter paradigm is that:
+ - the classes can all have the same interface, and
+ - the classes can be chained.
+
+Wei Dai, the author of Crypto++, devised an interface where each class has
+Put() methods to accept data, which it can implement or not; and each class
+has Get() methods to extract data, which it can also implement or not.
+Classes that implement these interfaces are called "transformations", and
+they can be either Sources, Sinks or Filters: a Source only implements the
+Get() interface, a Sink only implements the Put() interface, and a Filter
+implements both, so you can write to it using Put() and read from it using
+Get(). Sounds reasonable? It is.
+
+Additionally, each class can be configured to output the results of its
+processing not to its Get() interface, but rather to the Put() interface of
+another class that complies with the scheme. This is called "attaching" one
+transformation to another. Now, if someone calls the Get() interface on the
+transformation being attached to, that transformation will simply delegate
+the call to the Get() interface of its attached transformation.
+
+So, you can have a setup like this:
+
+    FileSource -> EncryptFilter -> FileSink
+
+You have three transformations in a chain. The first one is a source and
+is setup to read data from a file. The second one is setup to encrypt data
+that is output by the first transformation. And the third one is setup to
+write any data it receives to an output file.
+
+Now, suppose you want to divide the input file into lines and encrypt each
+line separately. Fine:
+
+    FileSource -> LineToMsg -> Encrypt -> MsgToLine -> FileSink
+
+But there is more! Suppose that you want to read lines from two files, so
+that the output file will contain one encrypted line from the first file,
+then one from the second, one from the first, and so on. How would you go
+about designing that? Well, it's done:
+
+    FileSource -> LineToMsg
+                        |
+                        V
+                  ChannelSwitch -> Encrypt -> MsgToLine -> FileSink
+                        A
+                        |
+    FileSource -> LineToMsg
+
+Of course, you need to synchronize the two source files so that each extracts
+a line at a time and then waits for a line to be extracted from the other
+source file. But this design looks like a good start.
+
+[This completes the overview of the Crypto++ Filter paradigm as far as this
+preview is concerned. If you are interested in learning more, I invite you to
+download my Crypto++ User's Guide at www.bitvise.com/users-guide.html .]
+
+
+
+II. The Crypto++ Filter Paradigm In Action: sshlib
+==============================================================================
+
+sshlib makes extensive use of the Crypto++ library, and is proud of it. The
+Crypto++ Filter paradigm is an infrastructural element, and that is exactly
+its part in sshlib. The following chain of transformations underlies any
+implementation of sshlib:
+
+    SocketSource -> PacketDecoder -> Manager -> PacketEncoder -> SocketSink
+
+The SocketSource and SocketSink classes are provided by Crypto++. The other
+classes (PacketDecoder, Manager and PacketEncoder) are provided by sshlib.
+
+The chain works as follows: when data arrives at the socket from the remote
+SSH2 server or client, it is extracted from the socket by SocketSource and
+output into PacketDecoder. PacketDecoder, in turn, receives an SSH2 packet
+and hands it to Manager. Manager processes the packet, and outputs zero, one
+or more SSH2 packets in response. These outgoing SSH2 packets are encoded by
+PacketEncoder and sent to the remote SSH2 implementation via SocketSink.
+
+But in an SSH2 session, packets need not only be sent as a response to
+something received from the remote. On the contrary - if Manager realizes
+that an external event has occurred that requires one or more packets to be
+sent, it will send those packets immediately, without waiting for the remote
+to send something first.
+
+So, what is it that Manager does? Perhaps it's time to look at a slightly
+larger picture:
+
+                global                                  global
+                data                                    data
+                handler     Channels        Channels    sender
+                   A           A             |           |
+                   |           |             |           |
+                   +-----------+             +-----------+
+                               |             |
+                               |             V
+    SocketSource -> PD -> Manager (in)     Manager (out) -> PE -> SocketSink
+                                       :
+                                       :
+                                    Authenticator
+                                    TransportState
+
+[Note that PacketDecoder and PacketEncoder have been abbreviated to PD and PE
+to conserve space.]
+
+You can now see that Manager has, in fact, two interfaces: one that receives
+and handles incoming data, and one data causes output data to be sent. They
+are interconnected, in the sense that the handling of incoming data may cause
+output data to be sent, but they are not interdependent.
+
+The Authenticator and TransportState objects are used by Manager to store
+state information about the SSH2 connection. Additionally, the Authenticator
+class is overridden by the consumer to provide handling for SSH2 session
+authentication events.
+
+
+
+III. The Role of the Main Loop
+==============================================================================
+
+The main SSH2 session loop is boilerplate code, but is nevertheless left to
+be implemented by the consumer. Part of the reason is that the consumer might
+opt to use an alternative design rather than a loop; for instance, you might
+want to trigger SSH2 processing from a GUI message handler. Due to the
+intrinsic nature of the main loop, implementations will be highly dependent
+on the target platform, as well as on the needs of the implementation.
+
+The primary role of the main loop is to wait for events and act on them. The
+main loop waits for events such as:
+ - data received on the SSH2 session socket -> needs to be handled;
+ - key pressed in the terminal window -> need to packetize and send;
+ - data arrived at port forwarding sockets -> need to forward into an SSH2
+   port forwarding channel.
+
+Each time an event occurs, the main loop causes the entire sshlib machinery
+to execute and perform any actions it might perform. The main loop doesn't
+handle anything; it just makes sure the SSH2 machinery is run when something
+needs to be handled.
+
+See the comments in ssh.h to read more about how synchronization is supported
+in sshlib. Look for the keywords "wait object".
+
+
+
+IV. What Next?
+==============================================================================
+
+Read the comments in ssh.h. Examine the source code for the SSH2 session part
+of the sample client, Tunnelier. Download the Crypto++ User's Guide. Learn.
+Compare sshlib and its design to other libraries out there.
+
+When you are ready to move ahead with sshlib, just let us know. Send us an
+email to:
+
+    info@bitvise.com
+
+If you happen to have any questions regarding sshlib, technical or otherwise,
+do not hesitate to write.
+
+Kind regards,
+
+denis bider
+
+
+
+==============================================================================
+This document is Copyright (C) 2001-2002 by denis bider and Bitvise Ltd.
