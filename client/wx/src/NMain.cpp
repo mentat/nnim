@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NMain.cpp,v 1.2 2002/06/09 19:45:03 thementat Exp $
+    $Id: NMain.cpp,v 1.3 2002/06/10 12:43:25 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -225,6 +225,11 @@ wxNNIM::AccessManager()
 bool wxNNIM::Shutdown() // a callable shutdown command
 {
 
+    m_LogView.reset( NULL );
+    m_AuthLoader.reset ( NULL );
+    m_ProtoManager.reset( NULL );
+    m_ContactView.reset( NULL );
+    m_LoginView.reset( NULL );
 /*	if (m_pLogView)
 	{
 		m_pLogView->Destroy();
@@ -260,6 +265,9 @@ bool wxNNIM::Shutdown() // a callable shutdown command
 /*
     -----
     $Log: NMain.cpp,v $
+    Revision 1.3  2002/06/10 12:43:25  thementat
+    Fixed bug that prevented shutdown (related to auto pointers)
+
     Revision 1.2  2002/06/09 19:45:03  thementat
     Liberal use of auto_ptr.
 
