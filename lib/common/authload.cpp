@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.5 2002/06/13 16:38:50 thementat Exp $
+    $Id: authload.cpp,v 1.6 2002/06/16 04:08:28 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -43,7 +43,7 @@ using namespace CryptoPP;
 using namespace boost;
 
 AuthLoad::AuthLoad(const string& directory)
-: m_contacts(this), m_
+: m_contacts(this), m_user(this), m_global(this)
 {
 	// set initial status to offline - no user logged in
     m_status = OFFLINE;
@@ -394,6 +394,9 @@ AuthLoad::GetActiveLogin()
 /*
     -----
     $Log: authload.cpp,v $
+    Revision 1.6  2002/06/16 04:08:28  thementat
+    Hopefully fixed Authload and related classes.
+
     Revision 1.5  2002/06/13 16:38:50  thementat
     Major work on the SSH2 protocol and authload changes.
 

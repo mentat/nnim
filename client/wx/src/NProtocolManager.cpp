@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -43,29 +43,29 @@ InitProtoManager(AuthLoad & myLoader, ProtocolManager& myMan)
 {
 	XMLNode config;
 	
-	myLoader.U().get()->GetNet("toc", config);
+	myLoader.U().GetNet("toc", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new TocProtocol(config, &myMan));
 	}
-	myLoader.U().get()->GetNet("icq", config);
+	myLoader.U().GetNet("icq", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new IcqProtocol(config, &myMan));
 	}
-	myLoader.U().get()->GetNet("msn", config);
+	myLoader.U().GetNet("msn", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new MsnProtocol(config, &myMan));
 	}
 
-	myLoader.U().get()->GetNet("yahoo", config);
+	myLoader.U().GetNet("yahoo", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new YahooProtocol(config, &myMan));
 	}
 
-	myLoader.U().get()->GetNet("kit", config);
+	myLoader.U().GetNet("kit", config);
 	if (config.child("user").property("username") != "")
 	{
 		myMan.addProtocol(new KitProtocol(config, &myMan));
@@ -156,6 +156,9 @@ void wxProtocolManager::c_stateChange(const string &proto,int state)
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.3  2002/06/16 04:08:28  thementat
+    Hopefully fixed Authload and related classes.
+
     Revision 1.2  2002/06/14 22:02:24  thementat
     Large work on revamping IDs in gui, more SSH2 additions.
 

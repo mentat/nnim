@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContactTreeXML.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NContactTreeXML.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -95,7 +95,7 @@ END_EVENT_TABLE()
 
 NContactTreeXML::NContactTreeXML(wxWindow *parent, const wxWindowID id,
                        const wxPoint& pos, const wxSize& size,
-                       long style, weak_ptr<XMLNode> xml, int type)
+                       long style, XMLNode xml, int type)
                        : wxGenericTreeCtrl(parent, id, pos, size, style)
 {
 
@@ -202,7 +202,7 @@ void NContactTreeXML::PlaceContactsInTree(wxTreeItemId &base, XMLNode& xml)
 }
 
 
-void NContactTreeXML::SetXML(weak_ptr<XMLNode> xml)
+void NContactTreeXML::SetXML(XMLNode xml)
 {
    m_xml = xml;
    LoadFromXML();
@@ -256,13 +256,13 @@ void NContactTreeXML::OnDeleteItem(wxCommandEvent& event)
 	if (m_type == ContactTree)
 	{
 		if (((MyTreeItemData *)GetItemData(id))->GetStatus() == STATUS_FOLDER)
-			wxGetApp().AccessLoader().C().get()->DeleteFolder(GetItemText(id).mb_str(wxConvUTF8).data());
+			wxGetApp().AccessLoader().C().DeleteFolder(GetItemText(id).mb_str(wxConvUTF8).data());
 		else
-			wxGetApp().AccessLoader().C().get()->Delete(GetItemText(id).mb_str(wxConvUTF8).data());
+			wxGetApp().AccessLoader().C().Delete(GetItemText(id).mb_str(wxConvUTF8).data());
 	}
 	else
 	{
-		wxGetApp().AccessLoader().C().get()->DeleteInfo(m_user.mb_str(wxConvUTF8).data(), GetItemText(id).mb_str(wxConvUTF8).data());
+		wxGetApp().AccessLoader().C().DeleteInfo(m_user.mb_str(wxConvUTF8).data(), GetItemText(id).mb_str(wxConvUTF8).data());
 	}
 
 	RefreshTree();
@@ -520,7 +520,7 @@ void NContactTreeXML::SetStatus(wxTreeItemId &id, int status)
 }
 wxString NContactTreeXML::NewFolder(const wxString& base)
 {
-	wxString name = wxGetTextFromUser(wxT("New Folder Name"), wxT("New Folder"), "", this);	if (name == wxT(""))		return wxT("");	AuthLoad &myLoader = wxGetApp().AccessLoader();	if (myLoader.C().get()->FolderExists(name.mb_str(wxConvUTF8).data()))	{		wxMessageBox(wxT("Sorry, this folder already exists."), wxT("Folder Exists"));		return wxT("");	}	if (base == wxT(""))	{		if (!myLoader.C().get()->AddFolder(name.mb_str(wxConvUTF8).data()))		{			wxLogError(wxT("Folder not added with no base."));			return "";		}		else			return name;	}		if (!myLoader.C().get()->AddFolder(name.mb_str(wxConvUTF8).data(), base.mb_str(wxConvUTF8).data()))	{		wxLogError(wxT("This folder wasn't added."));		return wxT("");	}
+	wxString name = wxGetTextFromUser(wxT("New Folder Name"), wxT("New Folder"), "", this);	if (name == wxT(""))		return wxT("");	AuthLoad &myLoader = wxGetApp().AccessLoader();	if (myLoader.C().FolderExists(name.mb_str(wxConvUTF8).data()))	{		wxMessageBox(wxT("Sorry, this folder already exists."), wxT("Folder Exists"));		return wxT("");	}	if (base == wxT(""))	{		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data()))		{			wxLogError(wxT("Folder not added with no base."));			return "";		}		else			return name;	}		if (!myLoader.C().AddFolder(name.mb_str(wxConvUTF8).data(), base.mb_str(wxConvUTF8).data()))	{		wxLogError(wxT("This folder wasn't added."));		return wxT("");	}
 
 	return name;
 }

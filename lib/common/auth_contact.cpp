@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: auth_contact.cpp,v 1.4 2002/06/13 16:38:50 thementat Exp $
+    $Id: auth_contact.cpp,v 1.5 2002/06/16 04:08:28 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -34,12 +34,18 @@
 using namespace std;
 using namespace CryptoPP;
 
+XMLNode
+AuthLoad::Contacts::GetConfig()
+{
+    return m_owner->m_config->child("contacts");
+}
+
 bool 
 AuthLoad::Contacts::DeleteAllNets(const string& contactname)
 {
     XMLNode searcher;
 
-    if (!AuthLoad::Search(contactname, "contact", m_contact(), searcher))
+    if (!AuthLoad::Search(contactname, "contact", m_owner->m_config->child("contacts").child("folder"), searcher))
         return false;
 
     searcher.delChild("nets");
@@ -53,7 +59,7 @@ AuthLoad::Contacts::DeleteAllInfo(const string& contactname)
 {
     XMLNode searcher;
 
-    if (!AuthLoad::Search(contactname, "contact", m_contact(), searcher))
+    if (!AuthLoad::Search(contactname, "contact", m_owner->m_config->child("contacts").child("folder"), searcher))
         return false;
 
     searcher.delChild("info");
@@ -66,7 +72,7 @@ AuthLoad::Contacts::DeleteAllInfo(const string& contactname)
 unsigned long 
 AuthLoad::Contacts::GetCount()
 {
-    return AuthLoad::TagCount("contact", m_contact());
+    return AuthLoad::TagCount("contact", m_owner->m_config->child("contacts").child("folder"));
 }
 
 bool 
@@ -74,7 +80,7 @@ AuthLoad::Contacts::Rename(const string& oldname, const string& newname)
 {
     XMLNode searcher;
 
-    if (!AuthLoad::Search(oldname, "contact", m_contact(), searcher))
+    if (!AuthLoad::Search(oldname, "contact", m_owner->m_config->child("contacts").child("folder"), searcher))
         return false;
 
     if (Exists(newname))
@@ -91,7 +97,7 @@ AuthLoad::Contacts::GetPublicKey(const string& contactname)
 
     XMLNode searcher;
 
-    if (!AuthLoad::Search(contactname, "contact", m_contact(), searcher))
+    if (!AuthLoad::Search(contactname, "contact", m_owner->m_config->child("contacts").child("folder"), searcher))
         return "";
 
     return searcher.child("key").data();
@@ -110,9 +116,9 @@ AuthLoad::Contacts::Add(const string& contactname, const string& folder)
     XMLNode searcher;
         
     if (folder == "")
-        searcher = m_contact();
+        searcher = m_owner->m_config->child("contacts").child("folder");
     else 
-        if (!AuthLoad::Search(folder, "folder", m_contact(), searcher))
+        if (!AuthLoad::Search(folder, "folder", m_owner->m_config->child("contacts").child("folder"), searcher))
             return false;
 
     searcher.addChild("contact").setProperty("name", contactname);
@@ -127,7 +133,7 @@ AuthLoad::Contacts::Delete(const string& contactname)
     int num;
     XMLNode baseSearch;
     
-    if (!AuthLoad::BaseSearch(contactname, "contact", m_contact(), baseSearch, num))
+    if (!AuthLoad::BaseSearch(contactname, "contact", m_owner->m_config->child("contacts").child("folder"), baseSearch, num))
         return false;
 
     baseSearch.delChild("contact", num);
@@ -140,21 +146,21 @@ AuthLoad::Contacts::Move(const string& name, const string& newbase)
 {
     XMLNode searcher;
     
-    if (!AuthLoad::Search(name, "contact", m_contact(), searcher))
+    if (!AuthLoad::Search(name, "contact", m_owner->m_config->child("contacts").child("folder"), searcher))
         return false;
 
     int num;
     XMLNode oldBase;
     
-    if (!AuthLoad::BaseSearch(name, "contact", m_contact(), oldBase, num))
+    if (!AuthLoad::BaseSearch(name, "contact", m_owner->m_config->child("contacts").child("folder"), oldBase, num))
         return false;
 
     XMLNode newBase;
     
     if (newbase == "")
-        newBase = m_contact();
+        newBase = m_owner->m_config->child("contacts").child("folder");
     else
-        if (!AuthLoad::Search(newbase, "folder", m_contact(), newBase))
+        if (!AuthLoad::Search(newbase, "folder", m_owner->m_config->child("contacts").child("folder"), newBase))
             return false;
 
     newBase.addChild(searcher);
@@ -169,7 +175,7 @@ AuthLoad::Contacts::SetInfo(const string& username, const string& infoname, cons
     // see if this contact exists
     XMLNode user;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), user))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), user))
         return false;
 
     XMLNode item;
@@ -209,7 +215,7 @@ AuthLoad::Contacts::DeleteInfo(const string& username, const string& infoname)
 {
     XMLNode contact;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), contact))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), contact))
         return false;
 
     int num;
@@ -233,7 +239,7 @@ AuthLoad::Contacts::GetInfo(const string& username, const string& infoname)
 
     XMLNode contact;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), contact))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), contact))
         return "";
 
 
@@ -251,7 +257,7 @@ AuthLoad::Contacts::SetNet(const string& username, const string& netname, const 
     // see if this contact exists
     XMLNode user;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), user))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), user))
         return false;
 
     XMLNode item;
@@ -277,7 +283,7 @@ AuthLoad::Contacts::DeleteNet(const string& username, const string& netname)
 {
     XMLNode contact;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), contact))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), contact))
         return false;
 
     int num;
@@ -301,7 +307,7 @@ AuthLoad::Contacts::GetAllNets(const string& username, map<string, string> &resu
 
     XMLNode contact;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), contact))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), contact))
         return false;
 
     for (int i = 1; i <= contact.child("nets").numChildren("item"); i++)
@@ -322,9 +328,9 @@ AuthLoad::Contacts::GetFoldersOfBase(vector<string> &result_vector, const string
     XMLNode xmlbase;
 
     if (base == "")
-        xmlbase = m_contact();
+        xmlbase = m_owner->m_config->child("contacts").child("folder");
     else 
-        if (!Search(base, "folder", m_contact(), xmlbase))
+        if (!Search(base, "folder", m_owner->m_config->child("contacts").child("folder"), xmlbase))
             return false;
 
     for (int i = 1; i <= xmlbase.numChildren("folder"); i++)
@@ -343,9 +349,9 @@ AuthLoad::Contacts::GetContactsOfBase(vector<string> &result_vector, const strin
     XMLNode xmlbase;
 
     if (base == "")
-        xmlbase = m_contact();
+        xmlbase = m_owner->m_config->child("contacts").child("folder");
     else 
-        if (!Search(base, "folder", m_contact(), xmlbase))
+        if (!Search(base, "folder", m_owner->m_config->child("contacts").child("folder"), xmlbase))
             return false;
 
     for (int i = 1; i <= xmlbase.numChildren("contact"); i++)
@@ -361,7 +367,7 @@ AuthLoad::Contacts::GetContactsOfProtocol(const string& protocol, vector<Contact
     contacts.clear();
 
     vector<XMLNode> allContacts;
-    AuthLoad::GetAllTags("contact", m_contact(), allContacts);
+    AuthLoad::GetAllTags("contact", m_owner->m_config->child("contacts").child("folder"), allContacts);
     
     for (unsigned int i = 0; i < allContacts.size(); i++)
     {
@@ -385,7 +391,7 @@ AuthLoad::Contacts::RenameFolder(const string& oldname, const string& newname)
 {
     XMLNode fold;
     
-    if (!AuthLoad::Search(oldname, "folder", m_contact(), fold))
+    if (!AuthLoad::Search(oldname, "folder", m_owner->m_config->child("contacts").child("folder"), fold))
         return false;
 
     fold.setProperty("name", newname);
@@ -402,9 +408,9 @@ AuthLoad::Contacts::AddFolder(const string& folder_name, const string& base)
     XMLNode searcher;
         
     if (base == "")
-        searcher = m_contact();
+        searcher = m_owner->m_config->child("contacts").child("folder");
     else 
-        if (!AuthLoad::Search(base, "folder", m_contact(), searcher))
+        if (!AuthLoad::Search(base, "folder", m_owner->m_config->child("contacts").child("folder"), searcher))
             return false;
 
     searcher.addChild("folder").setProperty("name", folder_name);
@@ -418,7 +424,7 @@ AuthLoad::Contacts::DeleteFolder(const string& folder_name)
     int num;
     XMLNode base;
     
-    if (!AuthLoad::BaseSearch(folder_name, "folder", m_contact(), base, num))
+    if (!AuthLoad::BaseSearch(folder_name, "folder", m_owner->m_config->child("contacts").child("folder"), base, num))
         return false;
 
     base.delChild("folder", num);
@@ -434,13 +440,13 @@ AuthLoad::Contacts::MoveFolder(const string& name, const string& newbase)
 
     XMLNode origbase;
     
-    if (!AuthLoad::BaseSearch(name, "folder", m_contact(), origbase, num))
+    if (!AuthLoad::BaseSearch(name, "folder", m_owner->m_config->child("contacts").child("folder"), origbase, num))
         return false;
     // folder of that name not found
 
     XMLNode tobase;
     
-    if (!AuthLoad::Search(name, "folder", m_contact(), tobase))
+    if (!AuthLoad::Search(name, "folder", m_owner->m_config->child("contacts").child("folder"), tobase))
         return false;
 
     tobase.addChild(origbase.child("folder", num));
@@ -457,7 +463,7 @@ AuthLoad::Contacts::FolderExists(const string& name)
 {
     XMLNode temp;
 
-    if (AuthLoad::Search(name, "folder", m_contact(), temp))
+    if (AuthLoad::Search(name, "folder", m_owner->m_config->child("contacts").child("folder"), temp))
         return true;
     return false;
 
@@ -468,7 +474,7 @@ AuthLoad::Contacts::Exists(const string& name)
 {
     
     XMLNode temp;
-    if (AuthLoad::Search(name, "contact", m_contact(), temp))
+    if (AuthLoad::Search(name, "contact", m_owner->m_config->child("contacts").child("folder"), temp))
         return true;
 
     return false;
@@ -492,7 +498,7 @@ AuthLoad::Contacts::GetInfoXML(const string& username, XMLNode& xml)
 {
     XMLNode contact;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), contact))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), contact))
         return false;
 
     xml = contact.child("info");
@@ -505,7 +511,7 @@ AuthLoad::Contacts::SetInfoXML(const string& username, const XMLNode& xml)
 {
     XMLNode contact;
     
-    if (!AuthLoad::Search(username, "contact", m_contact(), contact))
+    if (!AuthLoad::Search(username, "contact", m_owner->m_config->child("contacts").child("folder"), contact))
         return false;
 
     contact.child("info") = xml;

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.h,v 1.4 2002/06/13 16:38:50 thementat Exp $
+    $Id: authload.h,v 1.5 2002/06/16 04:08:28 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -91,8 +91,8 @@ protected:
 	class Contacts
 	{
 	public:
-		Contacts(weak_ptr<XMLNode> conf):m_conf(conf) {}
-		weak_ptr<XMLNode> GetConfig() { return m_conf; }
+		Contacts(AuthLoad * owner): m_owner(owner) {}
+		XMLNode GetConfig();
 		enum Type { FOLDER, BASEFOLDER, CONTACT, CONTACTBASE, PROTOCOL };
 
 		/// Deletes all net tags in XML
@@ -143,44 +143,27 @@ protected:
 		bool Exists(const string& name);
  
 	private:
-        // ugly interface to a non-shared pointer class
-		XMLNode m_contact() 
-		{ 
-            if (m_conf.expired()) 
-				throw gmException("Pointer Error", gmException::gFATAL); 
-			else 
-				return m_conf.get()->child("contacts").child("folder");
-		}
-
-		weak_ptr<XMLNode> m_conf;
+        AuthLoad * m_owner;
 	};
 
 	class Globals
 	{
 	public:
-		Globals(weak_ptr<XMLNode> conf):m_conf(conf) {}
+		Globals(AuthLoad * owner): m_owner(owner) {}
 		bool GetWindowPos(int &x, int &y, int &w, int &h, const string& windowname);
 		bool GetValue(const string& value, string &result_string);
 		bool SetValue(const string& value, const string& setting);
 		bool SetWindowPos(int x, int y, int w, int h, const string& windowname);
 
 	private:
-		XMLNode m_global() 
-		{ 
-			if (m_conf.expired()) 
-				throw gmException("Pointer Error", gmException::gFATAL); 
-			else 
-				return m_conf.get()->child("global");
-		}
-
-		weak_ptr<XMLNode> m_conf;
+		AuthLoad * m_owner;
 
 	};
 
 	class Users
 	{
 	public:
-		Users(weak_ptr<XMLNode> conf):m_conf(conf) {}
+		Users(AuthLoad * owner): m_owner(owner) {}
 
 		void SetPrivateKey(const string & key);
 		void SetPublicKey(const string & key);
@@ -196,14 +179,7 @@ protected:
 		bool DeleteNet(const string& netname);
       
 	private:
-		XMLNode m_user() 
-		{ 
-			if (m_conf.expired()) 
-				throw gmException("Pointer Error", gmException::gFATAL); 
-			else 
-				return m_conf.get()->child("user");
-		}
-		weak_ptr<XMLNode> m_conf;
+		AuthLoad * m_owner;
 		
 	};
 
@@ -237,17 +213,9 @@ private:
 
 public:
 
-    weak_ptr<Contacts> C() { if (m_contacts.get()) 
-        return weak_ptr<Contacts> (m_contacts); 
-        throw gmException("Fatal error", gmException::gFATAL); }
-
-	weak_ptr<User> U() { if (m_user.get())
-        return weak_ptr<User> (m_user); 
-        throw gmException("Fatal error", gmException::gFATAL); }
-
-	weak_ptr<Globals> G() { if (m_global.get())
-        return weak_ptr<Globals> (m_global); 
-        throw gmException("Fatal error", gmException::gFATAL); }
+    Contacts& C() { return m_contacts; }
+	Users& U() { return m_user; }
+	Globals& G() { return m_global; }
 
 	const XMLNode ReturnXML() { return *m_config; }
 
@@ -258,6 +226,9 @@ public:
 /*
     -----
     $Log: authload.h,v $
+    Revision 1.5  2002/06/16 04:08:28  thementat
+    Hopefully fixed Authload and related classes.
+
     Revision 1.4  2002/06/13 16:38:50  thementat
     Major work on the SSH2 protocol and authload changes.
 

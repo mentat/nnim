@@ -21,11 +21,11 @@ public:
     
     NContactTreeXML(wxWindow *parent, const wxWindowID id,
                        const wxPoint& pos, const wxSize& size,
-                       long style, weak_ptr<XMLNode> xml, int type = ContactTree);
+                       long style, XMLNode xml, int type = ContactTree);
 
     virtual ~NContactTreeXML();
 
-    void SetXML(weak_ptr<XMLNode> xml);
+    void SetXML(XMLNode xml);
     void RefreshTree();
 
     void OnBeginDrag(wxTreeEvent& event);
@@ -81,7 +81,7 @@ private:
 
 	wxString m_user;
     int m_type;
-    weak_ptr<XMLNode> m_xml;
+    XMLNode m_xml;
     DECLARE_EVENT_TABLE()
 
 

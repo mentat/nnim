@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NContact.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -48,7 +48,7 @@
 #include "bitmaps/wiz_obsd_fish2.xpm"
 
 wxMenuBar *myContactsMenuBar();
-wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , weak_ptr<XMLNode> node);
+wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer , XMLNode node);
 
 DECLARE_APP(wxNNIM)
 /*
@@ -122,7 +122,7 @@ guiContact::guiContact(bool newUser, wxWindow* parent, wxWindowID id, const wxSt
  
   wxPanel * pTopPanel = new wxPanel(this);
 
-  Contacts(pTopPanel, true, true, wxGetApp().AccessLoader().C().get()->GetConfig());
+  Contacts(pTopPanel, true, true, wxGetApp().AccessLoader().C().GetConfig());
 
 }
 
@@ -475,7 +475,7 @@ return NULL;
 }*/
 
 
-wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer, weak_ptr<XMLNode> node )
+wxSizer *Contacts( wxWindow *parent, bool call_fit, bool set_sizer, XMLNode node )
 {
     wxFlexGridSizer *item0 = new wxFlexGridSizer( 1, 0, 0 );
     item0->AddGrowableCol( 0 );
@@ -531,6 +531,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.3  2002/06/16 04:08:28  thementat
+    Hopefully fixed Authload and related classes.
+
     Revision 1.2  2002/06/14 22:02:24  thementat
     Large work on revamping IDs in gui, more SSH2 additions.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NUserWiz.cpp,v 1.2 2002/06/14 22:02:24 thementat Exp $
+    $Id: NUserWiz.cpp,v 1.3 2002/06/16 04:08:28 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -272,11 +272,11 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 
     try
     {
-	    myLoader.U().get()->SetNet(icq);	
-	    myLoader.U().get()->SetNet(toc);
-	    myLoader.U().get()->SetNet(msn);
-	    myLoader.U().get()->SetNet(yahoo);
-	    myLoader.U().get()->SetNet(kit);
+	    myLoader.U().SetNet(icq);	
+	    myLoader.U().SetNet(toc);
+	    myLoader.U().SetNet(msn);
+	    myLoader.U().SetNet(yahoo);
+	    myLoader.U().SetNet(kit);
     }
     catch(...)
     {
@@ -289,6 +289,9 @@ void UserWizardP2::OnWizardPageChanging(wxWizardEvent& event)
 /*
     -----
     $Log: NUserWiz.cpp,v $
+    Revision 1.3  2002/06/16 04:08:28  thementat
+    Hopefully fixed Authload and related classes.
+
     Revision 1.2  2002/06/14 22:02:24  thementat
     Large work on revamping IDs in gui, more SSH2 additions.
 
