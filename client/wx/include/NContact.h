@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.h,v 1.2 2002/06/21 19:03:14 thementat Exp $
+    $Id: NContact.h,v 1.3 2002/06/21 19:38:21 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -61,6 +61,7 @@ public:
     void OnIdle(wxIdleEvent& event);
  
 	void OnLogout(wxCommandEvent& event);
+    void OnConnect(wxCommandEvent& event);
     void OnStart(wxCommandEvent& event);
 	void OnCheckVersion(wxCommandEvent& event);
     void OnCommit(wxCommandEvent& event);
@@ -93,6 +94,9 @@ InitContactView(wxWindow * pParent = NULL, bool newUser = false);
 /*
     -----
     $Log: NContact.h,v $
+    Revision 1.3  2002/06/21 19:38:21  thementat
+    Trying to get online...
+
     Revision 1.2  2002/06/21 19:03:14  thementat
     NNIM compiles and links in gcc 2.96 20000731
 

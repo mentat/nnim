@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.2 2002/06/21 19:03:15 thementat Exp $
+    $Id: NContact.cpp,v 1.3 2002/06/21 19:38:22 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -26,6 +26,7 @@
 
 #include "wx/notebook.h"
 #include "wx/treebase.h"
+
 
 
 #include "wx/generic/treectlg.h"
@@ -81,6 +82,7 @@ BEGIN_EVENT_TABLE(guiContact, wxFrame)
 //	EVT_CUSTOM(gmEVT_LIST_ADD, -1, guiContact::OnListAdd)
     EVT_BUTTON(wxNNIM::ID_CONTACTS_BUTT, guiContact::OnStart)
 	// frame menu items
+    EVT_MENU(wxNNIM::ID_CONTACTS_MENU_POPUP_CONNECT, guiContact::OnConnect)
     EVT_MENU(wxNNIM::ID_CONTACTS_ABOUT, guiContact::OnAbout)
 	EVT_MENU(wxNNIM::ID_CONTACTS_QUIT, guiContact::OnQuit)
 	EVT_MENU(wxNNIM::ID_CONTACTS_MENU_AWAY, guiContact::OnSetAway)
@@ -117,9 +119,11 @@ bool guiContact::RemoveChat(const string& name)
 
 bool guiContact::AddChat(const string& name, guiChat * window)
 {
-  for(map<string, shared_ptr<guiChat> >::iterator it=m_chatWindows.begin(); it != m_chatWindows.end(); it++)
+    if (m_chatWindows.find(name) == m_chatWindows.end())
+        return false;
+ /* for(map<string, shared_ptr<guiChat> >::iterator it=m_chatWindows.begin(); it != m_chatWindows.end(); it++)
     if (it->first == name)
-      return false;
+      return false; */
 
   m_chatWindows[name].reset(window);
   return true;
@@ -206,6 +210,15 @@ void guiContact::OnLogout(wxCommandEvent& event)
     wxLogDebug(wxT("OnLogout"));
 
     wxGetApp().Logout();
+}
+
+void guiContact::OnConnect(wxCommandEvent& event)
+{
+    wxLogDebug(wxT("OnConnect"));
+
+    wxGetApp().AccessManager().login("toc");
+
+
 }
 
 void guiContact::OnCheckVersion(wxCommandEvent& event)
@@ -337,6 +350,7 @@ void guiContact::OnSetInfo(wxCommandEvent& event)
 
 }*/
 /*
+
 guiChat * guiContact::LaunchChat(const wxString& name, const wxString& protocol)
 {
   guiChat * pMyChatWindow = NULL;
@@ -533,6 +547,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.3  2002/06/21 19:38:22  thementat
+    Trying to get online...
+
     Revision 1.2  2002/06/21 19:03:15  thementat
     NNIM compiles and links in gcc 2.96 20000731
 
