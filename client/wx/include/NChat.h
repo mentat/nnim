@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.h,v 1.2 2002/06/27 11:52:51 thementat Exp $
+    $Id: NChat.h,v 1.3 2002/06/27 15:26:56 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -21,6 +21,9 @@
 
     -----
     $Log: NChat.h,v $
+    Revision 1.3  2002/06/27 15:26:56  thementat
+    Contact fixes and debug fixes, works better!
+
     Revision 1.2  2002/06/27 11:52:51  thementat
     More event handling fixes.
 
@@ -86,6 +89,7 @@ private:
 };
 
 class guiChat: public wxFrame
+
 {
 public:
 
@@ -100,7 +104,7 @@ public:
     * @param w Window width
     * @param l Window length
   */
-	guiChat(const wxString& title, int x, int y, int w, int h, wxWindow * parent, Contact cont);
+	guiChat(const wxString& title, int x, int y, int w, int h, wxWindow * parent, Contact& cont);
 	
   virtual ~guiChat();
 
@@ -137,6 +141,8 @@ public:
 
 private:
 
+    guiContact * m_owner;
+
 	wxString m_sxRealName;
 	wxString m_sxServerId;
 	wxString m_sxProtocol;
@@ -155,8 +161,8 @@ private:
 	
   // File tab items
 
-  wxTextCtrl *m_file_p2;
-  wxGauge *m_transfer_gauge_p2;
+    wxTextCtrl *m_file_p2;
+    wxGauge *m_transfer_gauge_p2;
 
   // Security tab items
 

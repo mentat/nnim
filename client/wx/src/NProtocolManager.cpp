@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NProtocolManager.cpp,v 1.9 2002/06/27 11:52:51 thementat Exp $
+    $Id: NProtocolManager.cpp,v 1.10 2002/06/27 15:26:58 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -134,6 +134,7 @@ void wxProtocolManager::c_recvdMessage(const string &proto,const Contact &c, con
 	myEvent.setProtocol(wProto);
 	myEvent.setServerId(wxString(c.nick().c_str(), wxConvUTF8));
 	myEvent.setMessage(wMessage);
+    myEvent.contact = c;
 
     //wxLogDebug("Hello");
 	SendEvent(myEvent);
@@ -151,6 +152,7 @@ void wxProtocolManager::c_recvdMessageAnony(const string& proto, const Contact &
 	myEvent.setProtocol(proto.c_str());
 	myEvent.setServerId(c.nick().c_str());
 	myEvent.setMessage(message.c_str());
+    myEvent.contact = c;
 
     //wxLogDebug("here123");
 	SendEvent(myEvent);
@@ -196,6 +198,9 @@ void wxProtocolManager::SetEventHandler(wxEvtHandler& handler, int id)
 /*
     -----
     $Log: NProtocolManager.cpp,v $
+    Revision 1.10  2002/06/27 15:26:58  thementat
+    Contact fixes and debug fixes, works better!
+
     Revision 1.9  2002/06/27 11:52:51  thementat
     More event handling fixes.
 

@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NChat.cpp,v 1.3 2002/06/27 11:52:51 thementat Exp $
+    $Id: NChat.cpp,v 1.4 2002/06/27 15:26:58 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -114,9 +114,11 @@ bool DnDFile::OnDropFiles(wxCoord, wxCoord, const wxArrayString& filenames)
     return TRUE;
 }
 
-guiChat::guiChat(const wxString& title, int x, int y, int w, int h, wxWindow * parent, Contact cont)
+guiChat::guiChat(const wxString& title, int x, int y, int w, int h, wxWindow * parent, Contact& cont)
        : wxFrame(parent, -1, title, wxPoint(x, y), wxSize(w, h))
 {
+
+    m_owner = static_cast<guiContact*>(parent);
 
 	m_Contact = cont;
 
@@ -131,9 +133,10 @@ guiChat::guiChat(const wxString& title, int x, int y, int w, int h, wxWindow * p
 	wxIcon appIcon;
 	appIcon.CopyFromBitmap(wxBitmap(nnim_i_xpm));
 
+
 	SetIcon(appIcon);  // Set the icon
 
-	CreateStatusBar(1);
+	//CreateStatusBar(1);
 
 	m_panel = new wxPanel(this, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL|wxCLIP_CHILDREN);
 
@@ -181,7 +184,13 @@ void guiChat::OnQuit(wxCommandEvent&)
 
 void guiChat::OnCloseWindow(wxCloseEvent& event)
 { 
-    Destroy();
+    if (m_owner)
+        m_owner->RemoveChat(this);
+    else
+    {
+        wxLogError(wxT("No owner in guiChat::OnCloseWindow"));
+        throw gmException("No owner in guiChat::OnCloseWindow", gmException::gMEM);
+    }
 }
 
 guiChat::~guiChat()
@@ -385,6 +394,7 @@ void guiChat::InitTabView(wxNotebook* notebook, wxPanel* window)
   wxStaticText *l_label2_p2 = new wxStaticText(panel2, -1, "Directory to recieve files to", 
     wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 
+
   c = new wxLayoutConstraints;
   c->left.SameAs(panel2, wxLeft, 4);
   c->width.AsIs();
@@ -513,8 +523,11 @@ void guiChat::DisplayText(const wxString& text)
 
   FlashWindow(GetHWND(), true);
 #endif*/
-  wxString newText = text, newText2;
+  wxString newText = text;
+  wxString newText2;
 
+  if (newText.Find(wxT("<HTML>")) != -1)
+  {
   newText.Replace(wxT("<HTML>"), wxT(""));
   newText.Replace(wxT("</HTML>"), wxT(""));
   newText.Replace(wxT("<BODY"), wxT("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\""));
@@ -527,7 +540,17 @@ void guiChat::DisplayText(const wxString& text)
   newText2 += wxT(": </FONT></b>");
   newText2 += newText.AfterFirst('>');
 
-  wxLogDebug(wxT("Trying to render ") + newText2);
+    wxLogDebug(wxT("Trying to render ") + newText2);
+    }
+    else
+    {
+        newText2 = wxT("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+        newText2 += wxT("<TR><TD><b><FONT COLOR=\"#FF0000\">");
+        newText2 += wxString(m_Contact.nick().c_str(), wxConvUTF8);
+        newText2 += wxT(": </FONT></b>");
+        newText2 += newText;
+        newText2 += wxT("<TR><TD><b><FONT COLOR=\"#FF0000\">");
+     }
 
 
   // Used for incomming text (from remote user)
@@ -592,6 +615,9 @@ void guiChat::OnP2Browse(wxCommandEvent& event)
 /*
     -----
     $Log: NChat.cpp,v $
+    Revision 1.4  2002/06/27 15:26:58  thementat
+    Contact fixes and debug fixes, works better!
+
     Revision 1.3  2002/06/27 11:52:51  thementat
     More event handling fixes.
 

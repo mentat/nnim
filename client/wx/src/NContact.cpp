@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: NContact.cpp,v 1.7 2002/06/27 11:52:51 thementat Exp $
+    $Id: NContact.cpp,v 1.8 2002/06/27 15:26:58 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001-2002  Jesse Lovelace
@@ -26,6 +26,7 @@
 
 #include "wx/notebook.h"
 #include "wx/treebase.h"
+
 #include "wx/generic/treectlg.h"
 #include "wx/wizard.h"
 
@@ -109,11 +110,15 @@ guiContact::guiContact(bool newUser, wxWindow* parent, wxWindowID id, const wxSt
 }
 
 
-bool guiContact::RemoveChat(const string& name)
+bool guiContact::RemoveChat(guiChat * window)
 {
 
-    m_chatWindows.erase(name);
-
+    for (map<string, shared_ptr<guiChat> >::iterator it=m_chatWindows.begin();
+        it != m_chatWindows.end(); it++)
+        if (it->second.get() == window) {
+            m_chatWindows.erase(it);
+            return true;
+        }
     return false;
 
 }
@@ -160,6 +165,7 @@ void guiContact::OnGetMessageAnony(gmEvent& event)
 
 
 
+
 }
 void guiContact::OnGetMessage(gmEvent& event)
 {
@@ -174,6 +180,10 @@ void guiContact::OnGetMessage(gmEvent& event)
 		title += " protocol.";
 		m_chatWindows[event.getServerId().c_str()].reset( InitChatView(this, title.c_str(), event.contact) );
 	}
+
+    wxLogDebug(event.contact.serverId().c_str());
+
+	m_chatWindows[event.getServerId().c_str()]->DisplayText(event.getMessage());
 
  /* wxLogDebug(wxString(wxT("Got event: ")) + event.getProtocol());
   
@@ -268,13 +278,9 @@ void guiContact::OnQuit(wxCommandEvent& event)
 
 void guiContact::OnCloseWindow(wxCloseEvent& event)
 {
+    // NOT MT SAFE
+    m_chatWindows.clear();
 	wxGetApp().AccessLoader().CommitToFile();
-	for(map<string, auto_ptr<guiChat> >::iterator it=m_chatWindows.begin(); it != m_chatWindows.end(); it++)
-	{
-		it->second.release();
-
-
-	}
 	wxGetApp().Shutdown();
 
 }
@@ -588,6 +594,9 @@ wxMenuBar *myContactsMenuBar()
 /*
    -----
     $Log: NContact.cpp,v $
+    Revision 1.8  2002/06/27 15:26:58  thementat
+    Contact fixes and debug fixes, works better!
+
     Revision 1.7  2002/06/27 11:52:51  thementat
     More event handling fixes.
 
