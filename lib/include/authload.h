@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.h,v 1.2 2002/06/08 18:34:21 thementat Exp $
+    $Id: authload.h,v 1.3 2002/06/09 20:28:47 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2001  Jesse Lovelace
@@ -89,7 +89,7 @@ protected:
 	{
 	public:
 		Contacts(AuthLoad* auth):m_auth(auth) {}
-		XMLNode &GetConfig() { return m_contact(); }
+		XMLNode GetConfig() { return *m_contact(); }
 		enum Type { FOLDER, BASEFOLDER, CONTACT, CONTACTBASE, PROTOCOL };
 
 		/// Deletes all net tags in XML
@@ -140,12 +140,12 @@ protected:
 		bool Exists(const string& name);
  
 	private:
-		XMLNode &m_contact() 
+		XMLNode *m_contact() 
 		{ 
-			if (!m_auth->m_config) 
+			if (!m_auth->m_config.get()) 
 				throw gmException("Pointer Error", gmException::gFATAL); 
 			else 
-				return m_auth->m_config->child("contacts").child("folder");
+				return &m_auth->m_config->child("contacts").child("folder");
 		}
 
 		AuthLoad* m_auth;
@@ -161,12 +161,12 @@ protected:
 		bool SetWindowPos(int x, int y, int w, int h, const string& windowname);
 
 	private:
-		XMLNode &m_global() 
+		XMLNode* m_global() 
 		{ 
-			if (!m_auth->m_config) 
+			if (!m_auth->m_config.get()) 
 				throw gmException("Pointer Error", gmException::gFATAL); 
 			else 
-				return m_auth->m_config->child("global");
+				return &m_auth->m_config->child("global");
 		}
 
 		AuthLoad* m_auth;
@@ -192,12 +192,12 @@ protected:
 		bool DeleteNet(const string& netname);
       
 	private:
-		XMLNode &m_user() 
+		XMLNode *m_user() 
 		{ 
-			if (!m_auth->m_config) 
+			if (!m_auth->m_config.get()) 
 				throw gmException("Pointer Error", gmException::gFATAL); 
 			else 
-				return m_auth->m_config->child("user");
+				return &m_auth->m_config->child("user");
 		}
 		AuthLoad* m_auth;
 		
@@ -208,22 +208,21 @@ protected:
     /// Replace HTML/XML unfriendlies with HTML codes.
     string Decode(const string & inbound);
 
-    SecByteBlock Hash(SecByteBlock & password);
-
-    bool Encrypt(const string& filename, const SecByteBlock &key, const string& data);
-    string Decrypt(const string& filename, const SecByteBlock &key);
-
     virtual void LogText(const string& text) { }
 
 
 private:
 
 	/// The base config XML node
-	XMLNode * m_config;
+    auto_ptr<XMLNode> m_config;
+//XMLNode * m_config;
  
-	Contacts *m_contacts;
-	User *m_user;
-	Globals *m_global;
+    auto_ptr<Contacts> m_contacts;
+    auto_ptr<User> m_user;
+    auto_ptr<Globals> m_global;
+	//Contacts *m_contacts;
+	//User *m_user;
+	//Globals *m_global;
 
 	/// The directory that the config is stored in
 	string m_directory;
@@ -251,6 +250,9 @@ public:
 /*
     -----
     $Log: authload.h,v $
+    Revision 1.3  2002/06/09 20:28:47  thementat
+    Tried to fix referencing in authload, moved crypto out of authload, more auto_ptrs
+
     Revision 1.2  2002/06/08 18:34:21  thementat
     Added comments and fixed VC7 project dirs
 

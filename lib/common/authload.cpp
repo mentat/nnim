@@ -1,6 +1,6 @@
 // --*-c++-*--
 /*
-    $Id: authload.cpp,v 1.2 2002/06/06 18:43:02 thementat Exp $
+    $Id: authload.cpp,v 1.3 2002/06/09 20:28:46 thementat Exp $
  
     GNU Messenger - The secure instant messenger
     Copyright (C) 2002  Jesse Lovelace
@@ -23,9 +23,6 @@
 #ifdef WIN32
     #pragma warning(disable:4786)
 #endif
-
-const static int IV_SEED_LENGTH = 8;
-const static int IV_LENGTH	= 16;
 
 #include "crypto/config.h"
 #include "crypto/misc.h"
@@ -65,28 +62,13 @@ AuthLoad::AuthLoad(const string& directory)
 	// set initial user directory to whatever is passed to constructor
     m_directory = directory;
 
-	m_contacts = new Contacts(this);
-	m_user = new User(this);
-	m_global = new Globals(this);
+	m_contacts.reset( new Contacts(this) );
+	m_user.reset( new User(this) );
+	m_global.reset( new Globals(this));
 }
 
 AuthLoad::~AuthLoad()
 {
-	destroy(m_contacts);
-	destroy(m_user);
-	destroy(m_global);
-	destroy(m_config);
-}
-
-SecByteBlock AuthLoad::Hash(SecByteBlock & password)
-{
-    SecByteBlock retBlock;
-
-	// this hash is for storage and authentication
-    retBlock.Resize(SHA384::DIGESTSIZE);
-    SHA384().CalculateDigest(retBlock, password, password.Size());
-
-    return retBlock;
 }
 
 bool AuthLoad::Logoff()
@@ -98,7 +80,7 @@ bool AuthLoad::Logoff()
     m_status = OFFLINE;
 
 	// set the config to a empty xml node
-    destroy(m_config);
+    m_config.reset( NULL );
 
 	// resize the disk password to zero length
     m_diskPass.CleanNew(0);
@@ -119,13 +101,13 @@ bool AuthLoad::CreateNew(const string& username, SecByteBlock &password)
 
 	Logoff();
 
-    m_config = new XMLNode();
+    m_config.reset( new XMLNode() );
 
 	// create a new file to hold user data
     m_filename = gmCrypto::Encode(username) + string(".kim");
 
 	// hash the user's password to use as file key
-    m_diskPass = Hash(password);
+    m_diskPass = gmCrypto::Hash(password);
 
 	// set up initial values in the xml node
     m_config->setName("config").setProperty("username", username);
@@ -134,11 +116,9 @@ bool AuthLoad::CreateNew(const string& username, SecByteBlock &password)
 	/* This extra store of the password with a different hash
 	might be unneeded because file is encrypted. */
 
-	SecByteBlock thehash = Hash(password);
+    gmCrypto::Hash(password);
 
-	string myhash((const char *)(void *)thehash, thehash.Size());
-
-    m_config->setProperty("password", myhash);
+    m_config->setProperty("password", gmCrypto::HashEncode(password));
 #endif
 
 	// set status to online - user logged in
@@ -157,12 +137,11 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
     	return false;
 
 
-	destroy(m_config);
-    m_config = new XMLNode();
+    m_config.reset( new XMLNode() );
 
     m_filename = gmCrypto::Encode(username) + string(".kim");
 
-    m_diskPass = Hash(password);
+    m_diskPass = gmCrypto::Hash(password);
 
 #if 0
 	ifstream in;
@@ -172,7 +151,7 @@ bool AuthLoad::Login(const string & username, SecByteBlock &password)
         inbound += tmp;
 #endif
 
-    *m_config << Decrypt(m_directory + m_filename, m_diskPass);
+    *m_config << gmCrypto::DecryptFile(m_directory + m_filename, m_diskPass);
 
 	ofstream out;
 
@@ -294,7 +273,7 @@ bool AuthLoad::CommitToFile()
 	// try to encrypt to disk
     try
     {
-        Encrypt(m_directory + m_filename, m_diskPass, data.c_str());
+        gmCrypto::EncryptFile(m_directory + m_filename, m_diskPass, data.c_str());
     }
     catch (CryptoPP::Exception &e)
     {
@@ -412,7 +391,7 @@ AuthLoad::SetActivePassword(SecByteBlock& password)
     //m_config.setProperty("password", (const char*)(void *)Hash(password));
 	
 	// set new password
-	m_diskPass = Hash(password);
+    m_diskPass = gmCrypto::Hash(password);
 
 	// save with new password
 	CommitToFile();
@@ -430,127 +409,13 @@ AuthLoad::GetActiveLogin()
     return m_config->property("username");
 }
 
-bool 
-AuthLoad::Encrypt(const string& filename, const SecByteBlock& key, const string& data)
-{
-
-	LogText("PlainText:");
-	LogText(data.c_str());
-    // generating random seed for iv
-    SecByteBlock ivSeed(IV_SEED_LENGTH);
-    SecByteBlock realIv(IV_LENGTH);
-
-    AutoSeededRandomPool rng;
-    rng.GenerateBlock(ivSeed, IV_SEED_LENGTH);
-
-    //creating actual iv, thanks to denis bider for this method
-    SecByteBlock ivHash(SHA256::DIGESTSIZE);
-    SHA256().CalculateDigest(ivHash, ivSeed, IV_SEED_LENGTH);
-
-    for (unsigned int i = 0; i != IV_LENGTH; ++i)
-        realIv[i] = ivHash[i] ^ ivHash[i+16];
-
-    //compress 
-
-    ZlibCompressor z(NULL,9);
-    z.Put((const unsigned char *)data.c_str(), data.length());
-    z.MessageEnd();
-
-    SecByteBlock compressedPlainText(z.MaxRetrievable());
-    z.Get(compressedPlainText, compressedPlainText.Size());
-
-
-
-    //encrypting
-    SecByteBlock cipherText(compressedPlainText.Size());
-
-    MARSEncryption mars(key, SHA384::DIGESTSIZE);
-    CBC_CTS_Encryptor encryptor(mars, realIv, new ArraySink(cipherText, compressedPlainText.Size()));
-    encryptor.Put(compressedPlainText, compressedPlainText.Size());
-    encryptor.MessageEnd();
-
-    // create HMAC
-
-    SecByteBlock myMac(HMAC<SHA>::DIGESTSIZE);
-    HMAC<SHA> themac(key, SHA384::DIGESTSIZE);
-
-    themac.Update(cipherText, cipherText.Size());
-    themac.Final(myMac);
-
-	LogText("mac enc:");
-	LogText((const char *)(const unsigned char *)myMac);
-
-	LogText("Ciphertext:");
-	LogText(gmCrypto::Encode(cipherText, cipherText.Size()));
-
-    // output all to file
-
-	SecByteBlock testout;
-	// setup output file and encode the file as base64
-    Base64Encoder encoder(new FileSink(filename.c_str(), false));
-
-	encoder.Put(realIv, IV_LENGTH);
-    encoder.Put(cipherText, cipherText.Size());
-    encoder.Put(myMac, HMAC<SHA>::DIGESTSIZE);
-    encoder.MessageEnd();
-
-    return true;
-}
-
-string 
-AuthLoad::Decrypt(const string& filename, const SecByteBlock &key)
-{
-    // read from file
-    FileSource inputFile(filename.c_str(), true);
-    SecByteBlock dataFromFile(inputFile.MaxRetrievable());
-    inputFile.Get(dataFromFile, dataFromFile.Size());
-
-    // decode from base64
-    Base64Decoder decoder64;
-    decoder64.Put(dataFromFile, dataFromFile.Size());
-    decoder64.MessageEnd();
-
-	SecByteBlock decodedData(decoder64.MaxRetrievable());
-    decoder64.Get(decodedData, decodedData.Size());
-
-    //seperate data
-    SecByteBlock iv(decodedData, IV_LENGTH);
-    SecByteBlock payload(decodedData + IV_LENGTH, decodedData.Size() - IV_LENGTH - HMAC<SHA>::DIGESTSIZE);
-    SecByteBlock hmac(decodedData + IV_LENGTH + payload.Size(), HMAC<SHA>::DIGESTSIZE);
-
-    // decrypt, dat becomes new compressed cipher text.
-    MARSDecryption marsDec(key, SHA384::DIGESTSIZE);
-    CBC_CTS_Decryptor cbcDecryptor(marsDec, iv);
-    cbcDecryptor.Put(payload, payload.Size());
-    cbcDecryptor.MessageEnd();
-
-	// verify hmac digest
-	LogText("mac:");
-	LogText((const char *)(const unsigned char *)hmac);
-
-    if (!HMAC<SHA>(key, SHA384::DIGESTSIZE).VerifyDigest(hmac, payload, payload.Size()))
-		throw gmException("File digest not verified.", gmException::gDISK);
-
-    // create object to store compressed plain text
-    SecByteBlock compressedPlaintext(cbcDecryptor.MaxRetrievable());
-
-	// put decrypted data in
-    cbcDecryptor.Get(compressedPlaintext, compressedPlaintext.Size());
-
-    ZlibDecompressor zDecompressor;
-    zDecompressor.Put(compressedPlaintext, compressedPlaintext.Size());
-    zDecompressor.MessageEnd();
-
-	SecByteBlock plainText(zDecompressor.MaxRetrievable());
-    zDecompressor.Get(plainText, plainText.Size());
-
-	return (const char *)(const unsigned char *)plainText;
-
-}
 
 /*
     -----
     $Log: authload.cpp,v $
+    Revision 1.3  2002/06/09 20:28:46  thementat
+    Tried to fix referencing in authload, moved crypto out of authload, more auto_ptrs
+
     Revision 1.2  2002/06/06 18:43:02  thementat
     Added copyrights, fixed cryptography compile errors, lib builds in vc7
 
